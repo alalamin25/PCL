@@ -40,3 +40,12 @@ class RawItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProductionItem(models.Model):
+    name = models.CharField(max_length=100)
+    comment = models.TextField()
+    type = models.ForeignKey(FundamentalProductType)
+
+    def __str__(self):
+        return self.name

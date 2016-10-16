@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from master_table.models import Suplier, FundamentalProductType, RawItem, Color
+from master_table.models import Suplier, FundamentalProductType,\
+    RawItem, Color, ProductionItem
 
 
 class Suplier_Admin(admin.ModelAdmin):
@@ -32,6 +33,7 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
         ),
     ]
 
+
 class Color_Admin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     list_display_links = ('id', 'name',)
@@ -41,7 +43,6 @@ class Color_Admin(admin.ModelAdmin):
             'Name Of Color: ', {'fields': ['name']}
         ),
     ]
-
 
 
 class RawItem_Admin(admin.ModelAdmin):
@@ -64,7 +65,28 @@ class RawItem_Admin(admin.ModelAdmin):
     ]
 
 
+class ProductionItem_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    list_filter = ('type',)
+    fieldsets = [
+        (
+            'Name Of The Production Item: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For Production Item:', {
+                'fields': ['type']}
+        ),
+        (
+            'Write Comment: ', {'fields': ['comment']}
+        ),
+
+    ]
+
+
 admin.site.register(Suplier, Suplier_Admin)
 admin.site.register(FundamentalProductType, FundamentalProductType_Admin)
 admin.site.register(RawItem, RawItem_Admin)
+admin.site.register(ProductionItem, ProductionItem_Admin)
 admin.site.register(Color, Color_Admin)
