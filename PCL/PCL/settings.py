@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'master_table',
+    'entry_table',
 )
 
 MIDDLEWARE_CLASSES = (
