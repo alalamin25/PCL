@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'master_table',
     'entry_table',
+    'production_table',
 )
 
 MIDDLEWARE_CLASSES = (

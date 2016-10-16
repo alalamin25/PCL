@@ -49,3 +49,29 @@ class ProductionItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CompoundProductionItem(models.Model):
+    name = models.CharField(max_length=100)
+    comment = models.TextField()
+    type = models.ForeignKey(FundamentalProductType)
+
+    def __str__(self):
+        return self.name
+
+
+class CompoundProductionItemEntry(models.Model):
+    compound_production_item = models.ForeignKey(CompoundProductionItem)
+    production_item = models.ForeignKey(ProductionItem)
+    unit_amount = models.FloatField()
+
+    def __str__(self):
+        return self.compound_production_item.name
+
+
+class Shift(models.Model):
+    name = models.CharField(max_length=100)
+    comment = models.TextField()
+
+    def __str__(self):
+        return self.name

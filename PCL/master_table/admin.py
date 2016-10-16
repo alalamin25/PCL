@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from master_table.models import Suplier, FundamentalProductType,\
-    RawItem, Color, ProductionItem
+    RawItem, Color, ProductionItem, Shift, CompoundProductionItem,\
+    CompoundProductionItemEntry
 
 
 class Suplier_Admin(admin.ModelAdmin):
@@ -85,8 +86,51 @@ class ProductionItem_Admin(admin.ModelAdmin):
     ]
 
 
+class CompoundProductionItemEntryInline(admin.TabularInline):
+    model = CompoundProductionItemEntry
+    extra = 0
+
+
+class CompoundProductionItem_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    list_filter = ('type',)
+    inlines = [CompoundProductionItemEntryInline]
+    fieldsets = [
+        (
+            'Name Of The Compound Production Item: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For Production Item:', {
+                'fields': ['type']}
+        ),
+        (
+            'Write Comment: ', {'fields': ['comment']}
+        ),
+
+    ]
+
+
+class Shift_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    fieldsets = [
+        (
+            'Name Of The Production Item: ', {'fields': ['name']}
+        ),
+        (
+            'Write Comment: ', {'fields': ['comment']}
+        ),
+
+    ]
+
+
 admin.site.register(Suplier, Suplier_Admin)
 admin.site.register(FundamentalProductType, FundamentalProductType_Admin)
 admin.site.register(RawItem, RawItem_Admin)
 admin.site.register(ProductionItem, ProductionItem_Admin)
+admin.site.register(CompoundProductionItem, CompoundProductionItem_Admin)
 admin.site.register(Color, Color_Admin)
+admin.site.register(Shift, Shift_Admin)
