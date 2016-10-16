@@ -17,3 +17,19 @@ class Suplier(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class FundamentalProductType(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
+class RawItem(models.Model):
+    name = models.CharField(max_length=100)
+    comment = models.TextField()
+    type = models.ForeignKey(FundamentalProductType)
+
+    def __str__(self):
+        return self.name

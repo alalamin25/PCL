@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from master_table.models import Suplier
+from master_table.models import Suplier, FundamentalProductType, RawItem
 
 
 class Suplier_Admin(admin.ModelAdmin):
@@ -21,9 +21,41 @@ class Suplier_Admin(admin.ModelAdmin):
         ),
     ]
 
+
+class FundamentalProductType_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    fieldsets = [
+        (
+            'Name Of Fundamental Product: ', {'fields': ['name']}
+        ),
+    ]
+
+
+class RawItem_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    list_filter = ('type',)
+    fieldsets = [
+        (
+            'Name Of The Raw Material Item: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For This Raw Item:', {
+                'fields': ['type']}
+        ),
+        (
+            'Write Comment: ', {'fields': ['comment']}
+        ),
+
+    ]
+
     def save_model(self, request, obj, form, change):
         obj.save()
 
 
 admin.site.register(Suplier, Suplier_Admin)
-# admin.site.register(Suplier)
+admin.site.register(FundamentalProductType, FundamentalProductType_Admin)
+admin.site.register(RawItem, RawItem_Admin)
