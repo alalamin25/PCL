@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from master_table.models import Suplier, FundamentalProductType, RawItem
+from master_table.models import Suplier, FundamentalProductType, RawItem, Color
 
 
 class Suplier_Admin(admin.ModelAdmin):
@@ -32,6 +32,17 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
         ),
     ]
 
+class Color_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    fieldsets = [
+        (
+            'Name Of Color: ', {'fields': ['name']}
+        ),
+    ]
+
+
 
 class RawItem_Admin(admin.ModelAdmin):
     list_display = ('id', 'name',)
@@ -52,10 +63,8 @@ class RawItem_Admin(admin.ModelAdmin):
 
     ]
 
-    def save_model(self, request, obj, form, change):
-        obj.save()
-
 
 admin.site.register(Suplier, Suplier_Admin)
 admin.site.register(FundamentalProductType, FundamentalProductType_Admin)
 admin.site.register(RawItem, RawItem_Admin)
+admin.site.register(Color, Color_Admin)
