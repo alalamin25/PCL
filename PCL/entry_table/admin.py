@@ -29,7 +29,7 @@ class Purchase_Admin(admin.ModelAdmin):
 
 class Issue_Admin(admin.ModelAdmin):
     list_display = (
-        'id', 'raw_item', 'unit_amount', 'edit_time')
+        'id', 'raw_item', 'unit_amount', 'edit_time', 'creation_time',)
     list_display_links = ('id', 'raw_item',)
     list_filter = ('creation_time', 'edit_time',)
     search_fields = ('raw_item',)

@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'master_table',
     'entry_table',
     'production_table',
+    'homepage',
     'report_builder',
 )
 

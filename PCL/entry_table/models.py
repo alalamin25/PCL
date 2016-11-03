@@ -1,6 +1,7 @@
 from django.db import models
 from master_table.models import Suplier, RawItem
 from django.utils.timezone import now
+from django.core.exceptions import ValidationError
 
 
 class Purchase(models.Model):
@@ -20,6 +21,8 @@ class Purchase(models.Model):
         return self.raw_item.name
 
 
+
+
 class Issue(models.Model):
 
     raw_item = models.ForeignKey(RawItem)
@@ -33,6 +36,10 @@ class Issue(models.Model):
 
     def __str__(self):
         return self.raw_item.name
+
+    def clean(self):
+        if self.creation_time > self.edit_time:
+            raise ValidationError('Start date is after end date')
 
 
 class Dispatch(models.Model):
