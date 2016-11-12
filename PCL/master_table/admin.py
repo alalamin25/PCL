@@ -1,7 +1,9 @@
 from django.contrib import admin
 
 from master_table.models import Suplier, FundamentalProductType,\
-    RawItem, Color, ProductionItem, Shift, CompoundProductionItem,\
+    RawItemMiddleCategory, RawItemLowerCategory, RawItem, Color,\
+    FinishedProductItemMiddleCategory, FinishedProductItemLowerCategory,\
+    FinishedProductItem, Shift, CompoundProductionItem,\
     CompoundProductionItemEntry
 
 
@@ -46,18 +48,18 @@ class Color_Admin(admin.ModelAdmin):
     ]
 
 
-class RawItem_Admin(admin.ModelAdmin):
+class RawItemMiddleCategory_Admin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
-    list_filter = ('type',)
+    list_filter = ('fundamental_type',)
     fieldsets = [
         (
-            'Name Of The Raw Material Item: ', {'fields': ['name']}
+            'Raw Material Middle Category Name: ', {'fields': ['name']}
         ),
         (
-            'Choose Fundamental Product Type For This Raw Item:', {
-                'fields': ['type']}
+            'Choose Fundamental Product Type For This Raw Material Middle Category:', {
+                'fields': ['fundamental_type']}
         ),
         (
             'Write Comment: ', {'fields': ['comment']}
@@ -66,18 +68,110 @@ class RawItem_Admin(admin.ModelAdmin):
     ]
 
 
-class ProductionItem_Admin(admin.ModelAdmin):
+class RawItemLowerCategory_Admin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
-    list_filter = ('type',)
+    list_filter = ('fundamental_type', 'middle_category_type',)
+    fieldsets = [
+        (
+            'Raw Material Lower Category Name: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For This Lower Category Raw Material :', {
+                'fields': ['fundamental_type']}
+        ),
+        (
+            'Choose Middle Category Type For This Lower Category Raw Material :', {
+                'fields': ['middle_category_type']}
+        ),
+        (
+            'Write Comment: ', {'fields': ['comment']}
+        ),
+
+    ]
+
+
+class RawItem_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'fundamental_type','middle_category_type', 'lower_category_type' )
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    list_filter = ('fundamental_type',)
+    fieldsets = [
+        (
+            'Name Of The Raw Material Item: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For This Raw Item:', {
+                'fields': ['fundamental_type']}
+        ),
+        (
+            'Choose Fundamental Product Type For This Raw Item:', {
+                'fields': ['fundamental_type']}
+        ),
+        (
+            'Write Comment: ', {'fields': ['comment']}
+        ),
+
+    ]
+
+
+class FinishedProductItemMiddleCategory_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    list_filter = ('fundamental_type',)
+    fieldsets = [
+        (
+            'Finished Product Middle Category Name: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For This Middle Category Finished Product:', {
+                'fields': ['fundamental_type']}
+        ),
+        (
+            'Write Comment: ', {'fields': ['comment']}
+        ),
+
+    ]
+
+
+class FinishedProductItemLowerCategory_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    list_filter = ('fundamental_type', 'middle_category_type',)
+    fieldsets = [
+        (
+            'Raw Material Lower Category Name: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For This Lower Category Finished Product :', {
+                'fields': ['fundamental_type']}
+        ),
+        (
+            'Choose Middle Category Type For This Lower Category Finished Product: ', {
+                'fields': ['middle_category_type']}
+        ),
+        (
+            'Write Comment: ', {'fields': ['comment']}
+        ),
+
+    ]
+
+
+class FinishedProductItem_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    list_filter = ('fundamental_type',)
     fieldsets = [
         (
             'Name Of The Production Item: ', {'fields': ['name']}
         ),
         (
             'Choose Fundamental Product Type For Production Item:', {
-                'fields': ['type']}
+                'fields': ['fundamental_type']}
         ),
         (
             'Write Comment: ', {'fields': ['comment']}
@@ -113,7 +207,7 @@ class CompoundProductionItem_Admin(admin.ModelAdmin):
 
 
 class Shift_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name','start_time', 'end_time')
+    list_display = ('id', 'name', 'start_time', 'end_time')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     fieldsets = [
@@ -121,10 +215,12 @@ class Shift_Admin(admin.ModelAdmin):
             'Name Of The Production Item: ', {'fields': ['name']}
         ),
         (
-            'Select Start Time Of Shift(24 Hours format H:M:S): ', {'fields': ['start_time']}
+            'Select Start Time Of Shift(24 Hours format H:M:S): ', {
+                'fields': ['start_time']}
         ),
         (
-            'Select End Time Of Shift(24 Hours format H:M:S): ', {'fields': ['end_time']}
+            'Select End Time Of Shift(24 Hours format H:M:S): ', {
+                'fields': ['end_time']}
         ),
         (
             'Write Comment: ', {'fields': ['comment']}
@@ -135,8 +231,14 @@ class Shift_Admin(admin.ModelAdmin):
 
 admin.site.register(Suplier, Suplier_Admin)
 admin.site.register(FundamentalProductType, FundamentalProductType_Admin)
+admin.site.register(RawItemMiddleCategory, RawItemMiddleCategory_Admin)
+admin.site.register(RawItemLowerCategory, RawItemLowerCategory_Admin)
 admin.site.register(RawItem, RawItem_Admin)
-admin.site.register(ProductionItem, ProductionItem_Admin)
+admin.site.register(
+    FinishedProductItemMiddleCategory, FinishedProductItemMiddleCategory_Admin)
+admin.site.register(
+    FinishedProductItemLowerCategory, FinishedProductItemLowerCategory_Admin)
+admin.site.register(FinishedProductItem, FinishedProductItem_Admin)
 admin.site.register(CompoundProductionItem, CompoundProductionItem_Admin)
 admin.site.register(Color, Color_Admin)
 admin.site.register(Shift, Shift_Admin)

@@ -1,11 +1,11 @@
 from django.db import models
 from django.utils.timezone import now
-from master_table.models import ProductionItem, Shift, CompoundProductionItem
+from master_table.models import FinishedProductItem, Shift, CompoundProductionItem
 
 
 class ProductionEntry(models.Model):
 
-    production_item = models.ForeignKey(ProductionItem, blank=True, null=True)
+    production_item = models.ForeignKey(FinishedProductItem, blank=True, null=True)
     compound_production_item = models.ForeignKey(CompoundProductionItem, blank=True, null=True)
     shift = models.ForeignKey(Shift)
     unit_amount = models.FloatField()

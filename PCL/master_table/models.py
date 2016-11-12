@@ -29,8 +29,20 @@ class FundamentalProductType(models.Model):
         return self.name
 
 
-class Color(models.Model):
-    name = models.CharField(max_length=50)
+class RawItemMiddleCategory(models.Model):
+    name = models.CharField(max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    comment = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class RawItemLowerCategory(models.Model):
+    name = models.CharField(max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    middle_category_type = models.ForeignKey(RawItemMiddleCategory)
+    comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -38,17 +50,40 @@ class Color(models.Model):
 
 class RawItem(models.Model):
     name = models.CharField(max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    middle_category_type = models.ForeignKey(RawItemMiddleCategory)
+    lower_category_type = models.ForeignKey(RawItemLowerCategory)
     comment = models.TextField(blank=True, null=True)
-    type = models.ForeignKey(FundamentalProductType)
 
     def __str__(self):
         return self.name
 
 
-class ProductionItem(models.Model):
+class FinishedProductItemMiddleCategory(models.Model):
     name = models.CharField(max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
     comment = models.TextField(blank=True, null=True)
-    type = models.ForeignKey(FundamentalProductType)
+
+    def __str__(self):
+        return self.name
+
+
+class FinishedProductItemLowerCategory(models.Model):
+    name = models.CharField(max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
+    comment = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class FinishedProductItem(models.Model):
+    name = models.CharField(max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
+    lower_category_type = models.ForeignKey(FinishedProductItemLowerCategory)
+    comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -65,7 +100,7 @@ class CompoundProductionItem(models.Model):
 
 class CompoundProductionItemEntry(models.Model):
     compound_production_item = models.ForeignKey(CompoundProductionItem)
-    production_item = models.ForeignKey(ProductionItem)
+    production_item = models.ForeignKey(FinishedProductItem)
     unit_amount = models.FloatField()
 
     def __str__(self):
@@ -77,6 +112,13 @@ class Shift(models.Model):
     comment = models.TextField(blank=True, null=True)
     start_time = models.TimeField()
     end_time = models.TimeField()
+
+    def __str__(self):
+        return self.name
+
+
+class Color(models.Model):
+    name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
