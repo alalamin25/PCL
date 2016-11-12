@@ -75,6 +75,8 @@ class CompoundProductionItemEntry(models.Model):
 class Shift(models.Model):
     name = models.CharField(max_length=100)
     comment = models.TextField(blank=True, null=True)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
     def __str__(self):
         return self.name

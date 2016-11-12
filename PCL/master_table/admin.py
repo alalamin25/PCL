@@ -113,12 +113,18 @@ class CompoundProductionItem_Admin(admin.ModelAdmin):
 
 
 class Shift_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
+    list_display = ('id', 'name','start_time', 'end_time')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     fieldsets = [
         (
             'Name Of The Production Item: ', {'fields': ['name']}
+        ),
+        (
+            'Select Start Time Of Shift(24 Hours format H:M:S): ', {'fields': ['start_time']}
+        ),
+        (
+            'Select End Time Of Shift(24 Hours format H:M:S): ', {'fields': ['end_time']}
         ),
         (
             'Write Comment: ', {'fields': ['comment']}
