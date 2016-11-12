@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'production_table',
     'homepage',
     'report_builder',
+    # 'reporter',
 )
 
 MIDDLEWARE_CLASSES = (

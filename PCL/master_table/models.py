@@ -38,7 +38,7 @@ class Color(models.Model):
 
 class RawItem(models.Model):
     name = models.CharField(max_length=100)
-    comment = models.TextField()
+    comment = models.TextField(blank=True, null=True)
     type = models.ForeignKey(FundamentalProductType)
 
     def __str__(self):
@@ -47,7 +47,7 @@ class RawItem(models.Model):
 
 class ProductionItem(models.Model):
     name = models.CharField(max_length=100)
-    comment = models.TextField()
+    comment = models.TextField(blank=True, null=True)
     type = models.ForeignKey(FundamentalProductType)
 
     def __str__(self):
@@ -56,7 +56,7 @@ class ProductionItem(models.Model):
 
 class CompoundProductionItem(models.Model):
     name = models.CharField(max_length=100)
-    comment = models.TextField()
+    comment = models.TextField(blank=True, null=True)
     type = models.ForeignKey(FundamentalProductType)
 
     def __str__(self):
@@ -74,7 +74,7 @@ class CompoundProductionItemEntry(models.Model):
 
 class Shift(models.Model):
     name = models.CharField(max_length=100)
-    comment = models.TextField()
+    comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name

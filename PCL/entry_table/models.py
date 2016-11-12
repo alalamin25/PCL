@@ -11,7 +11,7 @@ class Purchase(models.Model):
     unit_price = models.FloatField()
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100)
-    comment = models.TextField()
+    comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
     creation_time = models.DateTimeField(default=now, editable=False)
@@ -28,7 +28,7 @@ class Issue(models.Model):
     raw_item = models.ForeignKey(RawItem)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100)
-    comment = models.TextField()
+    comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
     creation_time = models.DateTimeField(default=now, editable=False)
@@ -47,7 +47,7 @@ class Dispatch(models.Model):
     raw_item = models.ForeignKey(RawItem)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100)
-    comment = models.TextField()
+    comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
     creation_time = models.DateTimeField(default=now, editable=False)
