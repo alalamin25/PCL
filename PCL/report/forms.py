@@ -49,7 +49,7 @@ class FPItemForm(forms.Form):
     attrs = {"class": "form-control", 'required': 'required'}
     fp_item = forms.ModelChoiceField(
         label="Select Finished Item",
-        queryset=FinishedProductItem.objects.all(),
+        queryset=FinishedProductItem.objects.none(),
         widget=forms.CheckboxSelectMultiple,
     )
     start_date = forms.DateField()
@@ -62,22 +62,18 @@ class FPItemForm(forms.Form):
         super(FPItemForm, self).__init__(*args, **kwargs)
         # self.fields['fp_item'].queryset = FinishedProductItem.objects.filter(
         #     lower_category_type__in=fp_lower_cat)
-        self.fields['fp_item'] = forms.MultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple,
-        choices=self.fields['fp_item'].choices)
-        # if(fp_lower_cat):
-        #     # self.fields['fp_item'] = forms.MultipleChoiceField(
-        #     #     widget=forms.CheckboxSelectMultiple, choices=(
-        #     #         (fp.id, fp) for fp in FinishedProductItem.objects.filter(lower_category_type__in=fp_lower_cat)))
-        #     self.fields['fp_item'] = forms.MultipleChoiceField(
-        #     widget=forms.CheckboxSelectMultiple, choices=(
-        #         (fp.id, fp) for fp in FinishedProductItem.objects.all()))
+        # self.fields['fp_item'] = forms.MultipleChoiceField(
+        # widget=forms.CheckboxSelectMultiple,
+        # choices=self.fields['fp_item'].choices)
+        if(fp_lower_cat):
+            self.fields['fp_item'] = forms.MultipleChoiceField(
+                widget=forms.CheckboxSelectMultiple, choices=(
+                    (fp.id, fp) for fp in FinishedProductItem.objects.filter(lower_category_type__in=fp_lower_cat)))
+        else:
 
-        # else:
-        #     print("Going to select all objects from fp")
-        #     self.fields['fp_item'] = forms.MultipleChoiceField(
-        #     widget=forms.CheckboxSelectMultiple, choices=(
-        #         (fp.id, fp) for fp in FinishedProductItem.objects.all()))
+            self.fields['fp_item'] = forms.MultipleChoiceField(
+            widget=forms.CheckboxSelectMultiple, choices=(
+                (fp.id, fp) for fp in FinishedProductItem.objects.all()))
 
 
 class FPReportForm(ModelForm):

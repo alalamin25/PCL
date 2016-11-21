@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView
+from django.db.models import Sum
 
 from django.template import Context
 from django.template.loader import get_template
@@ -161,11 +162,23 @@ class FpItemReportView(View):
             date_list.append(new_date)
         return date_list
 
-    def getFPResult(self, date_list):
+    def getFPSearchResult(self, date_list, fp_item):
+        fp_search_result = []
 
         for date in date_list:
-            fp_list = ProductionEntry.objects.filter(creation_time=date)
-            print(fp_list)
+            fp_result = FPResult(date)
+            for fp in fp_item:
+                result = ProductionEntry.objects.filter(
+                    creation_time=date,
+                    finished_product_item=fp).aggregate(Sum('unit_amount'))
+                if(result):
+                    fp_info = FPInfo(fp)
+                    fp_info.unit_amount = result
+                    fp_result.fp_list.append(fp_info)
+            fp_search_result.append(fp_result)
+
+        print(fp_search_result)
+        return fp_search_result
 
     def post(self, request, *args, **kwargs):
 
@@ -183,7 +196,7 @@ class FpItemReportView(View):
             date_list = self.getListOfDates(start_date, end_date)
             print(type(fp_item[0]))
             context['date_list'] = date_list
-            # getFPResult()
+            self.getFPSearchResult(date_list, fp_item)
 
             # return self.returnPdf(context)
             return render(request, self.template_name, context)
