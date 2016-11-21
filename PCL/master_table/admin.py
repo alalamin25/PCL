@@ -1,10 +1,8 @@
 from django.contrib import admin
 
 from master_table.models import Suplier, FundamentalProductType,\
-    RawItemMiddleCategory, RawItemLowerCategory, RawItem, Color,\
-    FinishedProductItemMiddleCategory, FinishedProductItemLowerCategory,\
-    FinishedProductItem, Shift, CompoundProductionItem,\
-    CompoundProductionItemEntry
+    RawItem, Color, FPMiddleCat, FPLowerCat,\
+    FinishedProductItem, Shift, CPItem, CPItemEntry
 
 
 class Suplier_Admin(admin.ModelAdmin):
@@ -48,52 +46,8 @@ class Color_Admin(admin.ModelAdmin):
     ]
 
 
-class RawItemMiddleCategory_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    list_display_links = ('id', 'name',)
-    search_fields = ('name',)
-    list_filter = ('fundamental_type',)
-    fieldsets = [
-        (
-            'Raw Material Middle Category Name: ', {'fields': ['name']}
-        ),
-        (
-            'Choose Fundamental Product Type For This Raw Material Middle Category:', {
-                'fields': ['fundamental_type']}
-        ),
-        (
-            'Write Comment: ', {'fields': ['comment']}
-        ),
-
-    ]
-
-
-class RawItemLowerCategory_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    list_display_links = ('id', 'name',)
-    search_fields = ('name',)
-    list_filter = ('fundamental_type', 'middle_category_type',)
-    fieldsets = [
-        (
-            'Raw Material Lower Category Name: ', {'fields': ['name']}
-        ),
-        (
-            'Choose Fundamental Product Type For This Lower Category Raw Material :', {
-                'fields': ['fundamental_type']}
-        ),
-        (
-            'Choose Middle Category Type For This Lower Category Raw Material :', {
-                'fields': ['middle_category_type']}
-        ),
-        (
-            'Write Comment: ', {'fields': ['comment']}
-        ),
-
-    ]
-
-
 class RawItem_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'fundamental_type','middle_category_type', 'lower_category_type' )
+    list_display = ('id', 'name', 'fundamental_type')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
@@ -106,17 +60,13 @@ class RawItem_Admin(admin.ModelAdmin):
                 'fields': ['fundamental_type']}
         ),
         (
-            'Choose Fundamental Product Type For This Raw Item:', {
-                'fields': ['fundamental_type']}
-        ),
-        (
             'Write Comment: ', {'fields': ['comment']}
         ),
 
     ]
 
 
-class FinishedProductItemMiddleCategory_Admin(admin.ModelAdmin):
+class FPMiddleCat_Admin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
@@ -136,7 +86,7 @@ class FinishedProductItemMiddleCategory_Admin(admin.ModelAdmin):
     ]
 
 
-class FinishedProductItemLowerCategory_Admin(admin.ModelAdmin):
+class FPLowerCat_Admin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
@@ -161,8 +111,8 @@ class FinishedProductItemLowerCategory_Admin(admin.ModelAdmin):
 
 
 class FinishedProductItem_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    list_display_links = ('id', 'name',)
+    list_display = ('id', 'name', 'fundamental_type')
+    list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
     fieldsets = [
@@ -174,31 +124,39 @@ class FinishedProductItem_Admin(admin.ModelAdmin):
                 'fields': ['fundamental_type']}
         ),
         (
+            'Choose Middle Category For Production Item:', {
+                'fields': ['middle_category_type']}
+        ),
+        (
+            'Choose Lower Category For Production Item:', {
+                'fields': ['lower_category_type']}
+        ),
+        (
             'Write Comment: ', {'fields': ['comment']}
         ),
 
     ]
 
 
-class CompoundProductionItemEntryInline(admin.TabularInline):
-    model = CompoundProductionItemEntry
+class CPItemEntryInline(admin.TabularInline):
+    model = CPItemEntry
     extra = 0
 
 
-class CompoundProductionItem_Admin(admin.ModelAdmin):
+class CPItem_Admin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
-    list_filter = ('type',)
-    inlines = [CompoundProductionItemEntryInline]
+    # list_filter = ('type',)
+    inlines = [CPItemEntryInline]
     fieldsets = [
         (
             'Name Of The Compound Production Item: ', {'fields': ['name']}
         ),
-        (
-            'Choose Fundamental Product Type For Production Item:', {
-                'fields': ['type']}
-        ),
+        # (
+        #     'Choose Fundamental Product Type For Production Item:', {
+        #         'fields': ['type']}
+        # ),
         (
             'Write Comment: ', {'fields': ['comment']}
         ),
@@ -207,12 +165,16 @@ class CompoundProductionItem_Admin(admin.ModelAdmin):
 
 
 class Shift_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'start_time', 'end_time')
+    list_display = ('id', 'name', 'fundamental_type', 'start_time', 'end_time')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     fieldsets = [
         (
             'Name Of The Production Item: ', {'fields': ['name']}
+        ),
+        (
+            'Select Funtamental Product Type ', {
+                'fields': ['fundamental_type']}
         ),
         (
             'Select Start Time Of Shift(24 Hours format H:M:S): ', {
@@ -231,14 +193,13 @@ class Shift_Admin(admin.ModelAdmin):
 
 admin.site.register(Suplier, Suplier_Admin)
 admin.site.register(FundamentalProductType, FundamentalProductType_Admin)
-admin.site.register(RawItemMiddleCategory, RawItemMiddleCategory_Admin)
-admin.site.register(RawItemLowerCategory, RawItemLowerCategory_Admin)
+# admin.site.register(RIMiddleCat, RIMiddleCat_Admin)
+# admin.site.register(RILowerCat, RILowerCat_Admin)
 admin.site.register(RawItem, RawItem_Admin)
-admin.site.register(
-    FinishedProductItemMiddleCategory, FinishedProductItemMiddleCategory_Admin)
-admin.site.register(
-    FinishedProductItemLowerCategory, FinishedProductItemLowerCategory_Admin)
+admin.site.register(FPMiddleCat, FPMiddleCat_Admin)
+admin.site.register(FPLowerCat, FPLowerCat_Admin)
 admin.site.register(FinishedProductItem, FinishedProductItem_Admin)
-admin.site.register(CompoundProductionItem, CompoundProductionItem_Admin)
+admin.site.register(CPItem, CPItem_Admin)
 admin.site.register(Color, Color_Admin)
 admin.site.register(Shift, Shift_Admin)
+admin.site.register(CPItemEntry)

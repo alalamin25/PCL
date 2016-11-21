@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
-# Create your models here.
+
+from smart_selects.db_fields import ChainedForeignKey
 
 
 class Suplier(models.Model):
@@ -29,37 +30,45 @@ class FundamentalProductType(models.Model):
         return self.name
 
 
-class RawItemMiddleCategory(models.Model):
-    name = models.CharField(max_length=100)
-    fundamental_type = models.ForeignKey(FundamentalProductType)
-    comment = models.TextField(blank=True, null=True)
+# class RIMiddleCat(models.Model):
+#     name = models.CharField(max_length=100)
+#     fundamental_type = models.ForeignKey(FundamentalProductType)
+#     comment = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
+
+#     class Meta:
+#         verbose_name = "Raw Item Middle Category"
+#         verbose_name_plural = "Raw Item Middle Categories"
 
 
-class RawItemLowerCategory(models.Model):
-    name = models.CharField(max_length=100)
-    fundamental_type = models.ForeignKey(FundamentalProductType)
-    middle_category_type = models.ForeignKey(RawItemMiddleCategory)
-    comment = models.TextField(blank=True, null=True)
+# class RILowerCat(models.Model):
+#     name = models.CharField(max_length=100)
+#     fundamental_type = models.ForeignKey(FundamentalProductType)
+#     middle_category_type = models.ForeignKey(RIMiddleCat)
+#     comment = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
+
+#     class Meta:
+#         verbose_name = "Raw Item Lower Category"
+#         verbose_name_plural = "Raw Item Lower Categories"
 
 
 class RawItem(models.Model):
     name = models.CharField(max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    middle_category_type = models.ForeignKey(RawItemMiddleCategory)
-    lower_category_type = models.ForeignKey(RawItemLowerCategory)
+    # middle_category_type = models.ForeignKey(RIMiddleCat)
+    # lower_category_type = models.ForeignKey(RILowerCat)
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 
-class FinishedProductItemMiddleCategory(models.Model):
+class FPMiddleCat(models.Model):
     name = models.CharField(max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     comment = models.TextField(blank=True, null=True)
@@ -67,48 +76,113 @@ class FinishedProductItemMiddleCategory(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Finished Product Item Middle Category"
+        verbose_name_plural = "Finished Product Item Middle Categories"
 
-class FinishedProductItemLowerCategory(models.Model):
+
+class FPLowerCat(models.Model):
     name = models.CharField(max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
+    # middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
+    middle_category_type = ChainedForeignKey(
+        FPMiddleCat,
+        chained_field="fundamental_type",
+        chained_model_field="fundamental_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Finished Product Item Lower Category"
+        verbose_name_plural = "Finished Product Item Lower Categories"
 
 
 class FinishedProductItem(models.Model):
     name = models.CharField(max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
-    lower_category_type = models.ForeignKey(FinishedProductItemLowerCategory)
+    # middle_category_type = models.ForeignKey(FPMiddleCat)
+    middle_category_type = ChainedForeignKey(
+        FPMiddleCat,
+        chained_field="fundamental_type",
+        chained_model_field="fundamental_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        FPLowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 
-class CompoundProductionItem(models.Model):
+class CPItem(models.Model):
     name = models.CharField(max_length=100)
     comment = models.TextField(blank=True, null=True)
-    type = models.ForeignKey(FundamentalProductType)
+    # type = models.ForeignKey(FundamentalProductType)
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Compound Product Item"
+        verbose_name_plural = "Compound Product Items"
 
-class CompoundProductionItemEntry(models.Model):
-    compound_production_item = models.ForeignKey(CompoundProductionItem)
-    production_item = models.ForeignKey(FinishedProductItem)
+
+class CPItemEntry(models.Model):
+
+    cp_item = models.ForeignKey(CPItem)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    # middle_category_type = models.ForeignKey(FPMiddleCat)
+    middle_category_type = ChainedForeignKey(
+        FPMiddleCat,
+        chained_field="fundamental_type",
+        chained_model_field="fundamental_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        FPLowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    # production_item = models.ForeignKey(FinishedProductItem)
+    finished_production_item = ChainedForeignKey(
+        FinishedProductItem,
+        chained_field="lower_category_type",
+        chained_model_field="lower_category_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
     unit_amount = models.FloatField()
 
     def __str__(self):
-        return self.compound_production_item.name
+        return self.cp_item.name
 
 
 class Shift(models.Model):
     name = models.CharField(max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
     comment = models.TextField(blank=True, null=True)
     start_time = models.TimeField()
     end_time = models.TimeField()

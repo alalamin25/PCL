@@ -1,0 +1,21 @@
+from report import views
+
+from django.conf.urls import url
+
+
+urlpatterns = [
+    # # ex: /polls/
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^fp_report/$', views.FpReportView.as_view(), name='fp_report'),
+    url(r'^fp_report/middle_cat$',
+        views.FpMiddleCatView.as_view(), name='fp_middle_cat'),
+    url(r'^fp_report/lower_cat$', views.FpLowerCatView.as_view(),
+        name='fp_lower_cat'),
+    url(r'^fp_report/fpitem$', views.FpItemView.as_view(),
+        name='fp_item'),
+    url(r'^fp_report/report$', views.FpItemReportView.as_view(),
+        name='fp_item_report'),
+
+    # url(r'^fp_report/report$', views.HelloPDFView.as_view(),
+    #     name='fp_item_report'),
+]
