@@ -3,8 +3,8 @@
 {% block content %}
    <h1> Final Product Select Lower Category </h1>
 
-<form action="{% url 'fp_item' %}" method="get">
-<!-- {% csrf_token %} -->
+<form action="{% url 'fp_item' %}" method="post">
+{% csrf_token %}
 <fieldset class="no-padding">
     {{ form.non_field_errors }}
 
@@ -20,6 +20,16 @@
         </div>
     </div>
     </div>
+    <label>Do You Want The Report Now <span class="color-red">*</span></label>
+    <div class="row sky-space-20">
+        <div class="col-md-11 col-md-offset-0">
+            <div>
+                {{ form.is_print }}
+
+            </div>
+        </div>
+    </div>
+
 
     <p>
         <button type="submit" class="btn-u">Next</button>

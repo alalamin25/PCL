@@ -45,19 +45,31 @@ class FPMiddleCatForm(forms.Form):
         else:
             self.fields['fp_middle_cat'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
-                    (fp.id, fp) for fp in FPMiddleCat.objects.all()))
+                    (mc.id, mc) for mc in FPMiddleCat.objects.all()))
 
 
 class FPLowerCatForm(forms.Form):
     attrs = {"class": "form-control", 'required': 'required'}
     fp_lower_cat = forms.ModelChoiceField(
         label="Select Lower Category",
-        queryset=None,
+        queryset=FPLowerCat.objects.none(),
         widget=forms.CheckboxSelectMultiple,
     )
     start_date = forms.DateField()
     end_date = forms.DateField()
     is_print = forms.BooleanField(initial=False, required=False)
+
+    def __init__(self, middle_category_type, *args, **kwargs):
+
+        super(FPLowerCatForm, self).__init__(*args, **kwargs)
+        if(middle_category_type):
+            self.fields['fp_lower_cat'] = forms.MultipleChoiceField(
+                widget=forms.CheckboxSelectMultiple, choices=(
+                    (lc.id, lc) for lc in FPLowerCat.objects.filter(middle_category_type__in=middle_category_type)))
+        else:
+            self.fields['fp_lower_cat'] = forms.MultipleChoiceField(
+                widget=forms.CheckboxSelectMultiple, choices=(
+                    (lc.id, lc) for lc in FPLowerCat.objects.all()))
 
 
 class FPItemForm(forms.Form):

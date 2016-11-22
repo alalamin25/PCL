@@ -97,29 +97,6 @@ class FpLowerCatView(View):
         print("lower cat class view get method\n")
         return HttpResponse(" make post request ")
 
-        # fp_middle_cat_form = self.fp(request.GET)
-        # if(fp_middle_cat_form):
-        #     print("The form is not none type\n\n\n")
-        #     print(self.fp)
-        #     # print(fp_middle_cat_form)
-        # fp_middle_cat = request.GET.getlist('fp_middle_cat')
-        # if fp_middle_cat:
-        #     print("The FPMiddle cat form is valid")
-        #     # fp_middle_cat = fp_middle_cat_form.cleaned_data[
-        #     #     'fp_middle_cat']
-        #     form = FPLowerCatForm()
-        #     form.fields['start_date'].initial = request.GET.get('start_date')
-        #     form.fields['end_date'].initial = request.GET.get('end_date')
-        #     print(type(fp_middle_cat))
-        #     print(fp_middle_cat)
-        #     form.fields['fp_lower_cat'].queryset = FPLowerCat.objects.filter(
-        #         middle_category_type__in=fp_middle_cat)
-        #     return render(request, self.template_name, {'form': form})
-        # else:
-        #     print("The middle cat form is not valid")
-        #     print(fp_middle_cat_form.errors)
-        #     return redirect(reverse('fp_report'))
-
     def post(self, request, *args, **kwargs):
 
         fp_middle_cat_form = self.fp("", request.POST)
@@ -143,19 +120,11 @@ class FpLowerCatView(View):
                 return HttpResponse("Going to print now")
 
             else:
-            #     # print(fp_middle_cat_form)
-            # fp_middle_cat = request.GET.getlist('fp_middle_cat')
-            # if fp_middle_cat:
-                # print("The FPMiddle cat form is valid")
-                # fp_middle_cat = fp_middle_cat_form.cleaned_data[
-                #     'fp_middle_cat']
-                form = FPLowerCatForm()
+
+                form = FPLowerCatForm(fp_middle_cat)
                 form.fields['start_date'].initial = start_date
                 form.fields['end_date'].initial = end_date
-                # print(type(fp_middle_cat))
-                # print(fp_middle_cat)
-                form.fields['fp_lower_cat'].queryset = FPLowerCat.objects.filter(
-                    middle_category_type__in=fp_middle_cat)
+
                 return render(request, self.template_name, {'form': form})
         else:
             print("The middle cat form is not valid")
@@ -164,29 +133,47 @@ class FpLowerCatView(View):
 
 
 class FpItemView(View):
-    fp = FPMiddleCatForm
+    fp = FPLowerCatForm
     template_name = 'report/fp_item.html'
+    template_report = "report/fp_item_report.html"
 
     def get(self, request, *args, **kwargs):
-        # print("lower cat class view get method\n")
+        return HttpResponse(" make post request ")
 
-        fp_lower_cat = request.GET.getlist('fp_lower_cat')
-        if fp_lower_cat:
+    def post(self, request, *args, **kwargs):
 
-            form = FPItemForm(fp_lower_cat)
-            # form = FPItemForm(fp_lower_cat)
-            form.fields['start_date'].initial = request.GET.get('start_date')
-            form.fields['end_date'].initial = request.GET.get('end_date')
+        fp_lower_cat_form = self.fp("", request.POST)
+        if(fp_lower_cat_form.is_valid()):
 
-            form.fields['fp_item'].queryset = FinishedProductItem.objects.filter(
-                lower_category_type__in=fp_lower_cat)
-            # form.fields['fp_item'].widget.choices = FinishedProductItem.objects.filter(
-            #     lower_category_type__in=fp_lower_cat).choices
-            return render(request, self.template_name, {'form': form})
+            fp_lower_cat = fp_lower_cat_form.cleaned_data['fp_lower_cat']
+            fp_lower_cat = FPLowerCat.objects.filter(id__in=fp_lower_cat)
+            start_date = fp_lower_cat_form.cleaned_data['start_date']
+            end_date = fp_lower_cat_form.cleaned_data['end_date']
+            is_print = fp_lower_cat_form.cleaned_data['is_print']
+            print("\n these lower cat has been chosen")
+            print(fp_lower_cat)
+            # return HttpResponse("Form valid")
+
+            if(is_print):
+                fp_list = FinishedProductItem.objects.filter(
+                    lower_category_type__in=fp_lower_cat)
+                # print(fp_list)
+                return final_product_report(request, self.template_report, start_date, end_date, fp_list)
+                # return HttpResponse("Going to print now")
+
+            else:
+
+                form = FPItemForm(fp_lower_cat)
+                form.fields['start_date'].initial = start_date
+                form.fields['end_date'].initial = end_date
+
+                return render(request, self.template_name, {'form': form})
+
+
         else:
             print("The middle cat form is not valid")
-            print(fp_middle_cat_form.errorsss)
-            return redirect(reverse('fp_report'))
+            print(fp_lower_cat_form.errors)
+            return HttpResponse("Form iiiiiiiiinvalid")
 
 
 def getFPSearchResult(date_list, fp_item):
