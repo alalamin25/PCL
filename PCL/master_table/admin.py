@@ -67,8 +67,8 @@ class RawItem_Admin(admin.ModelAdmin):
 
 
 class FPMiddleCat_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    list_display_links = ('id', 'name',)
+    list_display = ('id', 'name' , 'fundamental_type',)
+    list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
     fieldsets = [
@@ -87,7 +87,7 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
 
 
 class FPLowerCat_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
+    list_display = ('id', 'name', 'fundamental_type', 'middle_category_type')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     list_filter = ('fundamental_type', 'middle_category_type',)
@@ -111,7 +111,7 @@ class FPLowerCat_Admin(admin.ModelAdmin):
 
 
 class FinishedProductItem_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'fundamental_type')
+    list_display = ('id', 'name', 'fundamental_type', 'middle_category_type', 'lower_category_type')
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
@@ -168,6 +168,7 @@ class Shift_Admin(admin.ModelAdmin):
     list_display = ('id', 'name', 'fundamental_type', 'start_time', 'end_time')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
+    list_filter = ('fundamental_type', )
     fieldsets = [
         (
             'Name Of The Production Item: ', {'fields': ['name']}

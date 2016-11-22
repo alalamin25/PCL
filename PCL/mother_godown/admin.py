@@ -4,9 +4,9 @@ from mother_godown.models import PurchaseEntry, IssueEntry
 
 class PurchaseEntry_Admin(admin.ModelAdmin):
     list_display = (
-        'id', 'raw_item', 'suplier', 'unit_price', 'unit_amount', 'edit_time')
+        'id', 'raw_item', 'fundamental_type', 'suplier', 'unit_price', 'unit_amount', 'edit_time')
     list_display_links = ('id', )
-    list_filter = ('creation_time', 'edit_time',)
+    list_filter = ('fundamental_type', 'creation_time', 'edit_time', )
     search_fields = ('raw_item', 'suplier')
     raw_id_fields = ('suplier',)
     fieldsets = [
@@ -32,9 +32,9 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
 
 class IssueEntry_Admin(admin.ModelAdmin):
     list_display = (
-        'id', 'raw_item', 'unit_amount', 'edit_time', 'creation_time',)
+        'id', 'raw_item', 'fundamental_type', 'unit_amount', 'edit_time', 'creation_time',)
     list_display_links = ('id', 'raw_item',)
-    list_filter = ('creation_time', 'edit_time',)
+    list_filter = ('fundamental_type', 'creation_time', 'edit_time',)
     search_fields = ('raw_item',)
     # raw_id_fields = ('raw_item',)
     fieldsets = [
