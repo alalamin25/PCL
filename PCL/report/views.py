@@ -50,7 +50,7 @@ def final_shift_report(request, template_name, start_date, end_date, shift_list)
     # print(fp_search_result)
     context['fp_search_result'] = fp_search_result
     context['ri_search_result'] = ri_search_result
-
+    context['shift_list'] = shift_list
     # print(context)
     return render(request, template_name, context)
 

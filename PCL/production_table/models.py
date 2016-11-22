@@ -19,6 +19,8 @@ class ProductionEntry(models.Model):
         sort=True
     )
 
+    # cp_item = models.ForeignKey(CPItem, blank = True, null = True)
+
     shift = ChainedForeignKey(
         Shift,
         chained_field="fundamental_type",
