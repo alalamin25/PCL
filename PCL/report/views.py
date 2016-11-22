@@ -60,8 +60,12 @@ class FpMiddleCatView(View):
         fp_basic_form = self.fp_basic_form(request.POST)
         if fp_basic_form.is_valid():
             print("The FPbasic form is valid")
+            # fundamental_type will be a fundamental_type object not string
             fundamental_type = fp_basic_form.cleaned_data[
                 'fundamental_product_type']
+
+            # fundamental_type = FundamentalProductType.objects.filter(id=fundamental_type)
+            print(type(fundamental_type))
             start_date = fp_basic_form.cleaned_data['start_date']
             end_date = fp_basic_form.cleaned_data['end_date']
             is_print = fp_basic_form.cleaned_data['is_print']
@@ -70,7 +74,7 @@ class FpMiddleCatView(View):
                     fundamental_type=fundamental_type)
                 # print(fp_list)
                 return final_product_report(request, self.template_report, start_date, end_date, fp_list)
-                return HttpResponse("Going to print now")
+                # return HttpResponse("Going to print now")
 
             form = FPMiddleCatForm(fundamental_type)
             form.fields['start_date'].initial = fp_basic_form.cleaned_data[
@@ -87,6 +91,7 @@ class FpMiddleCatView(View):
 class FpLowerCatView(View):
     fp = FPMiddleCatForm
     template_name = 'report/fp_lower_cat.html'
+    template_report = "report/fp_item_report.html"
 
     def get(self, request, *args, **kwargs):
         print("lower cat class view get method\n")
@@ -119,24 +124,36 @@ class FpLowerCatView(View):
 
         fp_middle_cat_form = self.fp("", request.POST)
         if fp_middle_cat_form.is_valid():
-            return HttpResponse("form is valid")
+            # fp_middle_cat will be a  string not fp_middle cat object
+            fp_middle_cat = fp_middle_cat_form.cleaned_data['fp_middle_cat']
+            fp_middle_cat = FPMiddleCat.objects.filter(id__in=fp_middle_cat)
+            start_date = fp_middle_cat_form.cleaned_data['start_date']
+            end_date = fp_middle_cat_form.cleaned_data['end_date']
+            is_print = fp_middle_cat_form.cleaned_data['is_print']
+            print("\n these middle cat has been chosen")
+            print(fp_middle_cat)
 
+            # return HttpResponse("form is valid")
 
-            
-            if(fp_middle_cat_form):
-                print("The form is not none type\n\n\n")
-                print(self.fp)
-                # print(fp_middle_cat_form)
-            fp_middle_cat = request.GET.getlist('fp_middle_cat')
-            if fp_middle_cat:
-                print("The FPMiddle cat form is valid")
+            if(is_print):
+                fp_list = FinishedProductItem.objects.filter(
+                    middle_category_type__in=fp_middle_cat)
+                # print(fp_list)
+                return final_product_report(request, self.template_report, start_date, end_date, fp_list)
+                return HttpResponse("Going to print now")
+
+            else:
+            #     # print(fp_middle_cat_form)
+            # fp_middle_cat = request.GET.getlist('fp_middle_cat')
+            # if fp_middle_cat:
+                # print("The FPMiddle cat form is valid")
                 # fp_middle_cat = fp_middle_cat_form.cleaned_data[
                 #     'fp_middle_cat']
                 form = FPLowerCatForm()
-                form.fields['start_date'].initial = request.GET.get('start_date')
-                form.fields['end_date'].initial = request.GET.get('end_date')
-                print(type(fp_middle_cat))
-                print(fp_middle_cat)
+                form.fields['start_date'].initial = start_date
+                form.fields['end_date'].initial = end_date
+                # print(type(fp_middle_cat))
+                # print(fp_middle_cat)
                 form.fields['fp_lower_cat'].queryset = FPLowerCat.objects.filter(
                     middle_category_type__in=fp_middle_cat)
                 return render(request, self.template_name, {'form': form})
@@ -205,7 +222,7 @@ def getFPSearchResult(date_list, fp_item):
 
     print("\n returning\n")
     print(fp_search_result)
-    print(fp_search_result[0])
+    # print(fp_search_result[0])
     return fp_search_result
 
 
