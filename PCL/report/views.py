@@ -163,20 +163,34 @@ class FpItemReportView(View):
         return date_list
 
     def getFPSearchResult(self, date_list, fp_item):
+        print("fp_search_result page")
+        print(fp_item)
         fp_search_result = []
+        print(fp_search_result)
+
+        print("Deleting fp_search sesurlt")
 
         for date in date_list:
             fp_result = FPResult(date)
             for fp in fp_item:
                 result = ProductionEntry.objects.filter(
-                    creation_time=date,
+                    creation_time__year=date.year,
+                    creation_time__month=date.month,
+                    creation_time__day=date.day,
                     finished_product_item=fp).aggregate(Sum('unit_amount'))
-                if(result):
+                # print(
+                # "The result of {0} and typeof fp {1}is {2}".format(fp, " ", result))
+                if(result['unit_amount__sum']):
+                    print(
+                        "\n\n\n\nThe result of {0} is {1}\n\n\n".format(fp, result))
                     fp_info = FPInfo(fp)
-                    fp_info.unit_amount = result
+                    fp_info.unit_amount = result['unit_amount__sum']
                     fp_result.fp_list.append(fp_info)
-            fp_search_result.append(fp_result)
+            if(len(fp_result.fp_list) > 0):
+                print("........ appending to fpsearch result........")
+                fp_search_result.append(fp_result)
 
+        print("\n returning\n")
         print(fp_search_result)
         return fp_search_result
 
@@ -194,34 +208,15 @@ class FpItemReportView(View):
             start_date = fp_item_form.cleaned_data['start_date']
             end_date = fp_item_form.cleaned_data['end_date']
             date_list = self.getListOfDates(start_date, end_date)
-            print(type(fp_item[0]))
+
             context['date_list'] = date_list
-            self.getFPSearchResult(date_list, fp_item)
+            fp_search_result = self.getFPSearchResult(date_list, fp_item)
+            print(fp_search_result)
+            context['fp_search_result'] = fp_search_result
 
             # return self.returnPdf(context)
+            print(context)
             return render(request, self.template_name, context)
         else:
             print(fp_item_form.errors)
             return HttpResponse("The form is invalid")
-
-        # if fp_item:
-        #     # print("\n\n\n about to print the html \n\n")
-
-        # else:
-        #     print("The middle cat form is not valid")
-        #     print(fp_middle_cat_form.errorsss)
-        #     return redirect(reverse('fp_report'))
-        # print ("in post method")
-        # fp_item_form = FPItemForm(request.POST)
-        # if(fp_item_form):
-        #     print("\n the form is not none")
-        #     if(fp_item_form.is_valid()):
-        #         print("\n\n\n\n it works going to use post now ")
-        #         print(fp_item_form.cleaned_data['fp_item'])
-        #     else:
-        #         print("\n\nThe form invalid")
-        #         errors = fp_item_form.errors
-        #         print(errors)
-        #         return HttpResponse(errors)
-
-        # return HttpResponse("In post method")

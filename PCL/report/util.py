@@ -30,14 +30,14 @@ def FinishedProductReport_PDF(request, file_name='report.pdf'):
 
 
 class FPInfo:
-    unit_amount = 0
 
     def __init__(self, fp_item):
         self.fp_item = fp_item
+        self.unit_amount = 0
 
 
 class FPResult:
-    fp_list = []
 
     def __init__(self, date):
         self.date = date
+        self.fp_list = []

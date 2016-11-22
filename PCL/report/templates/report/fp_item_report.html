@@ -24,8 +24,7 @@
         <thead>
 
           <tr>
-            <th>Fundamental Product</th>
-            <th>Fundamental Product</th>
+            <th>Fundamental Product</th>            
             <th>Middle Cat</th>
             <th>Lower Cat</th>
             <th>Product Name</th>
@@ -33,14 +32,34 @@
           </tr>
         </thead>
         <tbody>
-          {% for i in "xxxx" %}
+
+          {% for result in fp_search_result %}
+            {% ifequal date result.date %}
+              
+              {% for r in result.fp_list %}
+              <tr>
+                <td>{{ r.fp_item.fundamental_type }}</td>
+                <td>{{ r.fp_item.middle_category_type }}</td>
+                <td>{{ r.fp_item.lower_category_type }}</td>
+                <td>{{ r.fp_item }}</td>
+                <td>{{ r.unit_amount }}</td>
+                
+                </tr>
+              {% endfor %}              
+              
+            {% endifequal %}
+          {% endfor %}
+
+
+          
+          {% for i in "xxx" %}
           <tr>
             <td>data</td>
             <td>data</td>
             <td>data</td>
             <td>data</td>
             <td>data</td>
-            <td>data</td>
+            
           </tr>
           {% endfor %}
 
