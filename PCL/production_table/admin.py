@@ -9,7 +9,7 @@ class ProductionEntry_Admin(admin.ModelAdmin):
         'id', 'finished_product_item', 'fundamental_type', 'shift',
         'unit_amount', 'edit_time')
     list_display_links = ('id', 'finished_product_item',)
-    list_filter = ('shift', 'creation_time', 'edit_time',)
+    list_filter = ('fundamental_type', 'shift', 'creation_time', 'edit_time',)
     search_fields = ('finished_product_item',)
     # raw_id_fields = ('finished_product_item', 'compound_production_item',)
     fieldsets = [

@@ -19,10 +19,6 @@ class ProductionEntry(models.Model):
         sort=True
     )
 
-    # production_item = models.ForeignKey(
-    #     FinishedProductItem, blank=True, null=True)
-    # compound_production_item = models.ForeignKey(
-    #     CompoundProductItem, blank=True, null=True)
     shift = ChainedForeignKey(
         Shift,
         chained_field="fundamental_type",

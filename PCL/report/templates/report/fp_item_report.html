@@ -2,13 +2,11 @@
 {% load static %}
 {% block content %}
    <h1 align="center"> Final Product Item Report page </h1>
-   <p style="color:red"> A red paragraph from css</p>
-   <font color="red">This is some text! with red from html</font>
-   <h3>Going to print report of :</h3>
-   {% for item in fp_item %}
-       {{ item }}
-   {% endfor %}
 
+   <h3>Going to print report of :</h3>
+
+
+{{ fp_search_result }}
 
 <table border="1">
   <tr>
@@ -20,7 +18,7 @@
     <td> {{ date }}</td>
     <td>
       <table>
-        <!-- <caption>table title and/or explanatory text</caption> -->
+        
         <thead>
 
           <tr>
@@ -35,23 +33,16 @@
 
           {% for result in fp_search_result %}
             {% ifequal date result.date %}
-              
-              {% for r in result.fp_list %}
               <tr>
-                <td>{{ r.fp_item.fundamental_type }}</td>
-                <td>{{ r.fp_item.middle_category_type }}</td>
-                <td>{{ r.fp_item.lower_category_type }}</td>
-                <td>{{ r.fp_item }}</td>
-                <td>{{ r.unit_amount }}</td>
-                
-                </tr>
-              {% endfor %}              
+                <td>{{ result.fp_item.fundamental_type }}</td>
+                <td>{{ result.fp_item.middle_category_type }}</td>
+                <td>{{ result.fp_item.lower_category_type }}</td>
+                <td>{{ result.fp_item }}</td>
+                <td>{{ result.total_amount }}</td>                
+              </tr>           
               
             {% endifequal %}
-          {% endfor %}
-
-
-          
+          {% endfor %}         
 
 
         </tbody>
@@ -62,14 +53,5 @@
   {% endfor %}
 
 </table>
-   data
-  {{ data }}
-
-          {% for d in data %}
-            <<p> data </p>
-
-          {% endfor %}
-
-
 
 {% endblock %}

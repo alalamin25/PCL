@@ -55,9 +55,7 @@ class FpMiddleCatView(View):
     def get(self, request, *args, **kwargs):
         return HttpResponse("Get request")
 
-        
     def post(self, request, *args, **kwargs):
-
 
         fp_basic_form = self.fp_basic_form(request.POST)
         if fp_basic_form.is_valid():
@@ -68,12 +66,11 @@ class FpMiddleCatView(View):
             end_date = fp_basic_form.cleaned_data['end_date']
             is_print = fp_basic_form.cleaned_data['is_print']
             if(is_print):
-                fp_list = FinishedProductItem.objects.filter(fundamental_type=fundamental_type)
+                fp_list = FinishedProductItem.objects.filter(
+                    fundamental_type=fundamental_type)
                 # print(fp_list)
                 return final_product_report(request, self.template_report, start_date, end_date, fp_list)
                 return HttpResponse("Going to print now")
-
-
 
             form = FPMiddleCatForm()
             form.fields['start_date'].initial = fp_basic_form.cleaned_data[
@@ -148,6 +145,7 @@ def getFPSearchResult(date_list, fp_item):
     print(".........................")
 
     fp_search_result = []
+    # fp_search_result2 = []
     for date in date_list:
         fp_result = FPResult(date)
         for fp in fp_item:
@@ -155,21 +153,28 @@ def getFPSearchResult(date_list, fp_item):
                 creation_time__year=date.year,
                 creation_time__month=date.month,
                 creation_time__day=date.day,
-                finished_product_item=fp).aggregate(total = Sum('unit_amount'))
+                finished_product_item=fp).aggregate(total_amount=Sum('unit_amount'))
             # print(
             # "The result of {0} and typeof fp {1}is {2}".format(fp, " ", result))
-            if(result['unit_amount__sum']):
+            if(result['total_amount']):
                 # print(
                     # "\n\n\n\nThe result of {0} is {1}\n\n\n".format(fp, result))
-                fp_info = FPInfo(fp)
-                fp_info.unit_amount = result['unit_amount__sum']
-                fp_result.fp_list.append(fp_info)
-        if(len(fp_result.fp_list) > 0):
-            # print("........ appending to fpsearch result........")
-            fp_search_result.append(fp_result)
+                # fp_info = FPInfo(fp)
+                # fp_info.unit_amount = result['total_amount']
+                # fp_result.fp_list.append(fp_info)
+                fp_info = {
+                    'date': date,
+                    'fp_item': fp,
+                    'total_amount': result['total_amount']
+                }
+                fp_search_result.append(fp_info)
+        # if(len(fp_result.fp_list) > 0):
+        #     # print("........ appending to fpsearch result........")
+        #     fp_search_result.append(fp_result)
 
     print("\n returning\n")
     print(fp_search_result)
+    print(fp_search_result[0])
     return fp_search_result
 
 
@@ -218,8 +223,6 @@ class FpItemReportView(View):
             'Content-Disposition'] = 'attachment; filename="ourcodeworld.pdf"'
 
         return response
-
-
 
     def post(self, request, *args, **kwargs):
 
