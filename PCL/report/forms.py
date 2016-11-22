@@ -21,6 +21,7 @@ class FPBasicForm(forms.Form):
         label="Select On which on which type you want the report",
         # widget=forms.CheckboxSelectMultiple,
     )
+    is_print = forms.BooleanField(initial=False, required=False)
 
 
 class FPMiddleCatForm(forms.Form):
