@@ -6,12 +6,12 @@ from production_table.models import ProductionEntry, RawItemEntry,\
 class ProductionEntry_Admin(admin.ModelAdmin):
 
     list_display = (
-        'id', 'finished_product_item', 'fundamental_type', 'shift',
+        'id', 'finished_product_item', 'cp_item', 'fundamental_type', 'shift',
         'unit_amount', 'edit_time')
     list_display_links = ('id', 'finished_product_item',)
     list_filter = ('fundamental_type', 'shift', 'creation_time', 'edit_time',)
     search_fields = ('finished_product_item',)
-    # raw_id_fields = ('finished_product_item', 'compound_production_item',)
+    raw_id_fields = ('cp_item',)
     fieldsets = [
         (
             'Select Fundamental Product: ', {'fields': ['fundamental_type']}
@@ -19,6 +19,10 @@ class ProductionEntry_Admin(admin.ModelAdmin):
         (
             'Select Name Of The Production Item: ', {
                 'fields': ['finished_product_item']}
+        ),
+        (
+            'Select Compound Item: ', {
+                'fields': ['cp_item']}
         ),
         # (
         #     'Select Name Of The Complex Production Item(If you have selected \

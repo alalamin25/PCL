@@ -16,10 +16,12 @@ class ProductionEntry(models.Model):
         chained_model_field="fundamental_type",
         show_all=False,
         auto_choose=True,
-        sort=True
+        sort=True,
+        blank = True,
+        null = True,
     )
 
-    # cp_item = models.ForeignKey(CPItem, blank = True, null = True)
+    cp_item = models.ForeignKey(CPItem, blank = True, null = True)
 
     shift = ChainedForeignKey(
         Shift,
@@ -38,8 +40,11 @@ class ProductionEntry(models.Model):
     edit_time = models.DateTimeField(default=now, editable=False)
 
     def __str__(self):
-        return self.finished_product_item.name
-
+        if(self.finished_product_item):
+            return self.finished_product_item.name
+        elif(self.cp_item):
+            return self.cp_item.name
+            
     class Meta:
         verbose_name = "Final Finished Product Entry"
         verbose_name_plural = "Final Finished Product Entries"
