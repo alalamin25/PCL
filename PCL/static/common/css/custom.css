@@ -1,0 +1,103 @@
+body {
+  	background-color: #FAFAD2;
+  	 font-family: 'Oxygen', sans-serif !important;
+  	color: 	#00008B;
+  }
+
+  input[type="text"] {
+  	background-color: 	#D3D3D3;
+  }
+
+  p {
+     font-family: 'Oxygen', sans-serif !important;;
+
+
+  }
+
+  a {
+     font-family: 'Oxygen', sans-serif !important;;
+
+
+  }
+
+  form {
+  	 /*width: 100%;*/
+    
+     
+  	 margin-right:auto;
+  	 margin-left:auto;"
+
+  }
+
+label-style{
+background-color:blue;
+width:auto;
+}
+
+  input {		
+		margin-bottom: 5px;
+    font-family: 'Oxygen', sans-serif;
+	}
+
+
+
+  h2{
+    color: #006400;
+     font-family: 'Oxygen', sans-serif !important;
+  } 
+
+   h1 {
+    color: #00FF00;
+    font-family: 'Oxygen', sans-serif !important;
+    
+  }
+
+   h3 {
+    color: #8B008B;
+     font-family: 'Oxygen', sans-serif !important;
+  }
+
+   h4 {
+    color: #008000;
+     font-family: 'Oxygen', sans-serif !important;
+  }
+
+
+  label {
+  	color: #00CED1;
+  	font-size:15pt;
+  }
+
+  button.btn{
+  	background-color: #00FF00 !important;
+    margin: 10px 10px 10px 10px !important;
+  }
+
+
+
+  table {
+    width: 100%;
+     border-collapse: collapse;
+     background-color: #ffe5e5;
+      font-family: 'Oxygen', sans-serif !important;
+  }
+  td {
+    text-align: center;
+     font-family: 'Oxygen', sans-serif !important;
+  }
+  table, tr {
+       border: 1px solid black;
+  }
+  th {
+      background-color: #4CAF50;
+      color: white;
+
+  }
+  tr:hover{background-color:#00ffbf}
+  
+  .myclass1{
+     background-color:  #00FFFF ;
+     color:   #556B2F !important;
+  }
+
+  * { font-family: 'Oxygen', sans-serif !important;

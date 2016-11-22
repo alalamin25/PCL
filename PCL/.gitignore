@@ -1,0 +1,14 @@
+.idea/
+__pycache__/
+*.pyc
+wsgi.py
+media/
+static/common/google_analytics.js
+bash_commands/
+bash_commands
+server_statics
+settings/local.py
+../.fuse_hidden0001307b0000001a
+backup
+db.sqlite3
+db.sqlite3

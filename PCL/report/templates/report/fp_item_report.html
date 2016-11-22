@@ -1,0 +1,79 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% block content %}
+   <h1 align="center"> Final Product Item Report page </h1>
+   <p style="color:red"> A red paragraph from css</p>
+   <font color="red">This is some text! with red from html</font>
+   <h3>Going to print report of :</h3>
+   {% for item in fp_item %}
+       {{ item }}
+   {% endfor %}
+
+
+<table border="1">
+  <tr>
+  <th>Date</th>
+  <th>Product Description</th>
+  </tr>
+  {% for date in date_list %}
+    <tr>
+    <td> {{ date }}</td>
+    <td>
+      <table>
+        <!-- <caption>table title and/or explanatory text</caption> -->
+        <thead>
+
+          <tr>
+            <th>Fundamental Product</th>            
+            <th>Middle Cat</th>
+            <th>Lower Cat</th>
+            <th>Product Name</th>
+            <th>unit</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for result in fp_search_result %}
+            {% ifequal date result.date %}
+              
+              {% for r in result.fp_list %}
+              <tr>
+                <td>{{ r.fp_item.fundamental_type }}</td>
+                <td>{{ r.fp_item.middle_category_type }}</td>
+                <td>{{ r.fp_item.lower_category_type }}</td>
+                <td>{{ r.fp_item }}</td>
+                <td>{{ r.unit_amount }}</td>
+                
+                </tr>
+              {% endfor %}              
+              
+            {% endifequal %}
+          {% endfor %}
+
+
+          
+<!--           {% for i in "xxx" %}
+          <tr>
+            <td>data</td>
+            <td>data</td>
+            <td>data</td>
+            <td>data</td>
+            <td>data</td>
+            
+          </tr>
+          {% endfor %} -->
+
+        </tbody>
+      </table>
+    </td>
+
+    </tr>  
+  {% endfor %}
+
+</table>
+
+date
+
+
+
+{% endblock %}
