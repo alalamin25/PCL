@@ -16,6 +16,12 @@ urlpatterns = [
     url(r'^fp_report/report$', views.FpItemReportView.as_view(),
         name='fp_item_report'),
 
+    url(r'^shiftwise/$', views.ShiftWiseView.as_view(), name='shiftwise'),
+    url(r'^shiftselect/$', views.ShiftSelectView.as_view(), name='shiftselect'),
+    url(r'^shiftwise/report$', views.ShiftWiseReportView.as_view(),
+        name='shfitwise_report'),
+
+
     # url(r'^fp_report/report$', views.HelloPDFView.as_view(),
     #     name='fp_item_report'),
 ]

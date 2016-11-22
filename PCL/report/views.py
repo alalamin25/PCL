@@ -18,12 +18,143 @@ from django.template.loader import get_template
 # from easy_pdf.views import PDFTemplateView
 import pdfkit
 
-from report.forms import FPBasicForm, FPMiddleCatForm, FPLowerCatForm, FPItemForm
+from report.forms import FPBasicForm, FPMiddleCatForm, FPLowerCatForm, FPItemForm,\
+     FundamentalForm, ShiftSelectForm
 from master_table.models import FundamentalProductType, FPMiddleCat, FPLowerCat,\
-    FinishedProductItem
-from production_table.models import ProductionEntry
+    FinishedProductItem, Shift
+from production_table.models import ProductionEntry, RIIssueEntry
 
 from report.util import FPResult, FPInfo
+
+
+class ShiftWiseView(View):
+
+    form = FundamentalForm
+    template_name = 'report/shiftwise.html'
+
+    def get(self, request, *args, **kwargs):
+        # form = self.form_class(initial=self.initial)
+        return render(request, self.template_name,
+                      {'form': self.form})
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+def final_shift_report(request, template_name, start_date, end_date, shift_list):
+
+    context = {}
+    date_list = getListOfDates(start_date, end_date)
+    context['date_list'] = date_list
+    fp_search_result, ri_search_result = getShiftSearchResult(date_list, shift_list)
+    # print(fp_search_result)
+    context['fp_search_result'] = fp_search_result
+    context['ri_search_result'] = ri_search_result
+
+    # print(context)
+    return render(request, template_name, context)
+
+
+
+def getShiftSearchResult(date_list, shift_list):
+    print(".........................")
+
+    fp_search_result = []
+    ri_search_result = []
+    for date in date_list:
+        for shift in shift_list:
+            result = ProductionEntry.objects.filter(
+                creation_time__year=date.year,
+                creation_time__month=date.month,
+                creation_time__day=date.day,
+                shift=shift)
+            # print(
+            # "The result of {0} and typeof fp {1}is {2}".format(fp, " ", result))
+            if(result):
+                fp_info = {
+                    'date': date,
+                    'shift': shift,
+                    'fp_result': result
+                }
+                fp_search_result.append(fp_info)
+
+
+
+    for date in date_list:
+        for shift in shift_list:
+            result = RIIssueEntry.objects.filter(
+                creation_time__year=date.year,
+                creation_time__month=date.month,
+                creation_time__day=date.day,
+                shift=shift)
+
+            if(result):
+                ri_info = {
+                    'date': date,
+                    'shift': shift,
+                    'ri_result': result
+                }
+                ri_search_result.append(ri_info)
+
+
+
+    print("\n returning\n")
+    print(fp_search_result)
+    print(ri_search_result)
+    return fp_search_result, ri_search_result
+
+
+class ShiftSelectView(View):
+
+    form = FundamentalForm
+    template_name = 'report/shiftselect.html'
+
+    def get(self, request, *args, **kwargs):
+        # form = self.form_class(initial=self.initial)
+        return render(request, self.template_name,
+                      {'form': self.form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST)
+        if(form.is_valid()):
+            fundamental_type = form.cleaned_data['fundamental_product_type']
+            shift_select_form = ShiftSelectForm(fundamental_type)
+            return render(request, self.template_name,
+                      {'form': shift_select_form})
+
+
+
+class ShiftWiseReportView(View):
+    template_name = 'report/shift_report.html'
+    form = ShiftSelectForm
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("In get method")
+
+    def post(self, request, *args, **kwargs):
+        # return HttpResponse("In post method")
+        form = self.form("", request.POST)
+        if(form.is_valid()):
+            shift = form.cleaned_data['shift']
+            shift_list = Shift.objects.filter(id__in=shift)
+            name = form.cleaned_data['name']
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+            # date_list = getListOfDates(start_date, end_date)
+            # fp_search_result, ri_search_result = getShiftSearchResult(date_list, shift)
+            # print(fp_search_result, ri_search_result)
+            
+            return final_shift_report(request, self.template_name, start_date, end_date, shift_list)
+
+
+            return HttpResponse("valid")
+
+
+        else:
+            return HttpResponse("IN valid")
+
+
+
 
 
 class IndexView(TemplateView):
@@ -267,21 +398,7 @@ class FpItemReportView(View):
         fp_item_form = FPItemForm("", request.POST)
 
         if(fp_item_form.is_valid()):
-            # fp_item = fp_item_form.cleaned_data['fp_item']
-            # fp_item = FinishedProductItem.objects.filter(id__in=fp_item)
-            # context['fp_item'] = fp_item
-            # start_date = fp_item_form.cleaned_data['start_date']
-            # end_date = fp_item_form.cleaned_data['end_date']
-            # date_list = self.getListOfDates(start_date, end_date)
 
-            # context['date_list'] = date_list
-            # fp_search_result = self.getFPSearchResult(date_list, fp_item)
-            # print(fp_search_result)
-            # context['fp_search_result'] = fp_search_result
-
-            # # return self.returnPdf(context)
-            # print(context)
-            # return render(request, self.template_name, context)
             fp_item = fp_item_form.cleaned_data['fp_item']
             fp_list = FinishedProductItem.objects.filter(id__in=fp_item)
             start_date = fp_item_form.cleaned_data['start_date']
@@ -291,3 +408,6 @@ class FpItemReportView(View):
         else:
             print(fp_item_form.errors)
             return HttpResponse("The form is invalid")
+
+
+

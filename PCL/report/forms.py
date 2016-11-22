@@ -10,6 +10,43 @@ from master_table.models import Suplier, FundamentalProductType,\
     FinishedProductItem, Shift
 
 
+
+class ShiftSelectForm(forms.Form):
+
+    attrs = {"class": "form-control", 'required': 'required'}
+    name = forms.CharField(max_length=50, label='Name',
+                           widget=forms.TextInput(attrs=attrs))
+    start_date = forms.DateField(initial=datetime.date.today)
+    end_date = forms.DateField(initial=datetime.date.today)
+    shift = forms.ModelChoiceField(
+        queryset=Shift.objects.none(),
+        label="Select On which on which type you want the report",
+        widget=forms.CheckboxSelectMultiple,
+    )
+
+    def __init__(self, fundamental_type, *args, **kwargs):
+
+        super(ShiftSelectForm, self).__init__(*args, **kwargs)
+        if(fundamental_type):
+            self.fields['shift'] = forms.MultipleChoiceField(
+                widget=forms.CheckboxSelectMultiple, choices=(
+                    (s.id, s) for s in Shift.objects.filter(fundamental_type=fundamental_type)))
+        else:
+            self.fields['shift'] = forms.MultipleChoiceField(
+                widget=forms.CheckboxSelectMultiple, choices=(
+                    (s.id, s) for s in Shift.objects.all()))
+            
+
+class FundamentalForm(forms.Form):
+    attrs = {"class": "form-control", 'required': 'required'}
+
+    fundamental_product_type = forms.ModelChoiceField(
+        queryset=FundamentalProductType.objects.all(),
+        label="Select On which on which type you want the report",
+        # widget=forms.CheckboxSelectMultiple,
+    )
+
+
 class FPBasicForm(forms.Form):
     attrs = {"class": "form-control", 'required': 'required'}
     name = forms.CharField(max_length=50, label='Name',

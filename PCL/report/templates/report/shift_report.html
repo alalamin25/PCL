@@ -1,0 +1,88 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% block content %}
+   <h1 align="center"> Shift Wise Report Page </h1>
+
+   <h3>Going to print report of :</h3>
+
+
+{{ fp_search_result }}
+<br>
+{{ ri_search_result }}
+<table border="1">
+  <tr>
+  <th>Date</th>
+  <th>Production Report</th>
+  <th>Raw Item Report</th>
+  </tr>
+  {% for date in date_list %}
+    <tr>
+    <td> {{ date }}</td>
+    <td>
+      <h5> Finished Product Table </h5>
+      <table>        
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>unit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in fp_search_result %}
+            {% ifequal date result.date %}
+              {% for fp in result.fp_result %}
+              <tr>
+                <td>{{ fp }}</td>
+                <td>{{ fp.unit_amount }}</td>                
+              </tr>           
+              {% endfor %}
+              
+            {% endifequal %}
+          {% endfor %}         
+
+
+        </tbody>
+      </table>
+    </td>
+
+
+
+    <td>
+      <h5> Raw Item Table </h5>
+      <table>        
+        <thead>
+          <tr>
+            <th>Raw Item</th>
+            <th>unit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in ri_search_result %}
+            {% ifequal date result.date %}
+              {% for ri in result.ri_result %}
+              <tr>
+                <td>{{ ri }}</td>
+                <td>{{ ri.unit_amount }}</td>                
+              </tr>           
+              {% endfor %}
+              
+            {% endifequal %}
+          {% endfor %}         
+
+
+        </tbody>
+      </table>
+    </td>
+
+
+
+
+
+
+
+    </tr>  
+  {% endfor %}
+
+</table>
+
+{% endblock %}
