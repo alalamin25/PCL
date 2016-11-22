@@ -46,6 +46,7 @@ class FpReportView(View):
 class FpMiddleCatView(View):
     fp_basic_form = FPBasicForm
     template_name = 'report/fp_mid_cat.html'
+    template_report = "report/fp_item_report.html"
 
     # def get(self, request, *args, **kwargs):
     #     # form = self.form_class(initial=self.initial)
@@ -53,25 +54,25 @@ class FpMiddleCatView(View):
 
     def get(self, request, *args, **kwargs):
         return HttpResponse("Get request")
-        print("\n in class view")
-        # form = FPMiddleCatForm
-        fp_basic_form = self.fp_basic_form(request.GET)
-        if fp_basic_form.is_valid():
-            print("The FPbasic form is valid")
-            fundamental_type = fp_basic_form.cleaned_data[
-                'fundamental_product_type']
-            form = FPMiddleCatForm()
-            form.fields['start_date'].initial = fp_basic_form.cleaned_data[
-                'start_date']
-            form.fields['end_date'].initial = fp_basic_form.cleaned_data[
-                'end_date']
-            form.fields['fp_middle_cat'].queryset = FPMiddleCat.objects.filter(
-                fundamental_type=fundamental_type)
-            return render(request, self.template_name, {'form': form})
-        else:
-            print("The basic form is not valid")
-            print(fp_basic_form.errors)
-            return redirect(reverse('fp_report'))
+        # print("\n in class view")
+        # # form = FPMiddleCatForm
+        # fp_basic_form = self.fp_basic_form(request.GET)
+        # if fp_basic_form.is_valid():
+        #     print("The FPbasic form is valid")
+        #     fundamental_type = fp_basic_form.cleaned_data[
+        #         'fundamental_product_type']
+        #     form = FPMiddleCatForm()
+        #     form.fields['start_date'].initial = fp_basic_form.cleaned_data[
+        #         'start_date']
+        #     form.fields['end_date'].initial = fp_basic_form.cleaned_data[
+        #         'end_date']
+        #     form.fields['fp_middle_cat'].queryset = FPMiddleCat.objects.filter(
+        #         fundamental_type=fundamental_type)
+        #     return render(request, self.template_name, {'form': form})
+        # else:
+        #     print("The basic form is not valid")
+        #     print(fp_basic_form.errors)
+        #     return redirect(reverse('fp_report'))
 
         # return render(request, self.template_name, {'form': form})
         
@@ -83,6 +84,17 @@ class FpMiddleCatView(View):
             print("The FPbasic form is valid")
             fundamental_type = fp_basic_form.cleaned_data[
                 'fundamental_product_type']
+            start_date = fp_basic_form.cleaned_data['start_date']
+            end_date = fp_basic_form.cleaned_data['end_date']
+            is_print = fp_basic_form.cleaned_data['is_print']
+            if(is_print):
+                fp_list = FinishedProductItem.objects.filter(fundamental_type=fundamental_type)
+                # print(fp_list)
+                return final_product_report(request, self.template_report, start_date, end_date, fp_list)
+                return HttpResponse("Going to print now")
+
+
+
             form = FPMiddleCatForm()
             form.fields['start_date'].initial = fp_basic_form.cleaned_data[
                 'start_date']
