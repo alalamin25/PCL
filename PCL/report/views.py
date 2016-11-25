@@ -44,8 +44,12 @@ class ShiftWiseView(View):
 def final_shift_report(request, template_name, start_date, end_date, shift_list):
 
     context = {}
+    if(len(shift_list) > 0):
+        fundamental_type = shift_list[0].fundamental_type
+        context['report_name'] = fundamental_type
     date_list = getListOfDates(start_date, end_date)
     context['date_list'] = date_list
+
     fp_search_result, ri_search_result = getShiftSearchResult(date_list, shift_list)
     # print(fp_search_result)
     context['fp_search_result'] = fp_search_result
@@ -137,7 +141,7 @@ class ShiftWiseReportView(View):
         if(form.is_valid()):
             shift = form.cleaned_data['shift']
             shift_list = Shift.objects.filter(id__in=shift)
-            name = form.cleaned_data['name']
+            # name = form.cleaned_data['name']
             start_date = form.cleaned_data['start_date']
             end_date = form.cleaned_data['end_date']
             # date_list = getListOfDates(start_date, end_date)

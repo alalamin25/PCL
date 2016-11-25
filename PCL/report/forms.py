@@ -11,8 +11,8 @@ from master_table.models import FundamentalProductType,\
 class ShiftSelectForm(forms.Form):
 
     attrs = {"class": "form-control", 'required': 'required'}
-    name = forms.CharField(max_length=50, label='Name',
-                           widget=forms.TextInput(attrs=attrs))
+    # name = forms.CharField(max_length=50, label='Name',
+    #                        widget=forms.TextInput(attrs=attrs))
     start_date = forms.DateField(initial=datetime.date.today)
     end_date = forms.DateField(initial=datetime.date.today)
     shift = forms.ModelChoiceField(

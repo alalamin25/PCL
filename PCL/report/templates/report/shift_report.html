@@ -3,34 +3,29 @@
 {% block content %}
    <h1 align="center"> Shift Wise Report Page </h1>
 
-   <h3>Going to print report of :</h3>
+   <h3>Going to print report of : {{ report_name }}</h3>
 
 
-{{ fp_search_result }}
+<!-- {{ fp_search_result }}
 <br>
-{{ ri_search_result }}
+{{ ri_search_result }} -->
 
 {% for shift in shift_list %}
 
-<h1> Report for shift: {{ shift }} </h1>
+<h1> Product Report for shift: {{ shift }} </h1>
 <table border="1">
   <tr>
   <th>Date</th>
-  <th>Production Report</th>
-  <th>Raw Item Report</th>
+  <th>Final Product</th>
+  <th>Amount </th>
+  
   </tr>
   {% for date in date_list %}
     <tr>
     <td> {{ date }}</td>
-    <td>
-      <!-- <h5> Finished Product Table </h5> -->
-      <table>        
-<!--         <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>unit</th>
-          </tr>
-        </thead> -->
+
+    <td>     
+      <table>      
         <tbody>
           {% for result in fp_search_result %}
             {% ifequal shift result.shift %}
@@ -38,13 +33,36 @@
                 {% for fp in result.fp_result %}
                 <tr>
                   <td>{{ fp }}</td>
+                  <!-- <td>{{ fp.unit_amount }}</td>                 -->
+                </tr>           
+                {% endfor %}
+                
+              {% endifequal %}
+            {% endifequal %}
+          {% endfor %}  
+
+
+        </tbody>
+      </table>
+    </td>
+
+
+    <td>     
+      <table>      
+        <tbody>
+          {% for result in fp_search_result %}
+            {% ifequal shift result.shift %}
+              {% ifequal date result.date  %}
+                {% for fp in result.fp_result %}
+                <tr>
+                  <!-- <td>{{ fp }}</td> -->
                   <td>{{ fp.unit_amount }}</td>                
                 </tr>           
                 {% endfor %}
                 
               {% endifequal %}
             {% endifequal %}
-          {% endfor %}         
+          {% endfor %}  
 
 
         </tbody>
@@ -53,15 +71,47 @@
 
 
 
+
+
+
+
+    </tr>  
+  {% endfor %}
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1> Raw Item Wise Report for shift: {{ shift }} </h1>
+<table border="1">
+  <tr>
+  <th>Date</th>
+  <th>Final Product</th>
+  <th>Amount </th>
+  
+  </tr>
+  {% for date in date_list %}
+    <tr>
+    <td> {{ date }}</td>
+
+
+
+
+
+
+
     <td>
-      <!-- <h5> Raw Item Table </h5> -->
       <table>        
-<!--         <thead>
-          <tr>
-            <th>Raw Item</th>
-            <th>unit</th>
-          </tr>
-        </thead> -->
         <tbody>
           {% for result in ri_search_result %}
             {% ifequal shift result.shift %}
@@ -69,22 +119,75 @@
                 {% for ri in result.ri_result %}
                 <tr>
                   <td>{{ ri }}</td>
+                 
+                </tr>           
+                {% endfor %}
+               {% endifequal %}
+              {% endifequal %}
+          {% endfor %}         
+        </tbody>
+      </table>
+    </td>
+
+
+    <td>
+      <table>        
+        <tbody>
+          {% for result in ri_search_result %}
+            {% ifequal shift result.shift %}
+              {% ifequal date result.date %}
+                {% for ri in result.ri_result %}
+                <tr>
+                  <!-- <td>{{ ri }}</td> -->
                   <td>{{ ri.unit_amount }}</td>                
                 </tr>           
                 {% endfor %}
                {% endifequal %}
               {% endifequal %}
           {% endfor %}         
-
-
         </tbody>
       </table>
     </td>
 
+
+
+
+
     </tr>  
   {% endfor %}
 
+
+
+
+
+
+
+
+  
+
 </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <br><br><br><br><br><br>
 {% endfor %}
 
