@@ -5,7 +5,7 @@ from django.forms import ModelForm
 
 from report.models import FinishedProductReport
 from master_table.models import FundamentalProductType,\
-    FPMiddleCat, FPLowerCat, FinishedProductItem, Shift
+    FPMiddleCat, FPLowerCat, FPItem, Shift
 
 
 class ShiftSelectForm(forms.Form):
@@ -113,7 +113,7 @@ class FPItemForm(forms.Form):
     attrs = {"class": "form-control", 'required': 'required'}
     fp_item = forms.ModelChoiceField(
         label="Select Finished Item",
-        queryset=FinishedProductItem.objects.none(),
+        queryset=FPItem.objects.none(),
         widget=forms.CheckboxSelectMultiple,
     )
     start_date = forms.DateField()
@@ -132,13 +132,13 @@ class FPItemForm(forms.Form):
         if(fp_lower_cat):
             self.fields['fp_item'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
-                    (fp.id, fp) for fp in FinishedProductItem.objects.filter(
+                    (fp.id, fp) for fp in FPItem.objects.filter(
                         lower_category_type__in=fp_lower_cat)))
         else:
 
             self.fields['fp_item'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
-                    (fp.id, fp) for fp in FinishedProductItem.objects.all()))
+                    (fp.id, fp) for fp in FPItem.objects.all()))
 
 
 class FPReportForm(ModelForm):

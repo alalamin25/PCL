@@ -4,7 +4,7 @@ from django.db import models
 # from smart_selects.db_fields import ChainedForeignKey
 from smart_selects.db_fields import ChainedManyToManyField
 from master_table.models import FundamentalProductType,\
-    FPMiddleCat, FPLowerCat, FinishedProductItem, Shift
+    FPMiddleCat, FPLowerCat, FPItem, Shift
 
 
 class FinishedProductReport(models.Model):
@@ -41,7 +41,7 @@ class FinishedProductReport(models.Model):
     )
     # production_item = models.ForeignKey(FinishedProductItem)
     finished_production_item = ChainedManyToManyField(
-        FinishedProductItem,
+        FPItem,
         chained_field="lower_category_type",
         chained_model_field="lower_category_type",
         # show_all=False,
@@ -49,7 +49,7 @@ class FinishedProductReport(models.Model):
         # sort=True
     )
     finished_production_item = ChainedManyToManyField(
-        FinishedProductItem,
+        FPItem,
         chained_field="lower_category_type",
         chained_model_field="lower_category_type",
         # show_all=False,

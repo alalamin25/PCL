@@ -30,31 +30,7 @@ class FundamentalProductType(models.Model):
         return self.name
 
 
-# class RIMiddleCat(models.Model):
-#     name = models.CharField(max_length=100)
-#     fundamental_type = models.ForeignKey(FundamentalProductType)
-#     comment = models.TextField(blank=True, null=True)
 
-#     def __str__(self):
-#         return self.name
-
-#     class Meta:
-#         verbose_name = "Raw Item Middle Category"
-#         verbose_name_plural = "Raw Item Middle Categories"
-
-
-# class RILowerCat(models.Model):
-#     name = models.CharField(max_length=100)
-#     fundamental_type = models.ForeignKey(FundamentalProductType)
-#     middle_category_type = models.ForeignKey(RIMiddleCat)
-#     comment = models.TextField(blank=True, null=True)
-
-#     def __str__(self):
-#         return self.name
-
-#     class Meta:
-#         verbose_name = "Raw Item Lower Category"
-#         verbose_name_plural = "Raw Item Lower Categories"
 
 
 class RawItem(models.Model):
@@ -103,7 +79,7 @@ class FPLowerCat(models.Model):
         verbose_name_plural = "Finished Product Item Lower Categories"
 
 
-class FinishedProductItem(models.Model):
+class FPItem(models.Model):
     name = models.CharField(max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FPMiddleCat)
@@ -125,15 +101,17 @@ class FinishedProductItem(models.Model):
         sort=True
     )
     comment = models.TextField(blank=True, null=True)
+    # comment2 = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 
 class CPItem(models.Model):
-    name = models.CharField(max_length=100)
+    # name = models.CharField(max_length=100)
+    fp_item = models.ForeignKey(FPItem)
     comment = models.TextField(blank=True, null=True)
-    # type = models.ForeignKey(FundamentalProductType)
+
 
     def __str__(self):
         return self.name
@@ -167,7 +145,7 @@ class CPItemEntry(models.Model):
     )
     # production_item = models.ForeignKey(FinishedProductItem)
     finished_production_item = ChainedForeignKey(
-        FinishedProductItem,
+        FPItem,
         chained_field="lower_category_type",
         chained_model_field="lower_category_type",
         show_all=False,

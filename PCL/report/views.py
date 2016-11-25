@@ -21,7 +21,7 @@ import pdfkit
 from report.forms import FPBasicForm, FPMiddleCatForm, FPLowerCatForm, FPItemForm,\
      FundamentalForm, ShiftSelectForm
 from master_table.models import FundamentalProductType, FPMiddleCat, FPLowerCat,\
-    FinishedProductItem, Shift
+    FPItem, Shift
 from production_table.models import ProductionEntry, RIIssueEntry
 
 from report.util import FPResult, FPInfo
@@ -201,7 +201,7 @@ class FpMiddleCatView(View):
             end_date = fp_basic_form.cleaned_data['end_date']
             is_print = fp_basic_form.cleaned_data['is_print']
             if(is_print):
-                fp_list = FinishedProductItem.objects.filter(
+                fp_list = FPItem.objects.filter(
                     fundamental_type=fundamental_type)
                 # print(fp_list)
                 return final_product_report(request, self.template_report, start_date, end_date, fp_list)
@@ -244,7 +244,7 @@ class FpLowerCatView(View):
             # return HttpResponse("form is valid")
 
             if(is_print):
-                fp_list = FinishedProductItem.objects.filter(
+                fp_list = FPItem.objects.filter(
                     middle_category_type__in=fp_middle_cat)
                 # print(fp_list)
                 return final_product_report(request, self.template_report, start_date, end_date, fp_list)
@@ -286,7 +286,7 @@ class FpItemView(View):
             # return HttpResponse("Form valid")
 
             if(is_print):
-                fp_list = FinishedProductItem.objects.filter(
+                fp_list = FPItem.objects.filter(
                     lower_category_type__in=fp_lower_cat)
                 # print(fp_list)
                 return final_product_report(request, self.template_report, start_date, end_date, fp_list)
@@ -400,7 +400,7 @@ class FpItemReportView(View):
         if(fp_item_form.is_valid()):
 
             fp_item = fp_item_form.cleaned_data['fp_item']
-            fp_list = FinishedProductItem.objects.filter(id__in=fp_item)
+            fp_list = FPItem.objects.filter(id__in=fp_item)
             start_date = fp_item_form.cleaned_data['start_date']
             end_date = fp_item_form.cleaned_data['end_date']
             # date_list = self.getListOfDates(start_date, end_date)

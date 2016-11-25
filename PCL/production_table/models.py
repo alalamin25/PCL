@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
-from master_table.models import FinishedProductItem, Shift,\
-    CPItem, FundamentalProductType, RawItem, Shift, FinishedProductItem
+from master_table.models import FPItem, Shift,\
+    FundamentalProductType, RawItem, Shift, FPItem
 
 from smart_selects.db_fields import ChainedForeignKey
 
@@ -11,7 +11,7 @@ class ProductionEntry(models.Model):
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # raw_item = models.ForeignKey(RawItem)
     finished_product_item = ChainedForeignKey(
-        FinishedProductItem,
+        FPItem,
         chained_field="fundamental_type",
         chained_model_field="fundamental_type",
         show_all=False,
@@ -21,7 +21,7 @@ class ProductionEntry(models.Model):
         null = True,
     )
 
-    cp_item = models.ForeignKey(CPItem, blank = True, null = True)
+    # cp_item = models.ForeignKey(CPItem, blank = True, null = True)
 
     shift = ChainedForeignKey(
         Shift,
