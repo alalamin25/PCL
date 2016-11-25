@@ -19,10 +19,6 @@ class ProductionEntry_Admin(admin.ModelAdmin):
             'Select Name Of The Production Item: ', {
                 'fields': ['finished_product_item']}
         ),
-        (
-            'Select Compound Item: ', {
-                'fields': ['cp_item']}
-        ),
 
         (
             'Select Shift: ', {'fields': ['shift']}

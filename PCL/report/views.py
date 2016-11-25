@@ -357,6 +357,9 @@ def getListOfDates(start_date, end_date):
 def final_product_report(request, template_name, start_date, end_date, fp_list):
 
     context = {}
+    if(len(fp_list) > 0):
+        fundamental_type = fp_list[0].fundamental_type
+        context['report_name'] = fundamental_type
     date_list = getListOfDates(start_date, end_date)
     context['date_list'] = date_list
     fp_search_result = getFPSearchResult(date_list, fp_list)

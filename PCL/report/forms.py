@@ -47,8 +47,8 @@ class FundamentalForm(forms.Form):
 
 class FPBasicForm(forms.Form):
     attrs = {"class": "form-control", 'required': 'required'}
-    name = forms.CharField(max_length=50, label='Name',
-                           widget=forms.TextInput(attrs=attrs))
+    # name = forms.CharField(max_length=50, label='Name',
+    #                        widget=forms.TextInput(attrs=attrs))
     start_date = forms.DateField(initial=datetime.date.today)
     end_date = forms.DateField(initial=datetime.date.today)
     fundamental_product_type = forms.ModelChoiceField(

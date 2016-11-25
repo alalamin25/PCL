@@ -3,47 +3,52 @@
 {% block content %}
    <h1 align="center"> Final Product Item Report page </h1>
 
-   <h3>Going to print report of :</h3>
+   <h3>Going to print report of : {{ report_name }}</h3>
 
-
-{{ fp_search_result }}
 
 <table border="1">
   <tr>
   <th>Date</th>
-  <th>Product Description</th>
+<!--   <th>Product Description</th> -->
+  <th>Name Of Finished Item</th>
+  <th>Amount</th>
   </tr>
   {% for date in date_list %}
     <tr>
     <td> {{ date }}</td>
     <td>
+
+
       <table>
-        
-<!--         <thead>
-          <tr>
-            <th>Fundamental Product</th>            
-            <th>Middle Cat</th>
-            <th>Lower Cat</th>
-            <th>Product Name</th>
-            <th>unit</th>
-          </tr>
-        </thead> -->
         <tbody>
 
           {% for result in fp_search_result %}
             {% ifequal date result.date %}
               <tr>
-                <td>{{ result.fp_item.fundamental_type }}</td>
-                <td>{{ result.fp_item.middle_category_type }}</td>
-                <td>{{ result.fp_item.lower_category_type }}</td>
+
                 <td>{{ result.fp_item }}</td>
+                <!-- <td>{{ result.total_amount }}</td>                 -->
+              </tr>           
+              
+            {% endifequal %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tbody>
+
+          {% for result in fp_search_result %}
+            {% ifequal date result.date %}
+              <tr>
+
+                <!-- <td>{{ result.fp_item }}</td> -->
                 <td>{{ result.total_amount }}</td>                
               </tr>           
               
             {% endifequal %}
-          {% endfor %}         
-
-
+          {% endfor %}
         </tbody>
       </table>
     </td>
