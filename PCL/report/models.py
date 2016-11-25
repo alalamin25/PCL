@@ -1,13 +1,10 @@
 from django.db import models
-from django.utils.timezone import now
+# from django.utils.timezone import now
 
-from smart_selects.db_fields import ChainedForeignKey
+# from smart_selects.db_fields import ChainedForeignKey
 from smart_selects.db_fields import ChainedManyToManyField
-from master_table.models import Suplier, FundamentalProductType,\
-    RawItem, Color,\
-    FPMiddleCat, FPLowerCat,\
-    FinishedProductItem, Shift, CPItem
-
+from master_table.models import FundamentalProductType,\
+    FPMiddleCat, FPLowerCat, FinishedProductItem, Shift
 
 
 class FinishedProductReport(models.Model):

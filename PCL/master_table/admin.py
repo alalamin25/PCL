@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from master_table.models import Suplier, FundamentalProductType,\
-    RawItem, Color, FPMiddleCat, FPLowerCat,\
+    RawItem, FPMiddleCat, FPLowerCat,\
     FinishedProductItem, Shift, CPItem, CPItemEntry
 
 
@@ -35,15 +35,15 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
     ]
 
 
-class Color_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    list_display_links = ('id', 'name',)
-    search_fields = ('name',)
-    fieldsets = [
-        (
-            'Name Of Color: ', {'fields': ['name']}
-        ),
-    ]
+# class Color_Admin(admin.ModelAdmin):
+#     list_display = ('id', 'name',)
+#     list_display_links = ('id', 'name',)
+#     search_fields = ('name',)
+#     fieldsets = [
+#         (
+#             'Name Of Color: ', {'fields': ['name']}
+#         ),
+#     ]
 
 
 class RawItem_Admin(admin.ModelAdmin):
@@ -201,6 +201,6 @@ admin.site.register(FPMiddleCat, FPMiddleCat_Admin)
 admin.site.register(FPLowerCat, FPLowerCat_Admin)
 admin.site.register(FinishedProductItem, FinishedProductItem_Admin)
 admin.site.register(CPItem, CPItem_Admin)
-admin.site.register(Color, Color_Admin)
+# admin.site.register(Color, Color_Admin)
 admin.site.register(Shift, Shift_Admin)
 admin.site.register(CPItemEntry)

@@ -4,11 +4,8 @@ from django import forms
 from django.forms import ModelForm
 
 from report.models import FinishedProductReport
-from master_table.models import Suplier, FundamentalProductType,\
-    RawItem, Color,\
-    FPMiddleCat, FPLowerCat,\
-    FinishedProductItem, Shift
-
+from master_table.models import FundamentalProductType,\
+    FPMiddleCat, FPLowerCat, FinishedProductItem, Shift
 
 
 class ShiftSelectForm(forms.Form):
@@ -30,12 +27,13 @@ class ShiftSelectForm(forms.Form):
         if(fundamental_type):
             self.fields['shift'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
-                    (s.id, s) for s in Shift.objects.filter(fundamental_type=fundamental_type)))
+                    (s.id, s) for s in Shift.objects.filter(
+                        fundamental_type=fundamental_type)))
         else:
             self.fields['shift'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
                     (s.id, s) for s in Shift.objects.all()))
-            
+
 
 class FundamentalForm(forms.Form):
     attrs = {"class": "form-control", 'required': 'required'}
@@ -78,7 +76,8 @@ class FPMiddleCatForm(forms.Form):
         if(fundamental_type):
             self.fields['fp_middle_cat'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
-                    (mc.id, mc) for mc in FPMiddleCat.objects.filter(fundamental_type=fundamental_type)))
+                    (mc.id, mc) for mc in FPMiddleCat.objects.filter(
+                        fundamental_type=fundamental_type)))
         else:
             self.fields['fp_middle_cat'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
@@ -102,7 +101,8 @@ class FPLowerCatForm(forms.Form):
         if(middle_category_type):
             self.fields['fp_lower_cat'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
-                    (lc.id, lc) for lc in FPLowerCat.objects.filter(middle_category_type__in=middle_category_type)))
+                    (lc.id, lc) for lc in FPLowerCat.objects.filter(
+                        middle_category_type__in=middle_category_type)))
         else:
             self.fields['fp_lower_cat'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
@@ -132,7 +132,8 @@ class FPItemForm(forms.Form):
         if(fp_lower_cat):
             self.fields['fp_item'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
-                    (fp.id, fp) for fp in FinishedProductItem.objects.filter(lower_category_type__in=fp_lower_cat)))
+                    (fp.id, fp) for fp in FinishedProductItem.objects.filter(
+                        lower_category_type__in=fp_lower_cat)))
         else:
 
             self.fields['fp_item'] = forms.MultipleChoiceField(
@@ -141,6 +142,7 @@ class FPItemForm(forms.Form):
 
 
 class FPReportForm(ModelForm):
+
     # reading_content = forms.ModelChoiceField(queryset=ReadingContent.objects.all(),
     #  label="Select Reading Content For This Quick Question",
     #   widget  = forms.CheckboxSelectMultiple,required=True)
