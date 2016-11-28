@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^report_builder/', include('report_builder.urls')),
     url(r'^report/', include('report.urls')),
+    url(r'^select2/', include('django_select2.urls')),
 
 
 ]

@@ -53,6 +53,8 @@ INSTALLED_APPS = (
     'ajax_select',
     'common',
     'report',
+    'django_select2',
+    
 
     # 'reporter',
 )
