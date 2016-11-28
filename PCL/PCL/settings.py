@@ -25,7 +25,12 @@ SECRET_KEY = 'epl0x!79j=@udt0quv96)9=mv4*y10^89py)&wq^uh%3b0le34'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'pcl.pythonanywhere.com',
+    '*',
+]
 
 
 # Application definition
@@ -47,6 +52,7 @@ INSTALLED_APPS = (
     'ajax_select',
     'common',
     'report',
+    'grappelli',
     # 'reporter',
 )
 

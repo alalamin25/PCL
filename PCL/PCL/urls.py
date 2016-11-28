@@ -1,15 +1,19 @@
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 
-from homepage.views import admin_home_page
+from homepage import views as homepage_views 
 
+admin.site.site_header = 'PCL ADMINISTRATION'
 
 urlpatterns = [
     # Examples:
     # url(r'^$', 'PCL.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^$', admin_home_page, name='admin_home_page'),
-    url(r'^admin_home/$', admin_home_page, name='admin_home_page'),
+    # url(r'^$', homepage_views.index_page, name='index_page'),
+    url(r'^$', TemplateView.as_view(template_name="homepage/index_page.html"), name='index'),    
+    url(r'^admin_home/$', login_required(TemplateView.as_view(template_name="homepage/admin_home_page.html"), login_url='/admin/login/'), name='admin_home'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^report_builder/', include('report_builder.urls')),    

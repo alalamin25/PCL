@@ -14,3 +14,4 @@ backup
 db.sqlite3
 db.sqlite3
 *.fuse_hidden*
+server_static

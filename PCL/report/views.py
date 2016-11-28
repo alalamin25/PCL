@@ -14,6 +14,7 @@ from django.db.models import Sum
 
 from django.template import Context
 from django.template.loader import get_template
+# from weasyprint import HTML
 # from xhtml2pdf import pisa
 # from easy_pdf.views import PDFTemplateView
 import pdfkit
@@ -312,7 +313,7 @@ class FpItemView(View):
 
 
 def getFPSearchResult(date_list, fp_item):
-    print(".........................")
+    # print(".........................")
 
     fp_search_result = []
     # fp_search_result2 = []
@@ -343,7 +344,7 @@ def getFPSearchResult(date_list, fp_item):
         #     fp_search_result.append(fp_result)
 
     print("\n returning\n")
-    print(fp_search_result)
+    # print(fp_search_result)
     # print(fp_search_result[0])
     return fp_search_result
 
@@ -358,7 +359,7 @@ def getListOfDates(start_date, end_date):
     return date_list
 
 
-def final_product_report(request, template_name, start_date, end_date, fp_list):
+def final_product_report(request, template_name, start_date, end_date, fp_list, is_pdf=False):
 
     context = {}
     if(len(fp_list) > 0):
@@ -372,7 +373,26 @@ def final_product_report(request, template_name, start_date, end_date, fp_list):
     data = {}
     data['date'] = date_list
     context['data'] = data
-    print(context)
+    # print(context)
+
+    print("\n final p report ")
+    print(is_pdf)
+
+    if(is_pdf):
+        template = get_template(template_name)
+        html = template.render(Context(context))
+        # print(html)
+        # pdf = pdfkit.from_string(html, False)
+        # pdf = HTML(string=html).write_pdf('report.pdf', stylesheets=['http://weasyprint.org/samples/CSS21-print.css'])
+        pdf = pdfkit.from_string(html, False)
+
+        # pdf = pdfkit.from_url('http://ourcodeworld.com', False)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response[
+            'Content-Disposition'] = 'attachment; filename="report.pdf"'
+        return response
+
+
     return render(request, template_name, context)
 
 

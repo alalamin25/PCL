@@ -106,6 +106,10 @@ class FPItem(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Finished Product Item "
+        verbose_name_plural = "Finished Product Items"
+
 
 class CPItem(models.Model):
     # name = models.CharField(max_length=100)
