@@ -23,7 +23,7 @@ class FinishedProductReport_Admin(admin.ModelAdmin):
     # list_display = ('id','question_set_text', 'uploader', 'is_free', 'question_topic','start_date', 'end_date',)
     # list_display_links = ('id', 'question_set_text',)
 
-    # filter_horizontal = ('fundamental_type', 'middle_category_type', 'lower_category_type')
+    filter_horizontal = ('fundamental_type', 'middle_category_type', 'lower_category_type')
     # raw_id_fields = ('question_topic', 'subtopic1', 'reading_topic', )
     # exclude = ('pub_date', 'edit_date')
     #

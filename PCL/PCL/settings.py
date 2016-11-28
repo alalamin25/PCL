@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = (
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +53,7 @@ INSTALLED_APPS = (
     'ajax_select',
     'common',
     'report',
-    'grappelli',
+
     # 'reporter',
 )
 
@@ -82,6 +83,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.static',
                 'django.template.context_processors.media',
+                'django.template.context_processors.request',
             ],
         },
     },
