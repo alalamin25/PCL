@@ -7,13 +7,15 @@ from homepage import views as homepage_views
 
 admin.site.site_header = 'PCL ADMINISTRATION'
 
-urlpatterns = [
+urlpatterns = [    
+   
     url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^$', TemplateView.as_view(
         template_name="homepage/index_page.html"), name='index'),
     url(r'^admin_home/$', login_required(TemplateView.as_view(template_name="homepage/admin_home_page.html"),
                                          login_url='/admin/login/'), name='admin_home'),
-    url(r'^admin/', include(admin.site.urls)),
+   
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^report_builder/', include('report_builder.urls')),
     url(r'^report/', include('report.urls')),
