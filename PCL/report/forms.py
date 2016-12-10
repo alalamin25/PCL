@@ -13,8 +13,7 @@ class ShiftSelectForm(forms.Form):
     attrs = {"class": "form-control", 'required': 'required'}
     # name = forms.CharField(max_length=50, label='Name',
     #                        widget=forms.TextInput(attrs=attrs))
-    start_date = forms.DateField(initial=datetime.date.today)
-    end_date = forms.DateField(initial=datetime.date.today)
+
     shift = forms.ModelChoiceField(
         queryset=Shift.objects.none(),
         label="Select On which on which type you want the report",
@@ -43,6 +42,9 @@ class FundamentalForm(forms.Form):
         label="Select On which on which type you want the report",
         # widget=forms.CheckboxSelectMultiple,
     )
+
+    start_date = forms.DateField(initial=datetime.date.today)
+    end_date = forms.DateField(initial=datetime.date.today)
 
 
 class FPBasicForm(forms.Form):

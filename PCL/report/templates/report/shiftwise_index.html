@@ -2,15 +2,12 @@
 {% load staticfiles %}
 
 
-
 {% block content %}
 
 <header>
-<!-- {{ form }} -->
-
-<form action="{% url 'fp_middle_cat' %}" method="POST">
+<form action="{% url 'shiftselect' %}" method="post">
 {% csrf_token %}
-    <!-- <div class="side-by-side clearfix"> -->
+
       <div class="header-content">
         <div class="header-content-inner">
               
@@ -33,18 +30,11 @@
 
 	            <label>End Date: {{ form.end_date }} </label>
 	            <br><br>
-              <div class="checkbox">
 
-               <label> 
-               {{ form.is_print }} 
-               Get report now!
-               </label>
 
             <button type="submit" class="btn btn-primary btn-lg">Next</button>
           </div>
         </div>
 </form>
-
-
 
 {% endblock %}

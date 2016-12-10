@@ -33,7 +33,7 @@ from report.util import FPResult, FPInfo
 class ShiftWiseView(View):
 
     form = FundamentalForm
-    template_name = 'report/shiftwise.html'
+    template_name = 'report/shiftwise_index.html'
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
@@ -125,6 +125,9 @@ class ShiftSelectView(View):
         form = self.form(request.POST)
         if(form.is_valid()):
             fundamental_type = form.cleaned_data['fundamental_product_type']
+            request.session['start_date'] = str(form.cleaned_data['start_date'])
+            request.session['end_date'] = str(form.cleaned_data['end_date'])
+
             shift_select_form = ShiftSelectForm(fundamental_type)
             return render(request, self.template_name,
                       {'form': shift_select_form})
@@ -144,12 +147,11 @@ class ShiftWiseReportView(View):
         if(form.is_valid()):
             shift = form.cleaned_data['shift']
             shift_list = Shift.objects.filter(id__in=shift)
-            # name = form.cleaned_data['name']
-            start_date = form.cleaned_data['start_date']
-            end_date = form.cleaned_data['end_date']
-            # date_list = getListOfDates(start_date, end_date)
-            # fp_search_result, ri_search_result = getShiftSearchResult(date_list, shift)
-            # print(fp_search_result, ri_search_result)
+            start_date = request.session.get('start_date')
+            end_date = request.session.get('end_date')
+            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+
             
             return final_shift_report(request, self.template_name, start_date, end_date, shift_list)
 
@@ -291,8 +293,6 @@ class FpItemView(View):
 
             fp_lower_cat = fp_lower_cat_form.cleaned_data['fp_lower_cat']
             fp_lower_cat = FPLowerCat.objects.filter(id__in=fp_lower_cat)
-            # start_date = request.session.get('start_date')
-            # end_date = request.session.get('end_date')
             is_print = fp_lower_cat_form.cleaned_data['is_print']
             print("\n these lower cat has been chosen")
             print(fp_lower_cat)
