@@ -5,7 +5,7 @@
 {% block head-content %}
 
   <style type="text/css" media="all">
-    /* fix rtl for demo */
+
     .chosen-rtl .chosen-drop { left: -9000px; }
   </style>
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -29,7 +29,6 @@
 
               {% for key, value in  form.fields.fp_item.choices %}
                 <option value={{ key }} type='checkbox'  name="fp_item">  {{ value }} </option>
-                <!-- <option><input value={{ key }} type='checkbox'  name="fp_middle_cat">{{ value }}</option> -->
               {% endfor %}
 
               </select>
@@ -40,12 +39,12 @@
               <div class="checkbox">
                 <label><input id="id_print_now" name="print_now" type="checkbox" value="">Get report now!</label>
               </div>
-            <!-- <a href="#" class="btn btn-primary btn-lg">NEXT</a> -->
+
             <button type="submit" class="btn btn-primary btn-lg">Next</button>
           </div>
         </div>
 </form>
-    <!-- </div> -->
+
 </header>
 
 {% endblock %}

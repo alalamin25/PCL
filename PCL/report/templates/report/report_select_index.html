@@ -28,35 +28,19 @@
 									{% for key, value in  form.fields.fundamental_product_type.choices %}
 									  <option value={{ key }}>  {{ value }} </option>
 									{% endfor %}
-<!-- 	              <option>UPVC</option>
-	              <option>CI</option> -->
-	             
-	              <!-- <option selected>Sloth Bear</option>
-	              <option disabled>Sun Bear</option>
-	              <option selected>Polar Bear</option>
-	              <option disabled>Spectacled Bear</option> -->
+
 	              </select>
 	            
               	<br><br>
 
-	            <!-- <div class="hero-unit">
-	            	<input  type="text" placeholder="Start Date"  id="start_date">
-	            </div> -->
 
-	            <!-- div class="hero-unit">
-	            	<input  type="text" placeholder="End Date"  id="end_date">
-	            </div> -->
-<!-- 	            <input id="id_start_date" name="start_date" type="text" value="2016-12-10" required=""> -->
-	            <!-- <input type="text" name="start_date" placeholder="Start Date" size="12" id="id_start_date" required /> -->
 	            <label>Start Date: {{ form.start_date }} </label>
 	            <br><br>
 	            <!-- <input type="text" placeholder="End Date" size="13" id="inputField2" /> -->
 	            <!-- <input type="text" name="end_date" placeholder="Start Date" size="12" id="id_end_date" required /> -->
 	            <label>End Date: {{ form.end_date }} </label>
 	            <br><br>
-              <div class="checkbox">
-                <label><input id="id_select_all" name="select_all" type="checkbox" value="">Select ALL</label>
-              </div>
+
               <div class="checkbox">
                 <!-- <label><input id="id_print_now" name="print_now" type="checkbox" value="">Get report now!</label> -->
                <label> 

@@ -338,14 +338,8 @@ def getFPSearchResult(date_list, fp_item):
                 creation_time__month=date.month,
                 creation_time__day=date.day,
                 finished_product_item=fp).aggregate(total_amount=Sum('unit_amount'))
-            # print(
-            # "The result of {0} and typeof fp {1}is {2}".format(fp, " ", result))
             if(result['total_amount']):
-                # print(
-                    # "\n\n\n\nThe result of {0} is {1}\n\n\n".format(fp, result))
-                # fp_info = FPInfo(fp)
-                # fp_info.unit_amount = result['total_amount']
-                # fp_result.fp_list.append(fp_info)
+
                 temp = {
                     'fp_item': fp,
                     'total_amount': result['total_amount']
@@ -353,13 +347,10 @@ def getFPSearchResult(date_list, fp_item):
                 fp_info['result_list'].append(temp)
         
         fp_search_result.append(fp_info)
-        # if(len(fp_result.fp_list) > 0):
-        #     # print("........ appending to fpsearch result........")
-        #     fp_search_result.append(fp_result)
+
 
     print("\n returning\n")
     # print(fp_search_result)
-    # print(fp_search_result[0])
     return fp_search_result
 
 
