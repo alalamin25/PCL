@@ -1,61 +1,65 @@
-{% extends "common/base.html" %}
-{% load static %}
+{% extends "common/base_report.html" %}
+{% load staticfiles %}
+
+
+
+
 {% block content %}
-   <h1 align="center"> Final Product Item Report page </h1>
+<div class="table-class">
+	<div class="container">
+	  	  
+	  	  <p>Report on Finished Products </p>            
+	  	  
+	  <table class="table table-bordered" border="5">
+	    <thead>
+	      <tr>
+	      	<th>Date</th>
+	        <th>Product Name</th>
+	        <th>Quantity</th>
+	        <th>Weight</th>
+	        <th>Remarks</th>
+	      </tr>
+	    </thead>
+	    <tbody>
 
-   <h3>Going to print report of : {{ report_name }}</h3>
+	    {% for result in fp_search_result %}
+
+	      {% if result.result_list %}
+		      <tr>
+		      	<td rowspan="{{ result.result_list|length }}" valign="middle">{{ result.date }}</td>
+
+						{% for r in result.result_list %}
+
+	            {% if forloop.first %}   
+	                         
+		            <td>{{ r.fp_item }}</td> 
+		            <td>{{ r.total_amount }}</td>
+				        <td>...</td>
+				        <td rowspan="{{ result.result_list|length }}">  </td>
+
+				      {% else %}
+				        
+				        <tr>
+					        <td>{{ r.fp_item }}</td> 
+			            <td>{{ r.total_amount }}</td>
+					        <td>...</td>			        	
+				        </tr>
+
+			        {% endif %}
+	          {% endfor %}
 
 
-<table border="1">
-  <tr>
-  <th>Date</th>
-<!--   <th>Product Description</th> -->
-  <th>Name Of Finished Item</th>
-  <th>Amount</th>
-  </tr>
-  {% for date in date_list %}
-    <tr>
-    <td> {{ date }}</td>
-    <td>
+		      </tr>
+	      {% endif %}
+
+	    {% endfor %}
 
 
-      <table>
-        <tbody>
-
-          {% for result in fp_search_result %}
-            {% ifequal date result.date %}
-              <tr>
-
-                <td>{{ result.fp_item }}</td>
-                <!-- <td>{{ result.total_amount }}</td>                 -->
-              </tr>           
-              
-            {% endifequal %}
-          {% endfor %}
-        </tbody>
-      </table>
-    </td>
-    <td>
-      <table>
-        <tbody>
-
-          {% for result in fp_search_result %}
-            {% ifequal date result.date %}
-              <tr>
-
-                <!-- <td>{{ result.fp_item }}</td> -->
-                <td>{{ result.total_amount }}</td>                
-              </tr>           
-              
-            {% endifequal %}
-          {% endfor %}
-        </tbody>
-      </table>
-    </td>
-
-    </tr>  
-  {% endfor %}
-
-</table>
-
+	    </tbody>
+	  </table>
+	</div>
+</div>
 {% endblock %}
+
+</body>
+</html>

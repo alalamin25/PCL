@@ -1,6 +1,8 @@
 from io import BytesIO
 from datetime import timedelta
 from reportlab.pdfgen import canvas
+import json
+import datetime
 
 
 from django.shortcuts import render
@@ -162,13 +164,14 @@ class ShiftWiseReportView(View):
 
 
 
-class IndexView(TemplateView):
-    template_name = "report/home.html"
+# class IndexView(TemplateView):
+#     template_name = "report/home.html"
 
 
 class FpReportView(View):
     fp_basic_form = FPBasicForm
-    template_name = 'report/fp_report.html'
+    # template_name = 'report/fp_report.html'
+    template_name = 'report/report_select_index.html'
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
@@ -205,6 +208,8 @@ class FpMiddleCatView(View):
             start_date = fp_basic_form.cleaned_data['start_date']
             end_date = fp_basic_form.cleaned_data['end_date']
             is_print = fp_basic_form.cleaned_data['is_print']
+            request.session['start_date'] = str(start_date)
+            request.session['end_date'] = str(end_date)
             if(is_print):
                 fp_list = FPItem.objects.filter(
                     fundamental_type=fundamental_type)
@@ -213,10 +218,10 @@ class FpMiddleCatView(View):
                 # return HttpResponse("Going to print now")
 
             form = FPMiddleCatForm(fundamental_type)
-            form.fields['start_date'].initial = fp_basic_form.cleaned_data[
-                'start_date']
-            form.fields['end_date'].initial = fp_basic_form.cleaned_data[
-                'end_date']
+            # form.fields['start_date'].initial = fp_basic_form.cleaned_data[
+            #     'start_date']
+            # form.fields['end_date'].initial = fp_basic_form.cleaned_data[
+            #     'end_date']
             # form.fields['fp_middle_cat'].queryset = FPMiddleCat.objects.filter(
             #     fundamental_type=fundamental_type)
             return render(request, self.template_name, {'form': form})
@@ -236,12 +241,15 @@ class FpLowerCatView(View):
     def post(self, request, *args, **kwargs):
 
         fp_middle_cat_form = self.fp("", request.POST)
+        # fp_middle_cat = request.POST.get('fp_middle_cat')
+        # if(fp_middle_cat):
+        #     print("\n\n\n ........ middle cat found {0}".format(fp_middle_cat))
         if fp_middle_cat_form.is_valid():
             # fp_middle_cat will be a  string not fp_middle cat object
             fp_middle_cat = fp_middle_cat_form.cleaned_data['fp_middle_cat']
             fp_middle_cat = FPMiddleCat.objects.filter(id__in=fp_middle_cat)
-            start_date = fp_middle_cat_form.cleaned_data['start_date']
-            end_date = fp_middle_cat_form.cleaned_data['end_date']
+            # start_date = fp_middle_cat_form.cleaned_data['start_date']
+            # end_date = fp_middle_cat_form.cleaned_data['end_date']
             is_print = fp_middle_cat_form.cleaned_data['is_print']
             print("\n these middle cat has been chosen")
             print(fp_middle_cat)
@@ -258,14 +266,14 @@ class FpLowerCatView(View):
             else:
 
                 form = FPLowerCatForm(fp_middle_cat)
-                form.fields['start_date'].initial = start_date
-                form.fields['end_date'].initial = end_date
+                # form.fields['start_date'].initial = start_date
+                # form.fields['end_date'].initial = end_date
 
                 return render(request, self.template_name, {'form': form})
         else:
-            print("The middle cat form is not valid")
+            print("\n\nThe middle cat form is not valid")
             print(fp_middle_cat_form.errors)
-            return HttpResponse("form is IIIIIIINvalid")
+            return HttpResponse("form is IIIIIIINvalid ")
 
 
 class FpItemView(View):
@@ -283,8 +291,8 @@ class FpItemView(View):
 
             fp_lower_cat = fp_lower_cat_form.cleaned_data['fp_lower_cat']
             fp_lower_cat = FPLowerCat.objects.filter(id__in=fp_lower_cat)
-            start_date = fp_lower_cat_form.cleaned_data['start_date']
-            end_date = fp_lower_cat_form.cleaned_data['end_date']
+            # start_date = request.session.get('start_date')
+            # end_date = request.session.get('end_date')
             is_print = fp_lower_cat_form.cleaned_data['is_print']
             print("\n these lower cat has been chosen")
             print(fp_lower_cat)
@@ -300,8 +308,8 @@ class FpItemView(View):
             else:
 
                 form = FPItemForm(fp_lower_cat)
-                form.fields['start_date'].initial = start_date
-                form.fields['end_date'].initial = end_date
+                # form.fields['start_date'].initial = start_date
+                # form.fields['end_date'].initial = end_date
 
                 return render(request, self.template_name, {'form': form})
 
@@ -318,8 +326,13 @@ def getFPSearchResult(date_list, fp_item):
     fp_search_result = []
     # fp_search_result2 = []
     for date in date_list:
-        fp_result = FPResult(date)
+        # fp_result = FPResult(date)
+        fp_info = {
+            'date': date,
+            'result_list': [],
+        }
         for fp in fp_item:
+
             result = ProductionEntry.objects.filter(
                 creation_time__year=date.year,
                 creation_time__month=date.month,
@@ -333,12 +346,13 @@ def getFPSearchResult(date_list, fp_item):
                 # fp_info = FPInfo(fp)
                 # fp_info.unit_amount = result['total_amount']
                 # fp_result.fp_list.append(fp_info)
-                fp_info = {
-                    'date': date,
+                temp = {
                     'fp_item': fp,
                     'total_amount': result['total_amount']
                 }
-                fp_search_result.append(fp_info)
+                fp_info['result_list'].append(temp)
+        
+        fp_search_result.append(fp_info)
         # if(len(fp_result.fp_list) > 0):
         #     # print("........ appending to fpsearch result........")
         #     fp_search_result.append(fp_result)
@@ -428,8 +442,11 @@ class FpItemReportView(View):
 
             fp_item = fp_item_form.cleaned_data['fp_item']
             fp_list = FPItem.objects.filter(id__in=fp_item)
-            start_date = fp_item_form.cleaned_data['start_date']
-            end_date = fp_item_form.cleaned_data['end_date']
+            start_date = request.session.get('start_date')
+            end_date = request.session.get('end_date')
+            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+            print(start_date)
             # date_list = self.getListOfDates(start_date, end_date)
             return final_product_report(request, self.template_name, start_date, end_date, fp_list)
         else:

@@ -66,8 +66,8 @@ class FPMiddleCatForm(forms.Form):
         queryset=FPMiddleCat.objects.none(),
         widget=forms.CheckboxSelectMultiple,
     )
-    start_date = forms.DateField()
-    end_date = forms.DateField()
+    # start_date = forms.DateField()
+    # end_date = forms.DateField()
     is_print = forms.BooleanField(initial=False, required=False)
 
     def __init__(self, fundamental_type, *args, **kwargs):
@@ -91,8 +91,8 @@ class FPLowerCatForm(forms.Form):
         queryset=FPLowerCat.objects.none(),
         widget=forms.CheckboxSelectMultiple,
     )
-    start_date = forms.DateField()
-    end_date = forms.DateField()
+    # start_date = forms.DateField()
+    # end_date = forms.DateField()
     is_print = forms.BooleanField(initial=False, required=False)
 
     def __init__(self, middle_category_type, *args, **kwargs):
@@ -116,8 +116,8 @@ class FPItemForm(forms.Form):
         queryset=FPItem.objects.none(),
         widget=forms.CheckboxSelectMultiple,
     )
-    start_date = forms.DateField()
-    end_date = forms.DateField()
+    # start_date = forms.DateField()
+    # end_date = forms.DateField()
 
     def __init__(self, fp_lower_cat, *args, **kwargs):
 

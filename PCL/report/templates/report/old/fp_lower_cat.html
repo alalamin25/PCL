@@ -1,0 +1,41 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% block content %}
+   <h1> Final Product Select Lower Category </h1>
+
+<form action="{% url 'fp_item' %}" method="post">
+{% csrf_token %}
+<fieldset class="no-padding">
+    {{ form.non_field_errors }}
+
+    <label>Select Lower Category <span class="color-red">*</span></label>
+    <div class="row sky-space-20">
+    <div class="col-md-11 col-md-offset-0">
+        <div>
+            {{ form.fp_lower_cat.errors }}
+            {{ form.fp_lower_cat }}
+            
+            {{ form.start_date.as_hidden }}
+            {{ form.end_date.as_hidden }}
+        </div>
+    </div>
+    </div>
+    <label>Do You Want The Report Now <span class="color-red">*</span></label>
+    <div class="row sky-space-20">
+        <div class="col-md-11 col-md-offset-0">
+            <div>
+                {{ form.is_print }}
+
+            </div>
+        </div>
+    </div>
+
+
+    <p>
+        <button type="submit" class="btn-u">Next</button>
+    </p>
+	</fieldset>
+
+</form>
+
+{% endblock %}
