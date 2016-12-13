@@ -1,0 +1,114 @@
+{% extends "common/base_report.html" %}
+{% load staticfiles %}
+
+
+
+
+{% block content %}
+<div class="table-class">
+  <div class="container">
+        
+        <p>Report on Raw Item </p>
+
+
+
+  <p> Raw Item Wise Summary Report </p>  
+       
+    <table class="table table-bordered" border="5">
+      <thead>
+        <tr>
+          <th>Initial</th>
+          <th>In</th>
+          <th>Return</th>
+          <th>Total In</th>
+          <th>Out</th>
+          <th>Closing</th>
+          <th>Stock In Taka</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for rawitem in rawitem_list %}
+      <tr>
+        <td> {{ rawitem }} </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+
+  <br><br><br><br><br><br>
+
+  <p> DateWise Summary Report </p>  
+       
+    <table class="table table-bordered" border="5">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Raw Item</th>
+          <th>Initial</th>
+          <th>In</th>
+          <th>Return</th>
+          <th>Total In</th>
+          <th>Out</th>
+          <th>Closing</th>
+          <th>Stock In Taka</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for rawitem in rawitem_list %}
+      <tr>
+        <td rowspan="2" valign="middle">01/01/2017</td>
+        <td>Plantic</td>
+        <td>  </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        
+        <td>Uria</td>
+        <td>  </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        
+      </tr>
+
+
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+    <br><br><br><br><br><br>
+    
+  </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>

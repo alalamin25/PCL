@@ -1,0 +1,45 @@
+{% extends "common/base_zim_2.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+<header>
+
+<form action="{% url 'rawitem_select' %}" method="POST">
+{% csrf_token %}
+    <!-- <div class="side-by-side clearfix"> -->
+      <div class="header-content">
+        <div class="header-content-inner">
+              
+              <h2>
+              Raw Material Report - Date selection<br><br>
+              </h2>
+              <br><br>
+                <label> Choose Category </label>
+	              <select data-placeholder="Select your options" class="chosen-select" style="width:100px;" tabindex="1"
+	              name="fundamental_product_type" id="id_fundamental_product_type" required>
+										{% for key, value in  form.fields.fundamental_product_type.choices %}
+										  <option value={{ key }}>  {{ value }} </option>
+										{% endfor %}
+	              </select>	            
+              	<br><br>
+
+
+	            <label>Start Date: {{ form.start_date }} </label>
+	            <br><br>
+
+	            <label>End Date: {{ form.end_date }} </label>
+	            <br><br>
+              <div class="checkbox">
+
+
+            <button type="submit" class="btn btn-primary btn-lg">Next</button>
+          </div>
+        </div>
+</form>
+
+
+
+{% endblock %}

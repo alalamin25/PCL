@@ -22,18 +22,18 @@ from django.template.loader import get_template
 import pdfkit
 
 from report.forms import FPBasicForm, FPMiddleCatForm, FPLowerCatForm, FPItemForm,\
-     FundamentalForm, ShiftSelectForm
+    FundamentalForm, ShiftSelectForm, RawItemSelectForm
 from master_table.models import FundamentalProductType, FPMiddleCat, FPLowerCat,\
-    FPItem, Shift
+    FPItem, Shift, RawItem
 from production_table.models import ProductionEntry, RIIssueEntry
 
 from report.util import FPResult, FPInfo
 
 
-class ShiftWiseView(View):
+class RawItemView(View):
 
     form = FundamentalForm
-    template_name = 'report/shiftwise_index.html'
+    template_name = 'report/rawitem_index.html'
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
@@ -42,6 +42,76 @@ class ShiftWiseView(View):
 
     def post(self, request, *args, **kwargs):
         pass
+
+
+class RawItemSelectView(View):
+
+    form = FundamentalForm
+    template_name = 'report/rawitem_select.html'
+
+    def get(self, request, *args, **kwargs):
+        # form = self.form_class(initial=self.initial)
+        return render(request, self.template_name,
+                      {'form': self.form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST)
+        if(form.is_valid()):
+            fundamental_type = form.cleaned_data['fundamental_product_type']
+            request.session['start_date'] = str(
+                form.cleaned_data['start_date'])
+            request.session['end_date'] = str(form.cleaned_data['end_date'])
+
+            rawitem_select_form = RawItemSelectForm(fundamental_type)
+            return render(request, self.template_name,
+                          {'form': rawitem_select_form})
+
+
+class RawItemReportView(View):
+
+    template_name = 'report/rawitem_report.html'
+    form = RawItemSelectForm
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("In get method")
+
+    def post(self, request, *args, **kwargs):
+        # return HttpResponse("In post method")
+        form = self.form("", request.POST)
+        if(form.is_valid()):
+            rawitem = form.cleaned_data['rawitem']
+            rawitem_list = RawItem.objects.filter(id__in=rawitem)
+            start_date = request.session.get('start_date')
+            end_date = request.session.get('end_date')
+            start_date = datetime.datetime.strptime(
+                start_date, "%Y-%m-%d").date()
+            end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+
+            return final_rawitem_report(request, self.template_name, start_date, end_date, rawitem_list)
+
+            # return HttpResponse("valid")
+
+        else:
+            return HttpResponse("IN valid")
+
+
+def final_rawitem_report(request, template_name, start_date, end_date, rawitem_list):
+
+    context = {}
+    # if(len(shift_list) > 0):
+    #     fundamental_type = shift_list[0].fundamental_type
+    #     context['report_name'] = fundamental_type
+    # date_list = getListOfDates(start_date, end_date)
+    # context['date_list'] = date_list
+
+    # fp_search_result, ri_search_result = getShiftSearchResult(
+    #     date_list, shift_list)
+    # # print(fp_search_result)
+    # context['fp_search_result'] = fp_search_result
+    # context['ri_search_result'] = ri_search_result
+    context['rawitem_list'] = rawitem_list
+    # print(context)
+    return render(request, template_name, context)
 
 
 def final_shift_report(request, template_name, start_date, end_date, shift_list):
@@ -53,14 +123,14 @@ def final_shift_report(request, template_name, start_date, end_date, shift_list)
     date_list = getListOfDates(start_date, end_date)
     context['date_list'] = date_list
 
-    fp_search_result, ri_search_result = getShiftSearchResult(date_list, shift_list)
+    fp_search_result, ri_search_result = getShiftSearchResult(
+        date_list, shift_list)
     # print(fp_search_result)
     context['fp_search_result'] = fp_search_result
     context['ri_search_result'] = ri_search_result
     context['shift_list'] = shift_list
     # print(context)
     return render(request, template_name, context)
-
 
 
 def getShiftSearchResult(date_list, shift_list):
@@ -85,8 +155,6 @@ def getShiftSearchResult(date_list, shift_list):
                 }
                 fp_search_result.append(fp_info)
 
-
-
     for date in date_list:
         for shift in shift_list:
             result = RIIssueEntry.objects.filter(
@@ -103,12 +171,24 @@ def getShiftSearchResult(date_list, shift_list):
                 }
                 ri_search_result.append(ri_info)
 
-
-
     print("\n returning\n")
     print(fp_search_result)
     print(ri_search_result)
     return fp_search_result, ri_search_result
+
+
+class ShiftWiseView(View):
+
+    form = FundamentalForm
+    template_name = 'report/shiftwise_index.html'
+
+    def get(self, request, *args, **kwargs):
+        # form = self.form_class(initial=self.initial)
+        return render(request, self.template_name,
+                      {'form': self.form})
+
+    def post(self, request, *args, **kwargs):
+        pass
 
 
 class ShiftSelectView(View):
@@ -125,13 +205,13 @@ class ShiftSelectView(View):
         form = self.form(request.POST)
         if(form.is_valid()):
             fundamental_type = form.cleaned_data['fundamental_product_type']
-            request.session['start_date'] = str(form.cleaned_data['start_date'])
+            request.session['start_date'] = str(
+                form.cleaned_data['start_date'])
             request.session['end_date'] = str(form.cleaned_data['end_date'])
 
             shift_select_form = ShiftSelectForm(fundamental_type)
             return render(request, self.template_name,
-                      {'form': shift_select_form})
-
+                          {'form': shift_select_form})
 
 
 class ShiftWiseReportView(View):
@@ -149,31 +229,22 @@ class ShiftWiseReportView(View):
             shift_list = Shift.objects.filter(id__in=shift)
             start_date = request.session.get('start_date')
             end_date = request.session.get('end_date')
-            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+            start_date = datetime.datetime.strptime(
+                start_date, "%Y-%m-%d").date()
             end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
 
-            
             return final_shift_report(request, self.template_name, start_date, end_date, shift_list)
 
-
             return HttpResponse("valid")
-
 
         else:
             return HttpResponse("IN valid")
 
 
-
-
-
-# class IndexView(TemplateView):
-#     template_name = "report/home.html"
-
-
 class FpReportView(View):
     fp_basic_form = FPBasicForm
     # template_name = 'report/fp_report.html'
-    template_name = 'report/report_select_index.html'
+    template_name = 'report/fp_index.html'
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
@@ -313,7 +384,6 @@ class FpItemView(View):
 
                 return render(request, self.template_name, {'form': form})
 
-
         else:
             print("The middle cat form is not valid")
             print(fp_lower_cat_form.errors)
@@ -345,9 +415,8 @@ def getFPSearchResult(date_list, fp_item):
                     'total_amount': result['total_amount']
                 }
                 fp_info['result_list'].append(temp)
-        
-        fp_search_result.append(fp_info)
 
+        fp_search_result.append(fp_info)
 
     print("\n returning\n")
     # print(fp_search_result)
@@ -397,7 +466,6 @@ def final_product_report(request, template_name, start_date, end_date, fp_list, 
             'Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
 
-
     return render(request, template_name, context)
 
 
@@ -435,7 +503,8 @@ class FpItemReportView(View):
             fp_list = FPItem.objects.filter(id__in=fp_item)
             start_date = request.session.get('start_date')
             end_date = request.session.get('end_date')
-            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+            start_date = datetime.datetime.strptime(
+                start_date, "%Y-%m-%d").date()
             end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
             print(start_date)
             # date_list = self.getListOfDates(start_date, end_date)
@@ -443,6 +512,3 @@ class FpItemReportView(View):
         else:
             print(fp_item_form.errors)
             return HttpResponse("The form is invalid")
-
-
-

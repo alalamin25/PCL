@@ -5,7 +5,37 @@ from django.forms import ModelForm
 
 from report.models import FinishedProductReport
 from master_table.models import FundamentalProductType,\
-    FPMiddleCat, FPLowerCat, FPItem, Shift
+    FPMiddleCat, FPLowerCat, FPItem, Shift, RawItem
+
+
+
+
+class RawItemSelectForm(forms.Form):
+
+    attrs = {"class": "form-control", 'required': 'required'}
+    # name = forms.CharField(max_length=50, label='Name',
+    #                        widget=forms.TextInput(attrs=attrs))
+
+    rawitem = forms.ModelChoiceField(
+        queryset=RawItem.objects.none(),
+        label="Select On which on which type you want the report",
+        widget=forms.CheckboxSelectMultiple,
+    )
+
+    def __init__(self, fundamental_type, *args, **kwargs):
+
+        super(RawItemSelectForm, self).__init__(*args, **kwargs)
+        if(fundamental_type):
+            self.fields['rawitem'] = forms.MultipleChoiceField(
+                widget=forms.CheckboxSelectMultiple, choices=(
+                    (s.id, s) for s in RawItem.objects.filter(
+                        fundamental_type=fundamental_type)))
+        else:
+            self.fields['rawitem'] = forms.MultipleChoiceField(
+                widget=forms.CheckboxSelectMultiple, choices=(
+                    (s.id, s) for s in RawItem.objects.all()))
+
+
 
 
 class ShiftSelectForm(forms.Form):
@@ -32,6 +62,11 @@ class ShiftSelectForm(forms.Form):
             self.fields['shift'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
                     (s.id, s) for s in Shift.objects.all()))
+
+
+
+
+
 
 
 class FundamentalForm(forms.Form):
