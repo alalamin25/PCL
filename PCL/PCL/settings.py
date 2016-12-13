@@ -37,8 +37,6 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = (
     
-    'django.contrib.admin',
-    'grappelli',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -55,6 +53,8 @@ INSTALLED_APPS = (
     'common',
     'report',
     'django_select2',
+    'django.contrib.admin',
+    'grappelli',
     
 
     # 'reporter',
@@ -76,7 +76,7 @@ ROOT_URLCONF = 'PCL.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

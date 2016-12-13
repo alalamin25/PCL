@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from homepage import views as homepage_views
 
 admin.site.site_header = 'PCL ADMINISTRATION'
+admin.site.site_title =  "PCL Admin"
+
 
 urlpatterns = [    
    
