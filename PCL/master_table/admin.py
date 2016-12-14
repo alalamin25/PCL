@@ -140,6 +140,7 @@ class CPItem_Admin(admin.ModelAdmin):
     list_display_links = ('id', 'fp_item',)
     search_fields = ('fp_item',)
     # list_filter = ('type',)
+    raw_id_fields = ('fp_item', )
     inlines = [CPItemEntryInline]
     fieldsets = [
         (

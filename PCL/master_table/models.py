@@ -101,6 +101,7 @@ class FPItem(models.Model):
         sort=True
     )
     comment = models.TextField(blank=True, null=True)
+    is_compound_product = models.BooleanField(default=False)
     # comment2 = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -113,12 +114,12 @@ class FPItem(models.Model):
 
 class CPItem(models.Model):
     # name = models.CharField(max_length=100)
-    fp_item = models.ForeignKey(FPItem)
+    fp_item = models.ForeignKey(FPItem, verbose_name = "Select Compound Product")
     comment = models.TextField(blank=True, null=True)
 
 
     def __str__(self):
-        return self.name
+        return self.fp_item.name
 
     class Meta:
         verbose_name = "Compound Product Item"
@@ -159,7 +160,7 @@ class CPItemEntry(models.Model):
     unit_amount = models.FloatField()
 
     def __str__(self):
-        return self.cp_item.name
+        return self.cp_item.fp_item.name
 
 
 class Shift(models.Model):
