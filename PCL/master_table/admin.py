@@ -124,6 +124,10 @@ class FPItem_Admin(admin.ModelAdmin):
                 'fields': ['lower_category_type']}
         ),
         (
+            'Check Box If This Finished Product Is A Compound Item:', {
+                'fields': ['is_cp']}
+        ),
+        (
             'Write Comment: ', {'fields': ['comment']}
         ),
 
@@ -140,7 +144,7 @@ class CPItem_Admin(admin.ModelAdmin):
     list_display_links = ('id', 'fp_item',)
     search_fields = ('fp_item',)
     # list_filter = ('type',)
-    raw_id_fields = ('fp_item', )
+    # raw_id_fields = ('fp_item', )
     inlines = [CPItemEntryInline]
     fieldsets = [
         (
@@ -152,6 +156,12 @@ class CPItem_Admin(admin.ModelAdmin):
         ),
 
     ]
+
+    def get_form(self, request, obj=None, **kwargs):
+        print("\n in get form method")
+        form = super(CPItem_Admin, self).get_form(request, obj, **kwargs)
+        form.base_fields['fp_item'].queryset = FPItem.objects.filter(is_cp='True')
+        return form
 
 
 class Shift_Admin(admin.ModelAdmin):

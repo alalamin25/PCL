@@ -101,7 +101,7 @@ class FPItem(models.Model):
         sort=True
     )
     comment = models.TextField(blank=True, null=True)
-    is_compound_product = models.BooleanField(default=False)
+    is_cp = models.BooleanField("Is Compound Item", default=False)
     # comment2 = models.TextField(blank=True, null=True)
 
     def __str__(self):
