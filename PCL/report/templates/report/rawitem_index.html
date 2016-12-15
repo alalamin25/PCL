@@ -18,7 +18,8 @@
               </h2>
               <br><br>
                 <label> Choose Category </label>
-	              <select data-placeholder="Select your options" class="chosen-select" style="width:100px;" tabindex="1"
+    
+	              <select data-placeholder="Select your options" class="chosen-select" style="width:300px;" tabindex="1"
 	              name="fundamental_product_type" id="id_fundamental_product_type" required>
 										{% for key, value in  form.fields.fundamental_product_type.choices %}
 										  <option value={{ key }}>  {{ value }} </option>
