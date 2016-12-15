@@ -512,4 +512,6 @@ td a:hover {
 }
 
 
-  /*for dropdown*/
+label{
+    padding-right: 20px;
+}

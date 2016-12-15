@@ -1,56 +1,51 @@
-{% extends "common/base.html" %}
-{% load static %}
-{% block content %}
-   <h1> Final Product Report Page </h1>
+{% extends "common/base_zim_2.html" %}
+{% load staticfiles %}
 
+
+{% block head-content %}
+
+  <style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop { left: -9000px; }
+  </style>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+{%  endblock %}
+
+
+{% block content %}
+
+<header>
 <form action="{% url 'shfitwise_report' %}" method="post">
 {% csrf_token %}
-<fieldset class="no-padding">
-    {{ form.non_field_errors }}
+    <!-- <div class="side-by-side clearfix"> -->
+      <div class="header-content">
+        <div class="header-content-inner">
+              
+              <h2>
+              Shift Wise Report - Select Shift<br><br>
+              </h2>
+              <br><br>
+              <select data-placeholder="Select your options" style="width:350px;" multiple class="chosen-select" tabindex="8" name="shift" type="checkbox">
 
-    <label>Select Shift <span class="color-red">*</span></label>
-    <div class="row sky-space-20">
-    <div class="col-md-11 col-md-offset-0">
-        <div>
-            {{ form.shift.errors }}
-            {{ form.shift }}
+              {% for key, value in  form.fields.shift.choices %}
+                <option value={{ key }} type='checkbox'  name="shift">  {{ value }} </option>
+
+              {% endfor %}
+
+              </select>
+              <br><br>
+              <div class="checkbox">
+                <label><input id="id_select_all" name="select_all" type="checkbox" value="">Select ALL</label>
+              </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">Next</button>
+          </div>
         </div>
-    </div>
-    </div>
-
-    <label>Start Date <span class="color-red">*</span></label>
-    <div class="row sky-space-20">
-        <div class="col-md-11 col-md-offset-0">
-            <div>
-                {{ form.start_date.errors }}
-                {{ form.start_date }}
-            </div>
-        </div>
-    </div>
-
-    <label>End Date <span class="color-red">*</span></label>
-    <div class="row sky-space-20">
-        <div class="col-md-11 col-md-offset-0">
-            <div>
-                {{ form.end_date.errors }}
-                {{ form.end_date }}
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-    <p>
-        <button type="submit" class="btn-u">Next</button>
-    </p>
-	</fieldset>
-
-
-
 </form>
-
-
+    <!-- </div> -->
+</header>
 
 {% endblock %}
+
+
