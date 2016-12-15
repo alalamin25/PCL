@@ -1,4 +1,4 @@
-{% extends "common/base_zim_2.html" %}
+{% extends "common/alamin_select.html" %}
 {% load staticfiles %}
 
 
@@ -25,10 +25,10 @@
               Final Product Report - Choose Final Products <br><br>
               </h2>
               <br><br>
-              <select data-placeholder="Select your options" style="width:350px;" multiple class="chosen-select" tabindex="8" name="fp_item" type="checkbox">
+              <select data-placeholder="Select your options" style="width:350px;" multiple class="chosen-select" tabindex="8" name="fp_item" type="checkbox" id="myselect">
 
               {% for key, value in  form.fields.fp_item.choices %}
-                <option value={{ key }} type='checkbox'  name="fp_item">  {{ value }} </option>
+                <option value={{ key }} type='checkbox'  name="fp_item" class="options">  {{ value }} </option>
               {% endfor %}
 
               </select>

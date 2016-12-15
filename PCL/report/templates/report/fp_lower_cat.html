@@ -1,4 +1,4 @@
-{% extends "common/base_zim_2.html" %}
+{% extends "common/alamin_select.html" %}
 {% load staticfiles %}
 
 
@@ -25,11 +25,11 @@
               Final Product Report - Lower Category<br><br>
               </h2>
               <br><br>
-              <select data-placeholder="Select your options" style="width:350px;" multiple class="chosen-select" tabindex="8" name="fp_lower_cat" type="checkbox">
+              <select data-placeholder="Select your options" style="width:350px;" multiple class="chosen-select" tabindex="8" name="fp_lower_cat" type="checkbox" id="myselect">
 
               {% for key, value in  form.fields.fp_lower_cat.choices %}
-                <option value={{ key }} type='checkbox'  name="fp_lower_cat">  {{ value }} </option>
-                <!-- <option><input value={{ key }} type='checkbox'  name="fp_middle_cat">{{ value }}</option> -->
+                <option value={{ key }} type='checkbox'  name="fp_lower_cat" class="options">  {{ value }} </option>
+                
               {% endfor %}
 
               </select>

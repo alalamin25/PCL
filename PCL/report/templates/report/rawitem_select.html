@@ -48,38 +48,7 @@
     <!-- </div> -->
 </header>
 
-  <script>
 
-  window.onload = function (){
-    $(document).ready(function() {
-
-      $("#myselect").select2({
-        placeholder: "Select an Item",
-
-      });
-
-      var options = $("option");
-      var values = []; 
-      $('#id_select_all').change(function(){
-          console.log(" selected changed ");
-
-          if($('#id_select_all').is(':checked')){
-            console.log("selected");
-
-            for(var i=0; i<options.length; i++){
-              values[i] = options[i].value;
-
-            }
-            console.log(values);
-            $("#myselect").val(values).trigger("change");
-          }
-      });
-
-
-
-    });
-  };
-  </script>
 
 
 

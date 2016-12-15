@@ -1,4 +1,4 @@
-{% extends "common/base_zim_2.html" %}
+{% extends "common/alamin_select.html" %}
 {% load staticfiles %}
 
 
@@ -25,23 +25,13 @@
               Final Product Report - Middle Category<br><br>
               </h2>
               <br><br>
-              <select data-placeholder="Select your options" style="width:350px;" multiple class="chosen-select" tabindex="8" name="fp_middle_cat" type="checkbox">
+              <select data-placeholder="Select your options" style="width:350px;" multiple class="chosen-select" tabindex="8" name="fp_middle_cat" type="checkbox" id="myselect">
 
               {% for key, value in  form.fields.fp_middle_cat.choices %}
-                <option value={{ key }} type='checkbox'  name="fp_middle_cat">  {{ value }} </option>
+                <option value={{ key }} type='checkbox'  name="fp_middle_cat" class="options">  {{ value }} </option>
                 <!-- <option><input value={{ key }} type='checkbox'  name="fp_middle_cat">{{ value }}</option> -->
               {% endfor %}
-<!--               <option value=""></option>
-              <option>Reisin</option>
-              <option>Plastic pipe</option>
-              <option>Pipe 2inch</option>
-              <option>pipe 3inch</option>
-              <option>Pipe 4inch</option>
-              <option>pipe 5inch</option> -->
-              <!-- <option selected>Sloth Bear</option>
-              <option disabled>Sun Bear</option>
-              <option selected>Polar Bear</option>
-              <option disabled>Spectacled Bear</option> -->
+
               </select>
               <br><br>
               <div class="checkbox">
