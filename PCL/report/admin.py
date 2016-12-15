@@ -44,4 +44,4 @@ class FinishedProductReport_Admin(admin.ModelAdmin):
 
     # return HttpResponseRedirect(reverse('news-year-archive', args=(year,)))
 
-admin.site.register(FinishedProductReport, FinishedProductReport_Admin)
+# admin.site.register(FinishedProductReport, FinishedProductReport_Admin)

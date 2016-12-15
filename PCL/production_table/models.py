@@ -120,8 +120,8 @@ class RIIssueEntry(models.Model):
             raise ValidationError('Start date is after end date')
 
     class Meta:
-        verbose_name = "Raw Item Issued From Gowdown By Shifts"
-        verbose_name_plural = "Raw Items Issued From Gowdown By Shifts"
+        verbose_name = "Issued From Gowdown By Shifts"
+        verbose_name_plural = "Issued From Gowdown By Shifts"
 
 
 
@@ -161,5 +161,5 @@ class RIReturnEntry(models.Model):
             raise ValidationError('Start date is after end date')
 
     class Meta:
-        verbose_name = "Returned Raw Item To Gowdown By Shifts"
-        verbose_name_plural = "Returned Raw Items To Gowdown By Shifts"
+        verbose_name = "Returned To Gowdown"
+        verbose_name_plural = "Returned To Gowdown"

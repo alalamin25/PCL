@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'production_table',
     'homepage',
     'mother_godown',
-    'report_builder',
+    # 'report_builder',
     'smart_selects',
     'ajax_select',
     'common',
