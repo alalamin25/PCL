@@ -29,7 +29,7 @@
               <select data-placeholder="Select your options" style="width:350px;" multiple class="chosen-select" tabindex="8" name="rawitem" type="checkbox">
 
               {% for key, value in  form.fields.rawitem.choices %}
-                <option value={{ key }} type='checkbox'  name="rawitem">  {{ value }} </option>
+                <option value={{ key }} type='checkbox'  name="rawitem" class="options">  {{ value }} </option>
 
               {% endfor %}
 
