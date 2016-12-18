@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from smart_selects.db_fields import ChainedForeignKey
 
 from master_table.models import FundamentalProductType, RawItem
+# from mptt.models import MPTTModel, TreeForeignKey
 
 
 class PurchaseEntry(models.Model):
@@ -21,6 +22,7 @@ class PurchaseEntry(models.Model):
         sort=True
     )
     suplier = models.ForeignKey(Suplier)
+    # suplier2 = models.ForeignKey(Suplier)
     unit_price = models.FloatField()
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
