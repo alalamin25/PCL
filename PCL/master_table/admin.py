@@ -2,7 +2,66 @@ from django.contrib import admin
 
 from master_table.models import Suplier, FundamentalProductType,\
     RawItem, FPMiddleCat, FPLowerCat,\
-    FPItem, Shift, CPItem, CPItemEntry
+    FPItem, Shift, CPItem, CPItemEntry, Deport, Customer, Deport
+
+
+class Deport_Admin(admin.ModelAdmin):
+    list_display = ('name', 'code')
+    list_display_links = ('name',)
+    search_fields = ('name', 'code')
+
+    fieldsets = [
+        (
+            'Name Of The Deport: ', {'fields': ['name']}
+        ),
+        (
+            'Unique Code For The Deport: ', {'fields': ['code']}
+        ),
+
+        (
+            'Address Of The Deport: ', {'fields': ['address']}
+        ),
+
+
+    ]
+
+
+
+class Customer_Admin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'deport_code')
+    list_display_links = ('name',)
+    search_fields = ('name',)
+    list_filter = ('deport_code',)
+    raw_id_fields = ('deport_code',)
+    fieldsets = [
+        (
+            'Name Of The Customer: ', {'fields': ['name']}
+        ),
+
+        (
+            'Unique Code For The Customer: ', {'fields': ['code']}
+        ),
+
+        (
+            'Select Deport Code: ', {'fields': ['deport_code']}
+        ),
+
+        (
+            'Address Of The Customer: ', {'fields': ['address']}
+        ),
+
+    ]
+
+
+class FundamentalProductType_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    fieldsets = [
+        (
+            'Name Of Fundamental Product: ', {'fields': ['name']}
+        ),
+    ]
 
 
 class Suplier_Admin(admin.ModelAdmin):
@@ -35,9 +94,6 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
     ]
 
 
-
-
-
 class RawItem_Admin(admin.ModelAdmin):
     list_display = ('id', 'name', 'fundamental_type')
     list_display_links = ('id', 'name',)
@@ -59,7 +115,7 @@ class RawItem_Admin(admin.ModelAdmin):
 
 
 class FPMiddleCat_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name' , 'fundamental_type',)
+    list_display = ('id', 'name', 'fundamental_type',)
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
@@ -103,7 +159,8 @@ class FPLowerCat_Admin(admin.ModelAdmin):
 
 
 class FPItem_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'fundamental_type', 'middle_category_type', 'lower_category_type')
+    list_display = ('id', 'name', 'fundamental_type',
+                    'middle_category_type', 'lower_category_type')
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
@@ -160,7 +217,8 @@ class CPItem_Admin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         print("\n in get form method")
         form = super(CPItem_Admin, self).get_form(request, obj, **kwargs)
-        form.base_fields['fp_item'].queryset = FPItem.objects.filter(is_cp='True')
+        form.base_fields[
+            'fp_item'].queryset = FPItem.objects.filter(is_cp='True')
         return form
 
 
@@ -201,4 +259,5 @@ admin.site.register(FPItem, FPItem_Admin)
 admin.site.register(CPItem, CPItem_Admin)
 # admin.site.register(Color, Color_Admin)
 admin.site.register(Shift, Shift_Admin)
-# admin.site.register(CPItemEntry)
+admin.site.register(Customer, Customer_Admin)
+admin.site.register(Deport, Deport_Admin)

@@ -4,6 +4,32 @@ from django.utils.timezone import now
 from smart_selects.db_fields import ChainedForeignKey
 
 
+class Deport(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=30, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Customer(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=30, unique=True)
+    deport_code = models.ForeignKey(Deport, to_field='code')
+
+    def __str__(self):
+        return self.name
+
+
+class FundamentalProductType(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
 class Suplier(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField()
@@ -28,9 +54,6 @@ class FundamentalProductType(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
 
 
 class RawItem(models.Model):
@@ -114,9 +137,8 @@ class FPItem(models.Model):
 
 class CPItem(models.Model):
     # name = models.CharField(max_length=100)
-    fp_item = models.ForeignKey(FPItem, verbose_name = "Select Compound Product")
+    fp_item = models.ForeignKey(FPItem, verbose_name="Select Compound Product")
     comment = models.TextField(blank=True, null=True)
-
 
     def __str__(self):
         return self.fp_item.name
