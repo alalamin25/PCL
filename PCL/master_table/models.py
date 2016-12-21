@@ -4,6 +4,15 @@ from django.utils.timezone import now
 from smart_selects.db_fields import ChainedForeignKey
 
 
+# class Bank(models.Model):
+#     name = models.CharField(max_length=100)
+#     address = models.TextField(blank=True, null=True)
+#     # code = models.CharField(max_length=30, unique=True)
+
+#     def __str__(self):
+#         return self.name
+
+
 class Deport(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField(blank=True, null=True)
@@ -25,7 +34,6 @@ class Customer(models.Model):
 
 class FundamentalProductType(models.Model):
     name = models.CharField(max_length=50)
-    
 
     def __str__(self):
         return self.name
@@ -195,7 +203,6 @@ class Shift(models.Model):
 
     def __str__(self):
         return self.name
-
 
 
 # class Color(models.Model):

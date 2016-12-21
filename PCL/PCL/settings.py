@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'ajax_select',
     'common',
     'report',
+    'sales',
     # 'django_select2',
     'django.contrib.admin',
     # 'grappelli',
