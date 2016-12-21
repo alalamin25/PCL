@@ -83,16 +83,6 @@ class Suplier_Admin(admin.ModelAdmin):
     ]
 
 
-class FundamentalProductType_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    list_display_links = ('id', 'name',)
-    search_fields = ('name',)
-    fieldsets = [
-        (
-            'Name Of Fundamental Product: ', {'fields': ['name']}
-        ),
-    ]
-
 
 class RawItem_Admin(admin.ModelAdmin):
     list_display = ('id', 'name', 'fundamental_type')

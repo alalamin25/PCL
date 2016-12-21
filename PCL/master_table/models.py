@@ -25,6 +25,7 @@ class Customer(models.Model):
 
 class FundamentalProductType(models.Model):
     name = models.CharField(max_length=50)
+    
 
     def __str__(self):
         return self.name
@@ -49,11 +50,11 @@ class Suplier(models.Model):
         fields = ('name',)   # Explicitly allowed fields
 
 
-class FundamentalProductType(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
+# class FundamentalProductType(models.Model):
+#     name = models.CharField(max_length=50)
+#     phone1 = models.CharField(max_length=30, blank=True, null=True)
+#     def __str__(self):
+#         return self.name
 
 
 class RawItem(models.Model):
@@ -194,6 +195,7 @@ class Shift(models.Model):
 
     def __str__(self):
         return self.name
+
 
 
 # class Color(models.Model):
