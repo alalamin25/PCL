@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from master_table.models import Suplier, FundamentalProductType,\
     RawItem, FPMiddleCat, FPLowerCat, ExpenseCriteria,\
-    FPItem, Shift, CPItem, CPItemEntry, Deport, Customer, Deport
+    FPItem, Shift, CPItem, CPItemEntry, Deport, Customer, Deport,\
+    BankAccount, Bank
 
 
 class ExpenseCriteria_Admin(admin.ModelAdmin):
@@ -17,6 +18,46 @@ class ExpenseCriteria_Admin(admin.ModelAdmin):
         (
             'Unique Code For The Deport: ', {'fields': ['code']}
         ),
+
+    ]
+
+
+class BankAccount_Admin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'bank')
+    list_display_links = ('name',)
+    list_filter = ('bank',)
+    search_fields = ('name', 'code')
+    raw_id_fields = ('bank', )
+
+    fieldsets = [
+        (
+            'Select Bank: ', {'fields': ['bank']}
+        ),
+        (
+            'Bank Account No: ', {'fields': ['name']}
+        ),
+        (
+            'Unique Code For Account Number: ', {'fields': ['code']}
+        ),
+
+
+    ]
+
+
+class Bank_Admin(admin.ModelAdmin):
+    list_display = ('name', 'code')
+    list_display_links = ('name',)
+    search_fields = ('name', 'code')
+
+    fieldsets = [
+        (
+            'Name Of The Bank: ', {'fields': ['name']}
+        ),
+        (
+            'Unique Code For This Bank: ', {'fields': ['code']}
+        ),
+
+
 
     ]
 
@@ -266,3 +307,5 @@ admin.site.register(Shift, Shift_Admin)
 admin.site.register(Customer, Customer_Admin)
 admin.site.register(Deport, Deport_Admin)
 admin.site.register(ExpenseCriteria, ExpenseCriteria_Admin)
+admin.site.register(Bank, Bank_Admin)
+admin.site.register(BankAccount, BankAccount_Admin)

@@ -4,13 +4,24 @@ from django.utils.timezone import now
 from smart_selects.db_fields import ChainedForeignKey
 
 
-# class Bank(models.Model):
-#     name = models.CharField(max_length=100)
-#     address = models.TextField(blank=True, null=True)
-#     # code = models.CharField(max_length=30, unique=True)
+class Bank(models.Model):
+    name = models.CharField("Bank Name", max_length=100)
+    # address = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=30, unique=True)
+    # account_no = models.ManyToManyField(BankAccount)
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
+
+
+class BankAccount(models.Model):
+    name = models.CharField("Bank Account Number:", max_length=100)
+    bank = models.ForeignKey(Bank,  to_field='code', verbose_name="Select Bank")
+    # address = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=30, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class ExpenseCriteria(models.Model):
@@ -20,7 +31,6 @@ class ExpenseCriteria(models.Model):
 
     def __str__(self):
         return self.name
-
 
 
 class Deport(models.Model):
