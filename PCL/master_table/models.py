@@ -13,6 +13,16 @@ from smart_selects.db_fields import ChainedForeignKey
 #         return self.name
 
 
+class ExpenseCriteria(models.Model):
+    name = models.CharField(max_length=100)
+    # address = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=30, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+
 class Deport(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField(blank=True, null=True)

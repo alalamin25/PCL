@@ -1,6 +1,15 @@
 from django.contrib import admin
 
-from sales.models import Credit, Sell
+from sales.models import Credit, Sell, ExpenseDetail
+
+
+class ExpenseDetail_Admin(admin.ModelAdmin):
+
+    list_display = (
+        'date', 'deport_code', 'invoice_no', 'expense_criteria', 'amount', 'detail')
+    search_fields = ('expense_criteria',)
+    list_filter = ('date', 'expense_criteria', 'deport_code', )
+    raw_id_fields = ('deport_code', )
 
 
 class Credit_Admin(admin.ModelAdmin):
@@ -18,3 +27,4 @@ class Sell_Admin(admin.ModelAdmin):
 
 admin.site.register(Credit, Credit_Admin)
 admin.site.register(Sell, Sell_Admin)
+admin.site.register(ExpenseDetail, ExpenseDetail_Admin)

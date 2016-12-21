@@ -1,8 +1,24 @@
 from django.contrib import admin
 
 from master_table.models import Suplier, FundamentalProductType,\
-    RawItem, FPMiddleCat, FPLowerCat,\
+    RawItem, FPMiddleCat, FPLowerCat, ExpenseCriteria,\
     FPItem, Shift, CPItem, CPItemEntry, Deport, Customer, Deport
+
+
+class ExpenseCriteria_Admin(admin.ModelAdmin):
+    list_display = ('name', 'code')
+    list_display_links = ('name',)
+    search_fields = ('name', 'code')
+
+    fieldsets = [
+        (
+            'Name Of The Deport: ', {'fields': ['name']}
+        ),
+        (
+            'Unique Code For The Deport: ', {'fields': ['code']}
+        ),
+
+    ]
 
 
 class Deport_Admin(admin.ModelAdmin):
@@ -24,7 +40,6 @@ class Deport_Admin(admin.ModelAdmin):
 
 
     ]
-
 
 
 class Customer_Admin(admin.ModelAdmin):
@@ -81,7 +96,6 @@ class Suplier_Admin(admin.ModelAdmin):
                 'fields': ['phone1', 'phone2', 'phone3', 'phone4', 'phone5']}
         ),
     ]
-
 
 
 class RawItem_Admin(admin.ModelAdmin):
@@ -251,3 +265,4 @@ admin.site.register(CPItem, CPItem_Admin)
 admin.site.register(Shift, Shift_Admin)
 admin.site.register(Customer, Customer_Admin)
 admin.site.register(Deport, Deport_Admin)
+admin.site.register(ExpenseCriteria, ExpenseCriteria_Admin)
