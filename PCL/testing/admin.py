@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from testing.models import *
+
+
+class MyModelAdmin(admin.ModelAdmin):
+    list_display = ('type', )
+
+    class Media:
+        js = ['/static/js/action_change.js']
+
+admin.site.register(MyModel, MyModelAdmin)

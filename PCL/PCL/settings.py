@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'common',
     'report',
     'sales',
+    'testing',
     # 'django_select2',
     'django.contrib.admin',
     # 'grappelli',
