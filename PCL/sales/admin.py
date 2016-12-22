@@ -38,10 +38,10 @@ class SellDetailInfoInline(admin.TabularInline):
 
 
 class Sell_Admin(admin.ModelAdmin):
-    # list_display = (
-    #     'date', 'serial_no', 'deport_code', 'customer_code', 'amount')
+    list_display = (
+        'date', 'transection_no', 'deport_code', 'customer_code', 'grand_total', 'total_commission', 'net_total')
     # search_fields = ('serial_no',)
-    # list_filter = ('date', 'deport_code', 'customer_code')
+    list_filter = ('date', 'deport_code')
     raw_id_fields = ('deport_code', 'customer_code')
     inlines = [SellDetailInfoInline]
 
@@ -61,11 +61,13 @@ class Sell_Admin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super(Sell_Admin, self).get_form(request, obj, **kwargs)
         form.base_fields['transection_no'].initial = 'abcd'
+        # self.initial['memo_no'] = self.transection_no
         return form
 
 
 class SellDetailInfo_Admin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'rate', 'quantity', 'total')
 
     # raw_id_fields = ('product_id', )
 

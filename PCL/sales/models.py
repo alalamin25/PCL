@@ -96,6 +96,23 @@ class Sell(models.Model):
     # commission = models.FloatField(default=1)
 
     # bank_code = models.ForeignKey(Bank)
+    #
+
+    @property
+    def grand_total(self):
+        sell_info = SellDetailInfo.objects.filter(sell=self)
+        grand_total = 0
+        for sell in sell_info:
+            grand_total += sell.total
+        return grand_total
+
+    @property
+    def total_commission(self):
+        return 45
+
+    @property
+    def net_total(self):
+        return 66
 
     def __str__(self):
         return self.transection_no
@@ -135,7 +152,14 @@ class SellDetailInfo(models.Model):
     )
     rate = models.IntegerField(default=0)
     quantity = models.IntegerField(default=1)
+
     commission = models.FloatField(default=1)
+
+    @property
+    def total(self):
+        return self.rate + self.quantity
+
+    # total = property(total)
 
     # bank_code = models.ForeignKey(Bank)
 
