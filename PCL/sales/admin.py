@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from sales.models import Credit, Sell, ExpenseDetail, SellDetailInfo
+from sales.models import Credit, Sell, ExpenseDetail, SellDetailInfo, DeportOperation
 
 
 class ExpenseDetail_Admin(admin.ModelAdmin):
@@ -72,8 +72,42 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
     # raw_id_fields = ('product_id', )
 
 
+class DeportOperation_Admin(admin.ModelAdmin):
+    list_display = (
+        'date', 'deport_operation', 'deport_code')
+    # search_fields = ('serial_no',)
+    list_filter = ('date', 'deport_code')
+    raw_id_fields = (
+        'deport_code', 'customer_code', 'product_id', 'deport_from_code',)
+    fieldsets = [
+        (
+            'Basic Info: ', {
+                'fields': ['deport_operation', 'deport_code',  'date', ]}
+        ),
+        (
+            'Select Product by Chaining', {'fields': [
+                'fundamental_type', 'middle_category_type',  'lower_category_type',
+                'finished_product_item', ]}
+        ),
+
+        (
+            'Select Product by Product Code: ', {'fields': ['product_id', ]}
+        ),
+
+        (
+            'If Deport Operation is From Other Deport Then Fill this up :', {
+                'fields': ['deport_from_code', ]}
+        ),
+
+        (
+            'If Deport Operation is Sales Return Then Fill this up :', {
+                'fields': ['customer_code', ]}
+        ),
+    ]
+
 
 admin.site.register(Credit, Credit_Admin)
 admin.site.register(Sell, Sell_Admin)
 admin.site.register(ExpenseDetail, ExpenseDetail_Admin)
 admin.site.register(SellDetailInfo, SellDetailInfo_Admin)
+admin.site.register(DeportOperation, DeportOperation_Admin)

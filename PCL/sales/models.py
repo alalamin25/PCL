@@ -11,6 +11,77 @@ PAYMENT_OPTION_CHOICES = (
 
 )
 
+DEPORT_OPERATION_CHOICES = (
+    ('new', 'New Arrival'),
+    ('received_from_other_deport', 'Received From Other Deport'),
+    ('sales_return', 'Sales Return'),
+    ('factory_return', 'Factory Return'),
+)
+
+
+class DeportOperation(models.Model):
+
+    deport_operation = models.CharField(choices=DEPORT_OPERATION_CHOICES,
+                                        max_length=30,
+                                        help_text='Select Deport Operation: ')
+    deport_code = models.ForeignKey(Deport, to_field='code', related_name="deport_code")
+    date = models.DateTimeField(default=now)
+
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    # middle_category_type = models.ForeignKey(FPMiddleCat)
+    middle_category_type = ChainedForeignKey(
+        FPMiddleCat,
+        chained_field="fundamental_type",
+        chained_model_field="fundamental_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+        blank=True,
+        null=True
+    )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        FPLowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+        blank=True,
+        null=True
+    )
+    # production_item = models.ForeignKey(FinishedProductItem)
+    finished_product_item = ChainedForeignKey(
+        FPItem,
+        chained_field="lower_category_type",
+        chained_model_field="lower_category_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+        blank=True,
+        null=True
+    )
+
+    product_id = models.ForeignKey(FPItem, related_name= 'product_id', blank=True, null=True)
+
+    deport_from_code = models.ForeignKey(
+        Deport, to_field='code', 
+        verbose_name="Deport From",
+        related_name="deport_from_code",
+        blank=True,
+        null=True)
+    customer_code = models.ForeignKey(
+        Customer, to_field='code', 
+        verbose_name="Party",
+        blank=True,
+        null=True
+        )
+    # chalan_no = models.ForeignKey(
+    #     Customer, to_field='code', verbose_name="Party")
+
+    def __str__(self):
+        return self.deport_operation
+
 
 class ExpenseDetail(models.Model):
 
