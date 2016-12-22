@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from sales.models import Credit, Sell, ExpenseDetail
+from sales.models import Credit, Sell, ExpenseDetail, SellDetailInfo
 
 
 class ExpenseDetail_Admin(admin.ModelAdmin):
@@ -28,26 +28,50 @@ class Credit_Admin(admin.ModelAdmin):
             'If you have choosen payment option as Bank then fill these fields :', {
                 'fields': ['bank', 'account_no']}
         ),
-        # (
-        #     'Choose Middle Category Type For This Lower Category Finished Product: ', {
-        #         'fields': ['middle_category_type']}
-        # ),
-        # (
-        #     'Write Comment: ', {'fields': ['comment']}
-        # ),
-
     ]
 
 
-class Sell_Admin(admin.ModelAdmin):
+class SellDetailInfoInline(admin.TabularInline):
+    # raw_id_fields = ('product_id', )
+    model = SellDetailInfo
+    extra = 0
 
+
+class Sell_Admin(admin.ModelAdmin):
+    # list_display = (
+    #     'date', 'serial_no', 'deport_code', 'customer_code', 'amount')
+    # search_fields = ('serial_no',)
+    # list_filter = ('date', 'deport_code', 'customer_code')
+    raw_id_fields = ('deport_code', 'customer_code')
+    inlines = [SellDetailInfoInline]
+
+    fieldsets = [
+        (
+            'Head Info: ', {'fields': ['transection_no', 'date', 'memo_no',
+                                       'deport_code', 'customer_code',
+                                       ]}
+        ),
+        # (
+        #     'Detail Info :', {
+        #         'fields': ['bank', 'account_no']}
+        # ),
+    ]
     # change_form_template = 'commo/change_form.html'
+
     def get_form(self, request, obj=None, **kwargs):
         form = super(Sell_Admin, self).get_form(request, obj, **kwargs)
         form.base_fields['transection_no'].initial = 'abcd'
         return form
 
 
+class SellDetailInfo_Admin(admin.ModelAdmin):
+    pass
+
+    # raw_id_fields = ('product_id', )
+
+
+
 admin.site.register(Credit, Credit_Admin)
 admin.site.register(Sell, Sell_Admin)
 admin.site.register(ExpenseDetail, ExpenseDetail_Admin)
+admin.site.register(SellDetailInfo, SellDetailInfo_Admin)

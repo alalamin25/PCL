@@ -133,6 +133,7 @@ class FPLowerCat(models.Model):
 
 class FPItem(models.Model):
     name = models.CharField(max_length=100)
+    # name = models.CharField(max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FPMiddleCat)
     middle_category_type = ChainedForeignKey(
