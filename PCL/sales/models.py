@@ -36,8 +36,8 @@ class ExpenseDetail(models.Model):
 class Credit(models.Model):
 
     serial_no = models.CharField(max_length=100, unique=True)
-    deport_code = models.ForeignKey(Deport, to_field='code')
-    customer_code = models.ForeignKey(Customer, to_field='code')
+    deport_code = models.ForeignKey(Deport, to_field='code', verbose_name="Deport")
+    customer_code = models.ForeignKey(Customer, to_field='code', verbose_name="Customer")
     date = models.DateTimeField(default=now)
     particular = models.TextField(blank=True, null=True)
     payment_option = models.CharField(choices=PAYMENT_OPTION_CHOICES,

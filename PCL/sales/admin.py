@@ -13,7 +13,30 @@ class ExpenseDetail_Admin(admin.ModelAdmin):
 
 
 class Credit_Admin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'date', 'serial_no', 'deport_code', 'customer_code', 'amount')
+    search_fields = ('serial_no',)
+    list_filter = ('date', 'deport_code', 'customer_code')
+    raw_id_fields = ('deport_code', 'customer_code',)
+
+    fieldsets = [
+        (
+            'Complete Basic Info: ', {'fields': ['serial_no', 'deport_code', 'customer_code',
+                                                 'date', 'particular', 'payment_option']}
+        ),
+        (
+            'If you have choosen payment option as Bank then fill these fields :', {
+                'fields': ['bank', 'account_no']}
+        ),
+        # (
+        #     'Choose Middle Category Type For This Lower Category Finished Product: ', {
+        #         'fields': ['middle_category_type']}
+        # ),
+        # (
+        #     'Write Comment: ', {'fields': ['comment']}
+        # ),
+
+    ]
 
 
 class Sell_Admin(admin.ModelAdmin):
