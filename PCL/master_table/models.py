@@ -1,7 +1,12 @@
 from django.db import models
 from django.utils.timezone import now
-
+# import uuid
+import random
 from smart_selects.db_fields import ChainedForeignKey
+
+
+def get_unique_code(id):
+    return 'code_' + str(id)
 
 
 class Bank(models.Model):
@@ -16,9 +21,10 @@ class Bank(models.Model):
 
 class BankAccount(models.Model):
     name = models.CharField("Bank Account Number:", max_length=100)
-    bank = models.ForeignKey(Bank,  to_field='code', verbose_name="Select Bank")
+    bank = models.ForeignKey(
+        Bank,  to_field='code', verbose_name="Select Bank")
     # address = models.TextField(blank=True, null=True)
-    code = models.CharField(max_length=30, unique=True)
+    # code = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.name
@@ -60,7 +66,9 @@ class FundamentalProductType(models.Model):
 
 
 class Suplier(models.Model):
+
     name = models.CharField(max_length=100)
+    code = models.CharField(max_length=30, unique=True)
     address = models.TextField()
     phone1 = models.CharField(max_length=30, blank=True, null=True)
     phone2 = models.CharField(max_length=30, blank=True, null=True)
@@ -74,19 +82,13 @@ class Suplier(models.Model):
     def __str__(self):
         return self.name
 
-    class ReportBuilder:
-        fields = ('name',)   # Explicitly allowed fields
-
-
-# class FundamentalProductType(models.Model):
-#     name = models.CharField(max_length=50)
-#     phone1 = models.CharField(max_length=30, blank=True, null=True)
-#     def __str__(self):
-#         return self.name
+    # def get_unique_code(self):        
+    #     return 'code_' + str(id)
 
 
 class RawItem(models.Model):
     name = models.CharField(max_length=100)
+    code = models.CharField(max_length=30, unique=True)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(RIMiddleCat)
     # lower_category_type = models.ForeignKey(RILowerCat)
@@ -133,7 +135,7 @@ class FPLowerCat(models.Model):
 
 class FPItem(models.Model):
     name = models.CharField(max_length=100)
-    # name = models.CharField(max_length=100)
+    code = models.CharField(max_length=30, unique=True)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FPMiddleCat)
     middle_category_type = ChainedForeignKey(

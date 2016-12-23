@@ -203,6 +203,8 @@ class SellDetailInfo(models.Model):
 
     sell = models.ForeignKey(Sell)
 
+    
+
     fundamental_type = models.ForeignKey(FundamentalProductType, verbose_name='Main Cat')
     # middle_category_type = models.ForeignKey(FPMiddleCat)
     middle_category_type = ChainedForeignKey(

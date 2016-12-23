@@ -23,10 +23,10 @@ class ExpenseCriteria_Admin(admin.ModelAdmin):
 
 
 class BankAccount_Admin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'bank')
+    list_display = ('name', 'bank')
     list_display_links = ('name',)
     list_filter = ('bank',)
-    search_fields = ('name', 'code')
+    search_fields = ('name',)
     raw_id_fields = ('bank', )
 
     fieldsets = [
@@ -36,9 +36,9 @@ class BankAccount_Admin(admin.ModelAdmin):
         (
             'Bank Account No: ', {'fields': ['name']}
         ),
-        (
-            'Unique Code For Account Number: ', {'fields': ['code']}
-        ),
+        # (
+        #     'Unique Code For Account Number: ', {'fields': ['code']}
+        # ),
 
 
     ]
