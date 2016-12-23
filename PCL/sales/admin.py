@@ -1,6 +1,8 @@
 from django.contrib import admin
 
 from sales.models import Payment, Sell, ExpenseDetail, SellDetailInfo, DeportOperation
+from django.forms import TextInput, Textarea
+from django.db import models
 
 
 class ExpenseDetail_Admin(admin.ModelAdmin):
@@ -40,7 +42,7 @@ class Payment_Admin(admin.ModelAdmin):
 
 
 class SellDetailInfoInline(admin.TabularInline):
-    # raw_id_fields = ('product_id', )
+    raw_id_fields = ('product_code', )
     model = SellDetailInfo
     extra = 0
 
@@ -59,12 +61,13 @@ class Sell_Admin(admin.ModelAdmin):
                                        'deport_code', 'customer_code',
                                        ]}
         ),
-        # (
-        #     'Detail Info :', {
-        #         'fields': ['bank', 'account_no']}
-        # ),
+        (
+            'Calculation :', {
+                'fields': ['grand_total_text', 'total_commission_text', 'net_total_text']}
+        ),
     ]
     # change_form_template = 'commo/change_form.html'
+
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(Sell_Admin, self).get_form(request, obj, **kwargs)
@@ -80,6 +83,10 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
     list_display = (
         'rate', 'quantity', 'total')
 
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '5'})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
     # raw_id_fields = ('product_id', )
 
 

@@ -112,7 +112,8 @@ class Payment(models.Model):
     serial_no = models.CharField(max_length=100, unique=True)
     deport_code = models.ForeignKey(
         Deport, to_field='code', verbose_name="Deport")
-    deport_code_text = models.CharField(max_length=100, blank=True, null=True, verbose_name="")
+    deport_code_text = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="")
 
     customer_code = models.ForeignKey(
         Customer, to_field='code', verbose_name="Customer")
@@ -158,11 +159,13 @@ class Sell(models.Model):
     deport_code = models.ForeignKey(Deport, to_field='code')
     customer_code = models.ForeignKey(Customer, to_field='code')
 
-    # particular = models.TextField(blank=True, null=True)
-    # payment_option = models.CharField(choices=PAYMENT_OPTION_CHOICES,
-    #                                   max_length=30,
-    #                                   help_text='Select Payment Option: ')
+    grand_total_text = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Grand Total")
 
+    total_commission_text = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Total Commission")
+    net_total_text = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Net Total")
     # product_id = models.ForeignKey(FPItem)
     # rate = models.IntegerField(default=0)
     # # product_id = models.ForeignKey(FPItem)
@@ -174,6 +177,7 @@ class Sell(models.Model):
     # bank_code = models.ForeignKey(Bank)
     #
     total = models.CharField(max_length=100)
+
     @property
     def grand_total(self):
         sell_info = SellDetailInfo.objects.filter(sell=self)
@@ -192,9 +196,6 @@ class Sell(models.Model):
 
     total = property(net_total)
 
-
-
-
     def __str__(self):
         return self.transection_no
 
@@ -203,15 +204,37 @@ class SellDetailInfo(models.Model):
 
     sell = models.ForeignKey(Sell)
 
-    
+    product_code = models.ForeignKey(
+        FPItem, to_field='code',
+        related_name='product_code',
+        blank=True,
+        null=True,
+    )
 
-    fundamental_type = models.ForeignKey(FundamentalProductType, verbose_name='Main Cat')
+    product_code_text = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="")
+
+
+    rate = models.FloatField(default=1)
+    quantity = models.FloatField(default=1)
+
+    total_text = models.FloatField(
+        max_length=100, blank=True, null=True, verbose_name="Total")
+    commission = models.FloatField(default=1)
+    net_total_text = models.FloatField(
+        max_length=100, blank=True, null=True, verbose_name="Net Total")
+
+    fundamental_type = models.ForeignKey(
+        FundamentalProductType,
+        verbose_name='Main Cat', blank=True, null=True)
     # middle_category_type = models.ForeignKey(FPMiddleCat)
     middle_category_type = ChainedForeignKey(
         FPMiddleCat,
         chained_field="fundamental_type",
         chained_model_field="fundamental_type",
         verbose_name="Mid Cat",
+        blank=True,
+        null=True,
         show_all=False,
         auto_choose=True,
         sort=True
@@ -222,6 +245,8 @@ class SellDetailInfo(models.Model):
         chained_field="middle_category_type",
         chained_model_field="middle_category_type",
         verbose_name="Lower Cat",
+        blank=True,
+        null=True,
         show_all=False,
         auto_choose=True,
         sort=True
@@ -232,14 +257,13 @@ class SellDetailInfo(models.Model):
         chained_field="lower_category_type",
         chained_model_field="lower_category_type",
         verbose_name="Product",
+        related_name='finished_product_item',
+        blank=True,
+        null=True,
         show_all=False,
         auto_choose=True,
         sort=True
     )
-    rate = models.IntegerField(default=0)
-    quantity = models.IntegerField(default=1)
-
-    commission = models.FloatField(default=1)
 
     @property
     def total(self):
