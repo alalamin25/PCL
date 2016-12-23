@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'common',
     'report',
     'sales',
+    'ajax_request',
     'testing',
     # 'django_select2',
     'django.contrib.admin',

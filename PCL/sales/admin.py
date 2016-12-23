@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from sales.models import Credit, Sell, ExpenseDetail, SellDetailInfo, DeportOperation
+from sales.models import Payment, Sell, ExpenseDetail, SellDetailInfo, DeportOperation
 
 
 class ExpenseDetail_Admin(admin.ModelAdmin):
@@ -12,23 +12,31 @@ class ExpenseDetail_Admin(admin.ModelAdmin):
     raw_id_fields = ('deport_code', )
 
 
-class Credit_Admin(admin.ModelAdmin):
+class Payment_Admin(admin.ModelAdmin):
     list_display = (
         'date', 'serial_no', 'deport_code', 'customer_code', 'amount')
     search_fields = ('serial_no',)
     list_filter = ('date', 'deport_code', 'customer_code')
     raw_id_fields = ('deport_code', 'customer_code',)
+    # readonly_fields = ('deport_code_text',)
 
     fieldsets = [
         (
-            'Complete Basic Info: ', {'fields': ['serial_no', 'deport_code', 'customer_code',
-                                                 'date', 'particular', 'payment_option']}
+            'Complete Basic Info: ',
+            {'fields': ['serial_no',
+                        ('deport_code', 'deport_code_text'),
+                        'customer_code',
+                        'date', 'particular',
+                        'payment_option']}
         ),
         (
             'If you have choosen payment option as Bank then fill these fields :', {
                 'fields': ['bank', 'account_no']}
         ),
     ]
+
+    class Media:
+        js = ['/static/js/custom.js']
 
 
 class SellDetailInfoInline(admin.TabularInline):
@@ -63,6 +71,9 @@ class Sell_Admin(admin.ModelAdmin):
         form.base_fields['transection_no'].initial = 'abcd'
         # self.initial['memo_no'] = self.transection_no
         return form
+
+    class Media:
+        js = ['/static/sales/js/sales.js']
 
 
 class SellDetailInfo_Admin(admin.ModelAdmin):
@@ -106,7 +117,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Credit, Credit_Admin)
+admin.site.register(Payment, Payment_Admin)
 admin.site.register(Sell, Sell_Admin)
 admin.site.register(ExpenseDetail, ExpenseDetail_Admin)
 admin.site.register(SellDetailInfo, SellDetailInfo_Admin)

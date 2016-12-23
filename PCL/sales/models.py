@@ -24,10 +24,12 @@ class DeportOperation(models.Model):
     deport_operation = models.CharField(choices=DEPORT_OPERATION_CHOICES,
                                         max_length=30,
                                         help_text='Select Deport Operation: ')
-    deport_code = models.ForeignKey(Deport, to_field='code', related_name="deport_code")
+    deport_code = models.ForeignKey(
+        Deport, to_field='code', related_name="deport_code")
     date = models.DateTimeField(default=now)
 
-    fundamental_type = models.ForeignKey(FundamentalProductType)
+    fundamental_type = models.ForeignKey(FundamentalProductType, blank=True,
+                                         null=True)
     # middle_category_type = models.ForeignKey(FPMiddleCat)
     middle_category_type = ChainedForeignKey(
         FPMiddleCat,
@@ -62,20 +64,21 @@ class DeportOperation(models.Model):
         null=True
     )
 
-    product_id = models.ForeignKey(FPItem, related_name= 'product_id', blank=True, null=True)
+    product_id = models.ForeignKey(
+        FPItem, related_name='product_id', blank=True, null=True)
 
     deport_from_code = models.ForeignKey(
-        Deport, to_field='code', 
+        Deport, to_field='code',
         verbose_name="Deport From",
         related_name="deport_from_code",
         blank=True,
         null=True)
     customer_code = models.ForeignKey(
-        Customer, to_field='code', 
+        Customer, to_field='code',
         verbose_name="Party",
         blank=True,
         null=True
-        )
+    )
     # chalan_no = models.ForeignKey(
     #     Customer, to_field='code', verbose_name="Party")
 
@@ -104,11 +107,13 @@ class ExpenseDetail(models.Model):
         return self.expense_criteria.name
 
 
-class Credit(models.Model):
+class Payment(models.Model):
 
     serial_no = models.CharField(max_length=100, unique=True)
     deport_code = models.ForeignKey(
         Deport, to_field='code', verbose_name="Deport")
+    deport_code_text = models.CharField(max_length=100, blank=True, null=True, verbose_name="")
+
     customer_code = models.ForeignKey(
         Customer, to_field='code', verbose_name="Customer")
     date = models.DateTimeField(default=now)
@@ -168,7 +173,7 @@ class Sell(models.Model):
 
     # bank_code = models.ForeignKey(Bank)
     #
-
+    total = models.CharField(max_length=100)
     @property
     def grand_total(self):
         sell_info = SellDetailInfo.objects.filter(sell=self)
@@ -185,6 +190,11 @@ class Sell(models.Model):
     def net_total(self):
         return 66
 
+    total = property(net_total)
+
+
+
+
     def __str__(self):
         return self.transection_no
 
@@ -193,12 +203,13 @@ class SellDetailInfo(models.Model):
 
     sell = models.ForeignKey(Sell)
 
-    fundamental_type = models.ForeignKey(FundamentalProductType)
+    fundamental_type = models.ForeignKey(FundamentalProductType, verbose_name='Main Cat')
     # middle_category_type = models.ForeignKey(FPMiddleCat)
     middle_category_type = ChainedForeignKey(
         FPMiddleCat,
         chained_field="fundamental_type",
         chained_model_field="fundamental_type",
+        verbose_name="Mid Cat",
         show_all=False,
         auto_choose=True,
         sort=True
@@ -208,6 +219,7 @@ class SellDetailInfo(models.Model):
         FPLowerCat,
         chained_field="middle_category_type",
         chained_model_field="middle_category_type",
+        verbose_name="Lower Cat",
         show_all=False,
         auto_choose=True,
         sort=True
@@ -217,6 +229,7 @@ class SellDetailInfo(models.Model):
         FPItem,
         chained_field="lower_category_type",
         chained_model_field="lower_category_type",
+        verbose_name="Product",
         show_all=False,
         auto_choose=True,
         sort=True
