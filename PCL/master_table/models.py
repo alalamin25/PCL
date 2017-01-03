@@ -75,6 +75,7 @@ class Suplier(models.Model):
 
     name = models.CharField(max_length=100)
     fundamental_type = models.ManyToManyField(FundamentalProductType)
+    # Customer = models.ForeignKey(Customer)
     code = models.CharField(max_length=30, unique=True)
     address = models.TextField()
     phone1 = models.CharField(max_length=30, blank=True, null=True)

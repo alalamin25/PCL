@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 
 from homepage import views as homepage_views
+from ajax_select import urls as ajax_select_urls
 
 admin.site.site_header = 'PCL ADMINISTRATION'
 admin.site.site_title = "PCL Admin"
@@ -27,4 +28,7 @@ urlpatterns = [
     url('', include('django.contrib.auth.urls', namespace='auth')),
     # url(r'^select2/', include('django_select2.urls')),
     url(r'^action_choices/', action_choices),
+    url('^searchableselect/', include('searchableselect.urls')),
+    url(r'^ajax_select/', include(ajax_select_urls)),
+
 ]

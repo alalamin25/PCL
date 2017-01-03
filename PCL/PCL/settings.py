@@ -57,6 +57,8 @@ INSTALLED_APPS = (
     'testing',
     # 'django_select2',
     'django.contrib.admin',
+    'searchableselect',
+    # 'ajax_select',
     # 'grappelli',
     
 

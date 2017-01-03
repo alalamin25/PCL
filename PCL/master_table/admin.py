@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.db import models
+from django import forms
 from django.forms import CheckboxSelectMultiple
+from searchableselect.widgets import SearchableSelect
+
 from master_table.models import Suplier, FundamentalProductType,\
     RawItem, FPMiddleCat, FPLowerCat, ExpenseCriteria,\
     FPItem, Shift, CPItem, CPItemEntry, Deport, Customer, Deport,\
@@ -121,7 +124,21 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
     ]
 
 
+# class SuplierForm(forms.ModelForm):
+#     name5 = forms.CharField()
+
+
+#     class Meta:
+#         model = Suplier
+#         exclude = ()
+#         widgets = {
+#             'Customer': SearchableSelect(model='master_table.Customer', search_field='name', many=False)
+#         }
+        
+
+
 class Suplier_Admin(admin.ModelAdmin):
+    # form = SuplierForm
     list_display = ('id', 'name')
     list_display_links = ('id', 'name',)
     list_filter = ()
@@ -132,10 +149,11 @@ class Suplier_Admin(admin.ModelAdmin):
     }
     fieldsets = [
         (
-            'Name Of The Supplier: ', {'fields': ['name']}
+            'Name Of The Supplier: ', {'fields': ['name',]}
         ),
         (
-            'Select What Type Of Raw Material This Supplier Provides: ', {'fields': ['fundamental_type']}
+            'Select What Type Of Raw Material This Supplier Provides: ', {
+                'fields': ['fundamental_type']}
         ),
         (
             'Address Of The Supplier: ', {'fields': ['address']}
@@ -216,7 +234,8 @@ class FPItem_Admin(admin.ModelAdmin):
                     'middle_category_type', 'lower_category_type')
     list_display_links = ('id', 'name')
     search_fields = ('name',)
-    list_filter = ('fundamental_type', 'middle_category_type', 'lower_category_type')
+    list_filter = (
+        'fundamental_type', 'middle_category_type', 'lower_category_type')
     fieldsets = [
         (
             'Name and Of The Production Item: ', {'fields': ['name', 'code']}
