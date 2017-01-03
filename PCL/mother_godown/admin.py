@@ -4,11 +4,11 @@ from mother_godown.models import PurchaseEntry, IssueEntry
 
 class PurchaseEntry_Admin(admin.ModelAdmin):
     list_display = (
-        'id', 'raw_item', 'fundamental_type', 'suplier', 'unit_price', 'unit_amount', 'date')
+        'id', 'raw_item', 'fundamental_type', 'supplier', 'unit_price', 'unit_amount', 'date')
     list_display_links = ('id', 'raw_item')
     list_filter = ('fundamental_type', 'date', )
-    search_fields = ('raw_item', 'suplier')
-    raw_id_fields = ('suplier',)
+    search_fields = ('raw_item', 'supplier')
+    raw_id_fields = ('supplier',)
     fieldsets = [
         (
             'Select Fundamental Product: ', {'fields': ['fundamental_type']}
@@ -17,7 +17,7 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
             'Name Of The Item: ', {'fields': ['raw_item']}
         ),
         (
-            'Name Of The Supplier: ', {'fields': ['suplier']}
+            'Name Of The Supplier: ', {'fields': ['supplier']}
         ),
         (
             'Enter Details: ', {

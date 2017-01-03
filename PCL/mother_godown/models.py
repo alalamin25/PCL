@@ -1,5 +1,5 @@
 from django.db import models
-from master_table.models import Suplier, RawItem
+from master_table.models import Supplier, RawItem
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
 
@@ -27,7 +27,7 @@ class PurchaseEntry(models.Model):
         auto_choose=True,
         sort=True
     )
-    suplier = models.ForeignKey(Suplier)
+    supplier = models.ForeignKey(Supplier)
     # suplier2 = models.ForeignKey(Suplier)
     unit_price = models.FloatField()
 
@@ -64,7 +64,7 @@ class IssueEntry(models.Model):
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
-    enroll_comment_in_report = models.BooleanField("Enroll This Comment In Report:", default=False)
+
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them

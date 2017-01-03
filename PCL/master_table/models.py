@@ -71,7 +71,30 @@ class FundamentalProductType(models.Model):
         return self.name
 
 
-class Suplier(models.Model):
+
+# class Suplier(models.Model):
+
+#     name = models.CharField(max_length=100)
+#     fundamental_type = models.ManyToManyField(FundamentalProductType)
+#     # Customer = models.ForeignKey(Customer)
+#     code = models.CharField(max_length=30, unique=True)
+#     address = models.TextField()
+#     phone1 = models.CharField(max_length=30, blank=True, null=True)
+#     phone2 = models.CharField(max_length=30, blank=True, null=True)
+#     phone3 = models.CharField(max_length=30, blank=True, null=True)
+#     phone4 = models.CharField(max_length=30, blank=True, null=True)
+#     phone5 = models.CharField(max_length=30, blank=True, null=True)
+#     # This timefield is added just to keep track of supliers ie log them
+#     # creation_time = models.DateTimeField(default=now, editable=False)
+#     # edit_time = models.DateTimeField(default=now, editable=False)
+
+#     def __str__(self):
+#         return self.name
+
+
+
+
+class Supplier(models.Model):
 
     name = models.CharField(max_length=100)
     fundamental_type = models.ManyToManyField(FundamentalProductType)

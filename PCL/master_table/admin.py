@@ -4,7 +4,7 @@ from django import forms
 from django.forms import CheckboxSelectMultiple
 from searchableselect.widgets import SearchableSelect
 
-from master_table.models import Suplier, FundamentalProductType,\
+from master_table.models import Supplier, FundamentalProductType,\
     RawItem, FPMiddleCat, FPLowerCat, ExpenseCriteria,\
     FPItem, Shift, CPItem, CPItemEntry, Deport, Customer, Deport,\
     BankAccount, Bank
@@ -137,7 +137,7 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
         
 
 
-class Suplier_Admin(admin.ModelAdmin):
+class Supplier_Admin(admin.ModelAdmin):
     # form = SuplierForm
     list_display = ('id', 'name')
     list_display_links = ('id', 'name',)
@@ -149,7 +149,7 @@ class Suplier_Admin(admin.ModelAdmin):
     }
     fieldsets = [
         (
-            'Name Of The Supplier: ', {'fields': ['name',]}
+            'Name Of The Supplier: ', {'fields': ['name', 'code']}
         ),
         (
             'Select What Type Of Raw Material This Supplier Provides: ', {
@@ -322,7 +322,7 @@ class Shift_Admin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Suplier, Suplier_Admin)
+admin.site.register(Supplier, Supplier_Admin)
 admin.site.register(FundamentalProductType, FundamentalProductType_Admin)
 admin.site.register(RawItem, RawItem_Admin)
 admin.site.register(FPMiddleCat, FPMiddleCat_Admin)
