@@ -175,18 +175,26 @@ class RawItem(models.Model):
 class FPMiddleCat(models.Model):
     name = models.CharField("Middle Category Name:", max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    code = models.CharField(max_length=1, unique=True)
+    code = models.CharField(max_length=1)
 
     def __str__(self):
         return self.name
+
+    def get_code(self):
+        return self.fundamental_type.fp_code + self.code
+    get_code.short_description = 'Full Code'
 
     class Meta:
         verbose_name = "Finished Product Item Middle Category"
         verbose_name_plural = "Finished Product Item Middle Categories"
 
+    # class Meta(object):
+    #     unique_together = ('code',)
+
 
 class FPLowerCat(models.Model):
     name = models.CharField("Lower Category Name:", max_length=100)
+    code = models.CharField(max_length=1)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
     middle_category_type = ChainedForeignKey(
@@ -201,6 +209,11 @@ class FPLowerCat(models.Model):
 
     def __str__(self):
         return self.name
+
+
+    def get_code(self):
+        return self.fundamental_type.fp_code + self.middle_category_type.code +self.code
+    get_code.short_description = 'Full Code'
 
     class Meta:
         verbose_name = "Finished Product Item Lower Category"

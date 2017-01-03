@@ -244,21 +244,18 @@ class FPMiddleCatForm(forms.ModelForm):
         exclude = ()
 
     def clean(self):
-        # Validation goes here :)
-        # fundamental_type = self.cleaned_data.get('fundamental_type')
-        # code = fundamental_type.fp_code + form.cleaned_data.get('code_edit')
+
         super(FPMiddleCatForm, self).clean()
         code_edit = self.cleaned_data.get('code_edit')
         fundamental_type = self.cleaned_data.get('fundamental_type')
-        code = fundamental_type.fp_code + code_edit
-        if(FPMiddleCat.objects.filter(code=code)):
-            raise forms.ValidationError('The Code Must Be Unique')
-        # {'password': ["Passwords must be the same."]}
+        if(code_edit and fundamental_type):
+            if(FPMiddleCat.objects.filter(fundamental_type=fundamental_type, code=code_edit)):
+                raise forms.ValidationError('The Code Must Be Unique')
 
 
 class FPMiddleCat_Admin(admin.ModelAdmin):
     form = FPMiddleCatForm
-    list_display = ('id', 'name', 'code', 'fundamental_type',)
+    list_display = ('id', 'name', 'get_code', 'fundamental_type',)
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
@@ -275,24 +272,45 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
             'Unique Code For This Finished Product Middle Category:', {
                 'fields': ['code', 'code_edit']}
         ),
-        # (
-        #     'Write Comment: ', {'fields': ['comment']}
-        # ),
 
     ]
 
     def save_model(self, request, obj, form, change):
         code_edit = form.cleaned_data.get('code_edit')
-        fundamental_type = form.cleaned_data.get('fundamental_type')
-        code = fundamental_type.fp_code + code_edit
-        obj.code = code
-        # print("\n\n code_edit: ")
-        # print(code_edit)
+        # fundamental_type = form.cleaned_data.get('fundamental_type')
+        # code = fundamental_type.fp_code + code_edit
+        obj.code = code_edit
         obj.save()
 
 
+class FPLowerCatForm(forms.ModelForm):
+
+    code_edit = forms.CharField(max_length=1)
+
+    class Meta:
+        model = FPLowerCat
+        exclude = ()
+
+    def clean(self):
+        # Validation goes here :)
+        # fundamental_type = self.cleaned_data.get('fundamental_type')
+        # code = fundamental_type.fp_code + form.cleaned_data.get('code_edit')
+        super(FPLowerCatForm, self).clean()
+        code_edit = self.cleaned_data.get('code_edit')
+        fundamental_type = self.cleaned_data.get('fundamental_type')
+        middle_category_type = self.cleaned_data.get('middle_category_type')
+        if(code_edit and fundamental_type):
+            if(FPLowerCat.objects.filter(
+                    fundamental_type=fundamental_type,
+                    middle_category_type=middle_category_type,
+                    code=code_edit)):
+                raise forms.ValidationError('The Code Must Be Unique')
+
+
 class FPLowerCat_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'fundamental_type', 'middle_category_type')
+    form = FPLowerCatForm
+    list_display = (
+        'id', 'name', 'get_code', 'fundamental_type', 'middle_category_type')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     list_filter = ('fundamental_type', 'middle_category_type',)
@@ -308,11 +326,18 @@ class FPLowerCat_Admin(admin.ModelAdmin):
             'Choose Middle Category Type For This Lower Category Finished Product: ', {
                 'fields': ['middle_category_type']}
         ),
-        # (
-        #     'Write Comment: ', {'fields': ['comment']}
-        # ),
+
+        (
+            'Unique Code For This Finished Product Lower Category:', {
+                'fields': ['code', 'code_edit']}
+        ),
 
     ]
+
+    def save_model(self, request, obj, form, change):
+        code_edit = form.cleaned_data.get('code_edit')
+        obj.code = code_edit
+        obj.save()
 
 
 class FPItem_Admin(admin.ModelAdmin):
@@ -342,9 +367,6 @@ class FPItem_Admin(admin.ModelAdmin):
             'Check Box If This Finished Product Is A Compound Item:', {
                 'fields': ['is_cp']}
         ),
-        # (
-        #     'Write Comment: ', {'fields': ['comment']}
-        # ),
 
     ]
 
