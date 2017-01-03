@@ -88,7 +88,7 @@ class Suplier(models.Model):
     def __str__(self):
         return self.name
 
-    # def get_unique_code(self):        
+    # def get_unique_code(self):
     #     return 'code_' + str(id)
 
 
@@ -105,7 +105,7 @@ class RawItem(models.Model):
 
 
 class FPMiddleCat(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField("Middle Category Name:", max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     comment = models.TextField(blank=True, null=True)
 
@@ -118,7 +118,7 @@ class FPMiddleCat(models.Model):
 
 
 class FPLowerCat(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField("Lower Category Name:", max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
     middle_category_type = ChainedForeignKey(
@@ -140,7 +140,8 @@ class FPLowerCat(models.Model):
 
 
 class FPItem(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        "Finished Product Name:", max_length=100, unique=True)
     code = models.CharField(max_length=30, unique=True)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FPMiddleCat)
