@@ -5,7 +5,7 @@ from mother_godown.models import PurchaseEntry, IssueEntry
 class PurchaseEntry_Admin(admin.ModelAdmin):
     list_display = (
         'id', 'raw_item', 'fundamental_type', 'suplier', 'unit_price', 'unit_amount', 'date')
-    list_display_links = ('id', )
+    list_display_links = ('id', 'raw_item')
     list_filter = ('fundamental_type', 'date', )
     search_fields = ('raw_item', 'suplier')
     raw_id_fields = ('suplier',)
@@ -21,13 +21,13 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
         ),
         (
             'Enter Details: ', {
-                'fields': ['unit_price', 'unit_amount', 'invoice_no']}
+                'fields': ['unit_price', 'unit_type', 'unit_amount', 'invoice_no']}
         ),
 
         (
             'Select Date:', {
                 'fields': ['date', ]}
-        ),        
+        ),
 
 
         (
@@ -53,7 +53,7 @@ class IssueEntry_Admin(admin.ModelAdmin):
         ),
         (
             'Enter Details: ', {
-                'fields': ['unit_amount', 'invoice_no']}
+                'fields': ['unit_type', 'unit_amount', 'invoice_no']}
         ),
         (
             'Select Date:', {
@@ -66,7 +66,5 @@ class IssueEntry_Admin(admin.ModelAdmin):
     ]
 
 
-
 admin.site.register(PurchaseEntry, PurchaseEntry_Admin)
 admin.site.register(IssueEntry, IssueEntry_Admin)
-

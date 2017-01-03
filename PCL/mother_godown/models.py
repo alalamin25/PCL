@@ -9,6 +9,12 @@ from master_table.models import FundamentalProductType, RawItem
 # from mptt.models import MPTTModel, TreeForeignKey
 
 
+UNIT_TYPE_CHOICES = (
+    ('kg', 'KG'),
+    ('ton', 'TON')
+)
+
+
 class PurchaseEntry(models.Model):
 
     fundamental_type = models.ForeignKey(FundamentalProductType)
@@ -24,6 +30,8 @@ class PurchaseEntry(models.Model):
     suplier = models.ForeignKey(Suplier)
     # suplier2 = models.ForeignKey(Suplier)
     unit_price = models.FloatField()
+
+    unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
@@ -52,6 +60,7 @@ class IssueEntry(models.Model):
         auto_choose=True,
         sort=True
     )
+    unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
