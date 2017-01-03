@@ -34,6 +34,7 @@ class PurchaseEntry(models.Model):
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
+    enroll_comment_in_report = models.BooleanField("Enroll This Comment In Report:", default=False)
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
@@ -63,6 +64,7 @@ class IssueEntry(models.Model):
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
+    enroll_comment_in_report = models.BooleanField("Enroll This Comment In Report:", default=False)
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them

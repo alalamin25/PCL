@@ -32,7 +32,7 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
 
         (
             'Write Comment:', {
-                'fields': ['comment', ]}
+                'fields': ['enroll_comment_in_report', 'comment', ]}
         ),
     ]
 
@@ -61,7 +61,7 @@ class IssueEntry_Admin(admin.ModelAdmin):
         ),
         (
             'Write Comment:', {
-                'fields': ['comment', ]}
+                'fields': ['enroll_comment_in_report', 'comment', ]}
         ),
     ]
 

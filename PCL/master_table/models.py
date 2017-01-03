@@ -98,7 +98,7 @@ class RawItem(models.Model):
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(RIMiddleCat)
     # lower_category_type = models.ForeignKey(RILowerCat)
-    comment = models.TextField(blank=True, null=True)
+    # comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -107,7 +107,7 @@ class RawItem(models.Model):
 class FPMiddleCat(models.Model):
     name = models.CharField("Middle Category Name:", max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    comment = models.TextField(blank=True, null=True)
+    # comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -129,7 +129,7 @@ class FPLowerCat(models.Model):
         auto_choose=True,
         sort=True
     )
-    comment = models.TextField(blank=True, null=True)
+    # comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -162,7 +162,7 @@ class FPItem(models.Model):
         auto_choose=True,
         sort=True
     )
-    comment = models.TextField(blank=True, null=True)
+    # comment = models.TextField(blank=True, null=True)
     is_cp = models.BooleanField("Is Compound Item", default=False)
     # comment2 = models.TextField(blank=True, null=True)
 
@@ -177,7 +177,7 @@ class FPItem(models.Model):
 class CPItem(models.Model):
     # name = models.CharField(max_length=100)
     fp_item = models.ForeignKey(FPItem, verbose_name="Select Compound Product")
-    comment = models.TextField(blank=True, null=True)
+    # comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.fp_item.name
@@ -228,7 +228,7 @@ class CPItemEntry(models.Model):
 class Shift(models.Model):
     name = models.CharField(max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    comment = models.TextField(blank=True, null=True)
+    # comment = models.TextField(blank=True, null=True)
     start_time = models.TimeField()
     end_time = models.TimeField()
 

@@ -152,9 +152,9 @@ class RawItem_Admin(admin.ModelAdmin):
             'Choose Fundamental Product Type For This Raw Item:', {
                 'fields': ['fundamental_type']}
         ),
-        (
-            'Write Comment: ', {'fields': ['comment']}
-        ),
+        # (
+        #     'Write Comment: ', {'fields': ['comment']}
+        # ),
 
     ]
 
@@ -172,9 +172,9 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
             'Choose Fundamental Product Type For This Middle Category Finished Product:', {
                 'fields': ['fundamental_type']}
         ),
-        (
-            'Write Comment: ', {'fields': ['comment']}
-        ),
+        # (
+        #     'Write Comment: ', {'fields': ['comment']}
+        # ),
 
     ]
 
@@ -196,9 +196,9 @@ class FPLowerCat_Admin(admin.ModelAdmin):
             'Choose Middle Category Type For This Lower Category Finished Product: ', {
                 'fields': ['middle_category_type']}
         ),
-        (
-            'Write Comment: ', {'fields': ['comment']}
-        ),
+        # (
+        #     'Write Comment: ', {'fields': ['comment']}
+        # ),
 
     ]
 
@@ -229,9 +229,9 @@ class FPItem_Admin(admin.ModelAdmin):
             'Check Box If This Finished Product Is A Compound Item:', {
                 'fields': ['is_cp']}
         ),
-        (
-            'Write Comment: ', {'fields': ['comment']}
-        ),
+        # (
+        #     'Write Comment: ', {'fields': ['comment']}
+        # ),
 
     ]
 
@@ -253,9 +253,9 @@ class CPItem_Admin(admin.ModelAdmin):
             'Name Of The Compound Production Item: ', {'fields': ['fp_item']}
         ),
 
-        (
-            'Write Comment: ', {'fields': ['comment']}
-        ),
+        # (
+        #     'Write Comment: ', {'fields': ['comment']}
+        # ),
 
     ]
 
@@ -288,9 +288,9 @@ class Shift_Admin(admin.ModelAdmin):
             'Select End Time Of Shift(24 Hours format H:M:S): ', {
                 'fields': ['end_time']}
         ),
-        (
-            'Write Comment: ', {'fields': ['comment']}
-        ),
+        # (
+        #     'Write Comment: ', {'fields': ['comment']}
+        # ),
 
     ]
 
