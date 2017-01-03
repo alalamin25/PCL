@@ -37,7 +37,7 @@ class ProductionEntry_Admin(admin.ModelAdmin):
 
         (
             'Write Comment:', {
-                'fields': ['comment', ]}
+                'fields': ['enroll_comment_in_report', 'comment', ]}
         ),
     ]
 
@@ -68,7 +68,7 @@ class RawItemEntry_Admin(admin.ModelAdmin):
 
         (
             'Write Comment:', {
-                'fields': ['comment', ]}
+                'fields': ['enroll_comment_in_report', 'comment', ]}
         ),
     ]
 
@@ -103,7 +103,7 @@ class RIIssueEntry_Admin(admin.ModelAdmin):
 
         (
             'Write Comment:', {
-                'fields': ['comment', ]}
+                'fields': ['enroll_comment_in_report', 'comment', ]}
         ),
     ]
 
@@ -138,7 +138,7 @@ class RIReturnEntry_Admin(admin.ModelAdmin):
         
         (
             'Write Comment:', {
-                'fields': ['comment', ]}
+                'fields': ['enroll_comment_in_report', 'comment', ]}
         ),
     ]
 
