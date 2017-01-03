@@ -1,7 +1,9 @@
 from django.db import models
+
 from master_table.models import Supplier, RawItem
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
+# from django.db.models.signals import m2m_changed
 
 from smart_selects.db_fields import ChainedForeignKey
 
@@ -13,6 +15,9 @@ UNIT_TYPE_CHOICES = (
     ('kg', 'KG'),
     ('ton', 'TON')
 )
+
+
+
 
 
 class PurchaseEntry(models.Model):
@@ -27,14 +32,16 @@ class PurchaseEntry(models.Model):
         auto_choose=True,
         sort=True
     )
-    supplier = models.ForeignKey(Supplier)
+    # supplier = models.ForeignKey(Supplier)
+    supplier = models.ManyToManyField(Supplier)
     # suplier2 = models.ForeignKey(Suplier)
     unit_price = models.FloatField()
 
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
-    enroll_comment_in_report = models.BooleanField("Enroll This Comment In Report:", default=False)
+    enroll_comment_in_report = models.BooleanField(
+        "Enroll This Comment In Report:", default=False)
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
@@ -43,6 +50,21 @@ class PurchaseEntry(models.Model):
 
     def __str__(self):
         return self.raw_item.name
+
+    # def clean(self, *args, **kwargs):
+
+    #     if self.supplier.count() > 1:
+    #         print("\n supplier count: ")
+    #         print(self.supplier.count())
+    #         raise ValidationError("You can't assign more than 1 Supplier")
+    #     super(PurchaseEntry, self).clean(*args, **kwargs)
+
+    # def regions_changed(sender, **kwargs):
+    #     if kwargs['instance'].supplier.count() > 1:
+    #         raise ValidationError("You can't assign more than three regions")
+
+
+    # m2m_changed.connect(regions_changed, sender=PurchaseEntry.through)
 
     class Meta:
         verbose_name = "New Purchase Entry To Mother Godown"

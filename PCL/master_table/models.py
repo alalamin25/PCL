@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
-# import uuid
+from django.core.exceptions import ValidationError
 import random
 from smart_selects.db_fields import ChainedForeignKey
 
@@ -13,6 +13,21 @@ UNIT_TYPE_CHOICES = (
 
 def get_unique_code(id):
     return 'code_' + str(id)
+
+
+class Code(models.Model):
+    fp = models.CharField(
+        "Finished Product Fundamental Type Code: ", max_length=1)
+    ri = models.CharField(
+        "Raw Item Fundamental Type Code: ", max_length=1)
+
+    def clean(self, *args, **kwargs):
+
+        if Code.objects.all().count() > 1:
+            # print("\n supplier count: ")
+            # print(self.supplier.count())
+            raise ValidationError("You can't create more than 1 code instance")
+        super(Code, self).clean(*args, **kwargs)
 
 
 class Bank(models.Model):
@@ -66,6 +81,8 @@ class Customer(models.Model):
 
 class FundamentalProductType(models.Model):
     name = models.CharField(max_length=50)
+    fp_code = models.CharField("Finished Product Code:", max_length=1, unique=True)
+    ri_code = models.CharField("Raw Item Code:", max_length=1, unique=True)
 
     def __str__(self):
         return self.name
@@ -158,7 +175,7 @@ class RawItem(models.Model):
 class FPMiddleCat(models.Model):
     name = models.CharField("Middle Category Name:", max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    # comment = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=1, unique=True)
 
     def __str__(self):
         return self.name

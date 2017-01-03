@@ -7,7 +7,11 @@ from searchableselect.widgets import SearchableSelect
 from master_table.models import Supplier, FundamentalProductType,\
     RIMiddleCat, RILowerCat, RawItem, FPMiddleCat, FPLowerCat,\
     ExpenseCriteria, FPItem, Shift, CPItem, CPItemEntry, Deport,\
-    Customer, Deport, BankAccount, Bank
+    Customer, Deport, BankAccount, Bank, Code
+
+
+class Code_Admin(admin.ModelAdmin):
+    pass
 
 
 class ExpenseCriteria_Admin(admin.ModelAdmin):
@@ -121,6 +125,9 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
         (
             'Name Of Fundamental Product: ', {'fields': ['name']}
         ),
+        (
+            'Enter Unique Code: ', {'fields': ['fp_code', 'ri_code']}
+        ),
     ]
 
 
@@ -228,11 +235,34 @@ class RawItem_Admin(admin.ModelAdmin):
     ]
 
 
+class FPMiddleCatForm(forms.ModelForm):
+
+    code_edit = forms.CharField(max_length=1)
+
+    class Meta:
+        model = FPMiddleCat
+        exclude = ()
+
+    def clean(self):
+        # Validation goes here :)
+        # fundamental_type = self.cleaned_data.get('fundamental_type')
+        # code = fundamental_type.fp_code + form.cleaned_data.get('code_edit')
+        super(FPMiddleCatForm, self).clean()
+        code_edit = self.cleaned_data.get('code_edit')
+        fundamental_type = self.cleaned_data.get('fundamental_type')
+        code = fundamental_type.fp_code + code_edit
+        if(FPMiddleCat.objects.filter(code=code)):
+            raise forms.ValidationError('The Code Must Be Unique')
+        # {'password': ["Passwords must be the same."]}
+
+
 class FPMiddleCat_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'fundamental_type',)
+    form = FPMiddleCatForm
+    list_display = ('id', 'name', 'code', 'fundamental_type',)
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
+    readonly_fields = ('code',)
     fieldsets = [
         (
             'Finished Product Middle Category Name: ', {'fields': ['name']}
@@ -241,11 +271,24 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
             'Choose Fundamental Product Type For This Middle Category Finished Product:', {
                 'fields': ['fundamental_type']}
         ),
+        (
+            'Unique Code For This Finished Product Middle Category:', {
+                'fields': ['code', 'code_edit']}
+        ),
         # (
         #     'Write Comment: ', {'fields': ['comment']}
         # ),
 
     ]
+
+    def save_model(self, request, obj, form, change):
+        code_edit = form.cleaned_data.get('code_edit')
+        fundamental_type = form.cleaned_data.get('fundamental_type')
+        code = fundamental_type.fp_code + code_edit
+        obj.code = code
+        # print("\n\n code_edit: ")
+        # print(code_edit)
+        obj.save()
 
 
 class FPLowerCat_Admin(admin.ModelAdmin):
@@ -381,3 +424,4 @@ admin.site.register(Deport, Deport_Admin)
 admin.site.register(ExpenseCriteria, ExpenseCriteria_Admin)
 admin.site.register(Bank, Bank_Admin)
 admin.site.register(BankAccount, BankAccount_Admin)
+admin.site.register(Code, Code_Admin)
