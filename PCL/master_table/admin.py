@@ -1,5 +1,6 @@
 from django.contrib import admin
-
+from django.db import models
+from django.forms import CheckboxSelectMultiple
 from master_table.models import Suplier, FundamentalProductType,\
     RawItem, FPMiddleCat, FPLowerCat, ExpenseCriteria,\
     FPItem, Shift, CPItem, CPItemEntry, Deport, Customer, Deport,\
@@ -125,9 +126,16 @@ class Suplier_Admin(admin.ModelAdmin):
     list_display_links = ('id', 'name',)
     list_filter = ()
     search_fields = ('name',)
+    # filter_horizontal = ("fundamental_type",)
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple},
+    }
     fieldsets = [
         (
             'Name Of The Supplier: ', {'fields': ['name']}
+        ),
+        (
+            'Select What Type Of Raw Material This Supplier Provides: ', {'fields': ['fundamental_type']}
         ),
         (
             'Address Of The Supplier: ', {'fields': ['address']}
