@@ -121,9 +121,9 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
 
 
 class Suplier_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'edit_time')
+    list_display = ('id', 'name')
     list_display_links = ('id', 'name',)
-    list_filter = ('creation_time', 'edit_time',)
+    list_filter = ()
     search_fields = ('name',)
     fieldsets = [
         (
