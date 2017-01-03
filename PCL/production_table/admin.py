@@ -7,7 +7,7 @@ class ProductionEntry_Admin(admin.ModelAdmin):
 
     list_display = (
         'id', 'finished_product_item', 'fundamental_type', 'shift',
-        'unit_amount', 'date')
+        'get_unit_amount', 'date')
     list_display_links = ('id', 'finished_product_item',)
     list_filter = ('fundamental_type', 'shift', 'date',)
     search_fields = ('finished_product_item',)
@@ -26,7 +26,7 @@ class ProductionEntry_Admin(admin.ModelAdmin):
 
         (
             'Enter Details: ', {
-                'fields': ['unit_amount', 'invoice_no']}
+                'fields': ['unit_type', 'unit_amount', 'invoice_no']}
         ),
 
         (
@@ -58,7 +58,7 @@ class RawItemEntry_Admin(admin.ModelAdmin):
         ),
         (
             'Enter Details: ', {
-                'fields': ['unit_amount', 'invoice_no']}
+                'fields': ['unit_type', 'unit_amount', 'invoice_no']}
         ),
 
         (
@@ -93,7 +93,7 @@ class RIIssueEntry_Admin(admin.ModelAdmin):
         ),
         (
             'Enter Details: ', {
-                'fields': ['unit_amount']}
+                'fields': ['unit_type', 'unit_amount']}
         ),
 
         (
@@ -128,7 +128,7 @@ class RIReturnEntry_Admin(admin.ModelAdmin):
         ),
         (
             'Enter Details: ', {
-                'fields': ['unit_amount']}
+                'fields': ['unit_type', 'unit_amount']}
         ),
         (
             'Select Date:', {
