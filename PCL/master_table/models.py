@@ -5,6 +5,12 @@ import random
 from smart_selects.db_fields import ChainedForeignKey
 
 
+UNIT_TYPE_CHOICES = (
+    ('kg', 'KG'),
+    ('ton', 'TON')
+)
+
+
 def get_unique_code(id):
     return 'code_' + str(id)
 
@@ -211,6 +217,7 @@ class CPItemEntry(models.Model):
         auto_choose=True,
         sort=True
     )
+    unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
 
     def __str__(self):
