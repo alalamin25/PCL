@@ -71,29 +71,6 @@ class FundamentalProductType(models.Model):
         return self.name
 
 
-
-# class Suplier(models.Model):
-
-#     name = models.CharField(max_length=100)
-#     fundamental_type = models.ManyToManyField(FundamentalProductType)
-#     # Customer = models.ForeignKey(Customer)
-#     code = models.CharField(max_length=30, unique=True)
-#     address = models.TextField()
-#     phone1 = models.CharField(max_length=30, blank=True, null=True)
-#     phone2 = models.CharField(max_length=30, blank=True, null=True)
-#     phone3 = models.CharField(max_length=30, blank=True, null=True)
-#     phone4 = models.CharField(max_length=30, blank=True, null=True)
-#     phone5 = models.CharField(max_length=30, blank=True, null=True)
-#     # This timefield is added just to keep track of supliers ie log them
-#     # creation_time = models.DateTimeField(default=now, editable=False)
-#     # edit_time = models.DateTimeField(default=now, editable=False)
-
-#     def __str__(self):
-#         return self.name
-
-
-
-
 class Supplier(models.Model):
 
     name = models.CharField(max_length=100)
@@ -117,13 +94,62 @@ class Supplier(models.Model):
     #     return 'code_' + str(id)
 
 
+class RIMiddleCat(models.Model):
+    name = models.CharField("RawItem Middle Category Name:", max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    # comment = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Raw Item Middle Category"
+        verbose_name_plural = "Raw Item Middle Categories"
+
+
+class RILowerCat(models.Model):
+    name = models.CharField("Raw Item Lower Category Name:", max_length=100)
+    fundamental_type = models.ForeignKey(FundamentalProductType)
+    # middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
+    middle_category_type = ChainedForeignKey(
+        RIMiddleCat,
+        chained_field="fundamental_type",
+        chained_model_field="fundamental_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Raw Item  Lower Category"
+        verbose_name_plural = "Raw Item Lower Categories"
+
+
 class RawItem(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=30, unique=True)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    # middle_category_type = models.ForeignKey(RIMiddleCat)
-    # lower_category_type = models.ForeignKey(RILowerCat)
-    # comment = models.TextField(blank=True, null=True)
+
+    middle_category_type = ChainedForeignKey(
+        RIMiddleCat,
+        chained_field="fundamental_type",
+        chained_model_field="fundamental_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        RILowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
 
     def __str__(self):
         return self.name

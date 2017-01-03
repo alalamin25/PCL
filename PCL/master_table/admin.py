@@ -5,9 +5,9 @@ from django.forms import CheckboxSelectMultiple
 from searchableselect.widgets import SearchableSelect
 
 from master_table.models import Supplier, FundamentalProductType,\
-    RawItem, FPMiddleCat, FPLowerCat, ExpenseCriteria,\
-    FPItem, Shift, CPItem, CPItemEntry, Deport, Customer, Deport,\
-    BankAccount, Bank
+    RIMiddleCat, RILowerCat, RawItem, FPMiddleCat, FPLowerCat,\
+    ExpenseCriteria, FPItem, Shift, CPItem, CPItemEntry, Deport,\
+    Customer, Deport, BankAccount, Bank
 
 
 class ExpenseCriteria_Admin(admin.ModelAdmin):
@@ -134,7 +134,6 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
 #         widgets = {
 #             'Customer': SearchableSelect(model='master_table.Customer', search_field='name', many=False)
 #         }
-        
 
 
 class Supplier_Admin(admin.ModelAdmin):
@@ -165,6 +164,43 @@ class Supplier_Admin(admin.ModelAdmin):
     ]
 
 
+class RIMiddleCat_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'fundamental_type',)
+    list_display_links = ('id', 'name')
+    search_fields = ('name',)
+    list_filter = ('fundamental_type',)
+    fieldsets = [
+        (
+            'Raw Item Middle Category Name: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For This Middle Category Raw Item :', {
+                'fields': ['fundamental_type']}
+        ),
+    ]
+
+
+class RILowerCat_Admin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'fundamental_type', 'middle_category_type')
+    list_display_links = ('id', 'name',)
+    search_fields = ('name',)
+    list_filter = ('fundamental_type', 'middle_category_type',)
+    fieldsets = [
+        (
+            'Raw Material Lower Category Name: ', {'fields': ['name']}
+        ),
+        (
+            'Choose Fundamental Product Type For This Lower Category Raw Item :', {
+                'fields': ['fundamental_type']}
+        ),
+        (
+            'Choose Middle Category Type For This Lower Category Raw Item : ', {
+                'fields': ['middle_category_type']}
+        ),
+
+    ]
+
+
 class RawItem_Admin(admin.ModelAdmin):
     list_display = ('id', 'name', 'fundamental_type')
     list_display_links = ('id', 'name',)
@@ -178,9 +214,16 @@ class RawItem_Admin(admin.ModelAdmin):
             'Choose Fundamental Product Type For This Raw Item:', {
                 'fields': ['fundamental_type']}
         ),
-        # (
-        #     'Write Comment: ', {'fields': ['comment']}
-        # ),
+
+        (
+            'Choose Middle Category For Raw Item:', {
+                'fields': ['middle_category_type']}
+        ),
+        (
+            'Choose Lower Category For Raw Item:', {
+                'fields': ['lower_category_type']}
+        ),
+
 
     ]
 
@@ -212,7 +255,7 @@ class FPLowerCat_Admin(admin.ModelAdmin):
     list_filter = ('fundamental_type', 'middle_category_type',)
     fieldsets = [
         (
-            'Raw Material Lower Category Name: ', {'fields': ['name']}
+            'Finished Product Lower Category Name: ', {'fields': ['name']}
         ),
         (
             'Choose Fundamental Product Type For This Lower Category Finished Product :', {
@@ -324,6 +367,8 @@ class Shift_Admin(admin.ModelAdmin):
 
 admin.site.register(Supplier, Supplier_Admin)
 admin.site.register(FundamentalProductType, FundamentalProductType_Admin)
+admin.site.register(RIMiddleCat, RIMiddleCat_Admin)
+admin.site.register(RILowerCat, RILowerCat_Admin)
 admin.site.register(RawItem, RawItem_Admin)
 admin.site.register(FPMiddleCat, FPMiddleCat_Admin)
 admin.site.register(FPLowerCat, FPLowerCat_Admin)
