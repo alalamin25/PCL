@@ -29,8 +29,8 @@ class PurchaseEntry(models.Model):
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
-    creation_time = models.DateTimeField(default=now, editable=False)
-    edit_time = models.DateTimeField(default=now, editable=False)
+    date = models.DateTimeField(default=now)
+    # edit_time = models.DateTimeField(default=now, editable=False)
 
     def __str__(self):
         return self.raw_item.name
@@ -57,8 +57,8 @@ class IssueEntry(models.Model):
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
-    creation_time = models.DateTimeField(default=now, editable=False)
-    edit_time = models.DateTimeField(default=now, editable=False)
+    date = models.DateTimeField(default=now)
+    # edit_time = models.DateTimeField(default=now, editable=False)
 
     def __str__(self):
         return self.raw_item.name
