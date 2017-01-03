@@ -7,9 +7,9 @@ class ProductionEntry_Admin(admin.ModelAdmin):
 
     list_display = (
         'id', 'finished_product_item', 'fundamental_type', 'shift',
-        'unit_amount', 'edit_time')
+        'unit_amount', 'date')
     list_display_links = ('id', 'finished_product_item',)
-    list_filter = ('fundamental_type', 'shift', 'creation_time', 'edit_time',)
+    list_filter = ('fundamental_type', 'shift', 'date',)
     search_fields = ('finished_product_item',)
     fieldsets = [
         (
@@ -28,6 +28,13 @@ class ProductionEntry_Admin(admin.ModelAdmin):
             'Enter Details: ', {
                 'fields': ['unit_amount', 'invoice_no']}
         ),
+
+        (
+            'Select Date:', {
+                'fields': ['date', ]}
+        ),
+
+
         (
             'Write Comment:', {
                 'fields': ['comment', ]}
@@ -37,9 +44,9 @@ class ProductionEntry_Admin(admin.ModelAdmin):
 
 class RawItemEntry_Admin(admin.ModelAdmin):
     list_display = (
-        'id', 'raw_item', 'fundamental_type', 'unit_amount', 'edit_time', 'creation_time',)
+        'id', 'raw_item', 'fundamental_type', 'unit_amount', 'date',)
     list_display_links = ('id', 'raw_item',)
-    list_filter = ( 'fundamental_type', 'creation_time', 'edit_time',)
+    list_filter = ( 'fundamental_type', 'date',)
     search_fields = ('raw_item',)
     # raw_id_fields = ('raw_item',)
     fieldsets = [
@@ -53,6 +60,12 @@ class RawItemEntry_Admin(admin.ModelAdmin):
             'Enter Details: ', {
                 'fields': ['unit_amount', 'invoice_no']}
         ),
+
+        (
+            'Select Date:', {
+                'fields': ['date', ]}
+        ),
+
         (
             'Write Comment:', {
                 'fields': ['comment', ]}
@@ -63,9 +76,9 @@ class RawItemEntry_Admin(admin.ModelAdmin):
 class RIIssueEntry_Admin(admin.ModelAdmin):
 
     list_display = (
-        'id', 'raw_item', 'fundamental_type', 'shift', 'unit_amount', 'edit_time', 'creation_time',)
+        'id', 'raw_item', 'fundamental_type', 'shift', 'unit_amount', 'date',)
     list_display_links = ('id', 'raw_item',)
-    list_filter = ( 'fundamental_type', 'shift', 'creation_time', 'edit_time',)
+    list_filter = ( 'fundamental_type', 'shift', 'date',)
     search_fields = ('raw_item',)
     # raw_id_fields = ('raw_item',)
     fieldsets = [
@@ -82,6 +95,12 @@ class RIIssueEntry_Admin(admin.ModelAdmin):
             'Enter Details: ', {
                 'fields': ['unit_amount']}
         ),
+
+        (
+            'Select Date:', {
+                'fields': ['date', ]}
+        ),
+
         (
             'Write Comment:', {
                 'fields': ['comment', ]}
@@ -92,9 +111,9 @@ class RIIssueEntry_Admin(admin.ModelAdmin):
 class RIReturnEntry_Admin(admin.ModelAdmin):
 
     list_display = (
-        'id', 'raw_item', 'fundamental_type', 'shift', 'unit_amount', 'edit_time', 'creation_time',)
+        'id', 'raw_item', 'fundamental_type', 'shift', 'unit_amount', 'date',)
     list_display_links = ('id', 'raw_item',)
-    list_filter = ('fundamental_type', 'shift', 'creation_time', 'edit_time',)
+    list_filter = ('fundamental_type', 'shift', 'date',)
     search_fields = ('raw_item',)
     # raw_id_fields = ('raw_item',)
     fieldsets = [
@@ -111,6 +130,12 @@ class RIReturnEntry_Admin(admin.ModelAdmin):
             'Enter Details: ', {
                 'fields': ['unit_amount']}
         ),
+        (
+            'Select Date:', {
+                'fields': ['date', ]}
+        ),
+
+        
         (
             'Write Comment:', {
                 'fields': ['comment', ]}
