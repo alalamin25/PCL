@@ -275,6 +275,13 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
 
     ]
 
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(FPMiddleCat_Admin, self).get_form(request, obj, **kwargs)
+        code = obj.code
+        form.base_fields['code_edit'].initial = code
+        return form
+
     def save_model(self, request, obj, form, change):
         code_edit = form.cleaned_data.get('code_edit')
         # fundamental_type = form.cleaned_data.get('fundamental_type')
@@ -290,6 +297,14 @@ class FPLowerCatForm(forms.ModelForm):
     class Meta:
         model = FPLowerCat
         exclude = ()
+
+
+    # def __init__(self, *args, **kwargs):
+    #     # We can't assume that kwargs['initial'] exists! 
+    #     if not kwargs.get('initial'):
+    #         kwargs['initial'] = {}
+    #     kwargs['initial'].update({'description': get_default_content()})
+    #     super(FooAdminForm, self).__init__(*args, **kwargs)
 
     def clean(self):
         # Validation goes here :)
@@ -333,6 +348,12 @@ class FPLowerCat_Admin(admin.ModelAdmin):
         ),
 
     ]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(FPLowerCat_Admin, self).get_form(request, obj, **kwargs)
+        code = obj.code
+        form.base_fields['code_edit'].initial = code
+        return form
 
     def save_model(self, request, obj, form, change):
         code_edit = form.cleaned_data.get('code_edit')
