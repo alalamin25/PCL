@@ -178,7 +178,7 @@ class RawItem(models.Model):
 
     def __str__(self):
         return self.code + ": " + self.name
-        return self.name
+        # return self.name
 
 
 class FPMiddleCat(models.Model):
@@ -258,7 +258,7 @@ class FPItem(models.Model):
     # comment2 = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.code + ": " + self.name
 
     class Meta:
         verbose_name = "Finished Product Item "

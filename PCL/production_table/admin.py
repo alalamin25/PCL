@@ -2,28 +2,34 @@ from django.contrib import admin
 from production_table.models import ProductionEntry, RawItemEntry,\
     RIIssueEntry, RIReturnEntry
 
-from production_table.forms import RIIssueEntryForm, RawItemEntryForm, RIReturnEntryForm
+from production_table.forms import RIIssueEntryForm, RawItemEntryForm,\
+    RIReturnEntryForm, ProductionEntryForm
 
 
 class ProductionEntry_Admin(admin.ModelAdmin):
 
+    form = ProductionEntryForm
     list_display = (
-        'id', 'finished_product_item', 'fundamental_type', 'shift',
+        'id', 'fp_item', 'fundamental_type', 'shift',
         'get_unit_amount', 'date')
-    list_display_links = ('id', 'finished_product_item',)
+    list_display_links = ('id', 'fp_item',)
     list_filter = ('fundamental_type', 'shift', 'date',)
-    search_fields = ('finished_product_item',)
+    search_fields = ('fp_item__name', 'fp_item__code')
+    filter_horizontal = ('fp_item_many',)
     fieldsets = [
         (
-            'Select Fundamental Product: ', {'fields': ['fundamental_type']}
-        ),
-        (
-            'Select Name Of The Production Item: ', {
-                'fields': ['finished_product_item']}
+            'Select The Shift: ', {'fields': ['fundamental_type', 'shift']}
         ),
 
         (
-            'Select Shift: ', {'fields': ['shift']}
+            'Select Finished Item By Searching:', {
+                'fields': ['fp_item_many', ]}
+        ),
+
+        (
+            'Select Finished Item Info: ',
+            {'fields': ['middle_category_type',
+                        'lower_category_type', 'fp_item_chained']}
         ),
 
         (
@@ -42,6 +48,16 @@ class ProductionEntry_Admin(admin.ModelAdmin):
                 'fields': ['enroll_comment_in_report', 'comment', ]}
         ),
     ]
+
+    def save_model(self, request, obj, form, change):
+
+        obj.save()
+        fp_item_many = form.cleaned_data.get('fp_item_many')
+        if(fp_item_many):
+            obj.fp_item = fp_item_many[0]
+        if(obj.fp_item_chained):
+            obj.fp_item = obj.fp_item_chained
+        obj.save()
 
 
 class RawItemEntry_Admin(admin.ModelAdmin):
@@ -193,7 +209,7 @@ class RIReturnEntry_Admin(admin.ModelAdmin):
         if(obj.raw_item_chained):
             obj.raw_item = obj.raw_item_chained
         obj.save()
-        
+
 
 admin.site.register(ProductionEntry, ProductionEntry_Admin)
 admin.site.register(RawItemEntry, RawItemEntry_Admin)

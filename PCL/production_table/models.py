@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.timezone import now
 from master_table.models import FPItem, Shift,\
-    FundamentalProductType, RIMiddleCat, RILowerCat, RawItem, Shift, FPItem
+    FundamentalProductType, RIMiddleCat, RILowerCat, RawItem,\
+    Shift, FPMiddleCat, FPLowerCat, FPItem
 
 from smart_selects.db_fields import ChainedForeignKey
 
@@ -14,11 +15,33 @@ UNIT_TYPE_CHOICES = (
 class ProductionEntry(models.Model):
 
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    # raw_item = models.ForeignKey(RawItem)
-    finished_product_item = ChainedForeignKey(
-        FPItem,
+
+    middle_category_type = ChainedForeignKey(
+        FPMiddleCat,
         chained_field="fundamental_type",
         chained_model_field="fundamental_type",
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        FPLowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    fp_item_chained = ChainedForeignKey(
+        FPItem,
+        chained_field="lower_category_type",
+        chained_model_field="lower_category_type",
+        related_name="p_entry_fp_chained",
         show_all=False,
         auto_choose=True,
         sort=True,
@@ -26,7 +49,10 @@ class ProductionEntry(models.Model):
         null=True,
     )
 
-    # cp_item = models.ForeignKey(CPItem, blank = True, null = True)
+    fp_item_many = models.ManyToManyField(
+        FPItem, blank=True, null=True, related_name='p_entry_fp_many')
+
+    fp_item = models.ForeignKey(FPItem, blank=True, null=True)
 
     shift = ChainedForeignKey(
         Shift,
@@ -47,10 +73,11 @@ class ProductionEntry(models.Model):
     date = models.DateTimeField(default=now)
 
     def __str__(self):
-        if(self.finished_product_item):
-            return self.finished_product_item.name
-        elif(self.cp_item):
-            return self.cp_item.name
+        if(self.fp_item):
+            return self.fp_item.name
+        return "FP Item not set"
+        # elif(self.cp_item):
+        #     return self.cp_item.name
 
     def get_unit_amount(self):
         if(self.unit_type == "kg"):
