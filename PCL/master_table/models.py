@@ -115,7 +115,7 @@ class Supplier(models.Model):
 class RIMiddleCat(models.Model):
     name = models.CharField("RawItem Middle Category Name:", max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    # comment = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=1, unique=True)
 
     def __str__(self):
         return self.name

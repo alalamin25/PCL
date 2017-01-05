@@ -9,7 +9,7 @@ from master_table.models import Supplier, FundamentalProductType,\
     ExpenseCriteria, FPItem, Shift, CPItem, CPItemEntry, Deport,\
     Customer, Deport, BankAccount, Bank, Code
 
-from master_table.forms import FPMiddleCatForm, FPLowerCatForm, FPItemForm
+from master_table.forms import FPMiddleCatForm, FPLowerCatForm, FPItemForm, RIMiddleCatForm
 
 
 class Code_Admin(admin.ModelAdmin):
@@ -181,7 +181,8 @@ class Supplier_Admin(admin.ModelAdmin):
 
 
 class RIMiddleCat_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'fundamental_type',)
+    form = RIMiddleCatForm
+    list_display = ('id', 'name', 'code', 'fundamental_type',)
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
@@ -193,7 +194,28 @@ class RIMiddleCat_Admin(admin.ModelAdmin):
             'Choose Fundamental Product Type For This Middle Category Raw Item :', {
                 'fields': ['fundamental_type']}
         ),
+
+        (
+            'Unique Code For This Finished Product Middle Category:', {
+                'fields': ['code']}
+        ),
     ]
+
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code', 'fundamental_type']
+        else:
+            return []
+
+    def save_model(self, request, obj, form, change):
+        # print("\n\n")
+        # print(form.cleaned_data.get('code'))
+        # print(obj.code)
+        if(not obj.id):
+            code = obj.fundamental_type.ri_code + obj.code
+            obj.code = code
+        obj.save()
 
 
 class RILowerCat_Admin(admin.ModelAdmin):
@@ -266,11 +288,11 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
 
     ]
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(FPMiddleCat_Admin, self).get_form(request, obj, **kwargs)
-        # code = obj.code
-        # form.base_fields['code_edit'].initial = code
-        return form
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super(FPMiddleCat_Admin, self).get_form(request, obj, **kwargs)
+    #     # code = obj.code
+    #     # form.base_fields['code_edit'].initial = code
+    #     return form
 
     def get_readonly_fields(self, request, obj=None):
         # This is the case when obj is already created i.e. it's an edit
