@@ -81,7 +81,8 @@ class Customer(models.Model):
 
 class FundamentalProductType(models.Model):
     name = models.CharField(max_length=50)
-    fp_code = models.CharField("Finished Product Code:", max_length=1, unique=True)
+    fp_code = models.CharField(
+        "Finished Product Code:", max_length=1, unique=True)
     ri_code = models.CharField("Raw Item Code:", max_length=1, unique=True)
 
     def __str__(self):
@@ -180,9 +181,10 @@ class FPMiddleCat(models.Model):
     def __str__(self):
         return self.name
 
+    @property
     def get_code(self):
         return self.fundamental_type.fp_code + self.code
-    get_code.short_description = 'Full Code'
+    # get_code.short_description = 'Full Code'
 
     class Meta:
         verbose_name = "Finished Product Item Middle Category"
@@ -210,9 +212,8 @@ class FPLowerCat(models.Model):
     def __str__(self):
         return self.name
 
-
     def get_code(self):
-        return self.fundamental_type.fp_code + self.middle_category_type.code +self.code
+        return self.fundamental_type.fp_code + self.middle_category_type.code + self.code
     get_code.short_description = 'Full Code'
 
     class Meta:

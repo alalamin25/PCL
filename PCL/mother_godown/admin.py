@@ -2,7 +2,6 @@ from django.contrib import admin
 from django import forms
 
 
-
 from mother_godown.models import PurchaseEntry, IssueEntry
 from django.core.exceptions import ValidationError
 
@@ -23,7 +22,7 @@ class PurchaseEntryForm(forms.ModelForm):
 class PurchaseEntry_Admin(admin.ModelAdmin):
     form = PurchaseEntryForm
     list_display = (
-        'id', 'raw_item', 'fundamental_type', 'unit_price', 'unit_amount', 'date')
+        'id', 'raw_item', 'fundamental_type', 'unit_price', 'unit_amount', 'total_price', 'date')
     list_display_links = ('id', 'raw_item')
     list_filter = ('fundamental_type', 'date', )
     search_fields = ('raw_item', 'supplier')
@@ -41,7 +40,7 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
         ),
         (
             'Enter Details: ', {
-                'fields': ['unit_price', 'unit_type', 'unit_amount', 'invoice_no']}
+                'fields': ['unit_price', 'unit_type', 'unit_amount', 'total_price', 'invoice_no']}
         ),
 
         (
@@ -59,8 +58,8 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
     # def save_model(self, request, obj, form, change):
     #     raise form.ValidationError("You can't assign more than 1 Supplier")
 
-    # class Media:
-    #     js = ('/static/js/limitchoice.js', )
+    class Media:
+        js = ('/static/mother_godown/js/calculate_total.js', )
 
 
 class IssueEntry_Admin(admin.ModelAdmin):
