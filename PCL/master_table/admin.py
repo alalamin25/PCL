@@ -118,7 +118,7 @@ class Customer_Admin(admin.ModelAdmin):
 
 
 class FundamentalProductType_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
+    list_display = ('id', 'name', 'fp_code', 'ri_code')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     fieldsets = [
@@ -129,6 +129,12 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
             'Enter Unique Code: ', {'fields': ['fp_code', 'ri_code']}
         ),
     ]
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj: #This is the case when obj is already created i.e. it's an edit
+            return ['fp_code', 'ri_code']
+        else:
+            return []
 
 
 # class SuplierForm(forms.ModelForm):
