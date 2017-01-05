@@ -280,9 +280,14 @@ class RawItem_Admin(admin.ModelAdmin):
             'Choose Lower Category For Raw Item:', {
                 'fields': ['lower_category_type']}
         ),
+
         (
             'Unique Code For This Finished Product Middle Category:', {
                 'fields': ['code']}
+        ),
+        (
+            'Optional Grade Field For Raw Item:', {
+                'fields': ['grade']}
         ),
 
     ]

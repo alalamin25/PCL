@@ -1,28 +1,15 @@
 from django.contrib import admin
-from django import forms
-
 
 from mother_godown.models import PurchaseEntry, IssueEntry
 from django.core.exceptions import ValidationError
 
-
-class PurchaseEntryForm(forms.ModelForm):
-
-    class Meta:
-        model = PurchaseEntry
-        exclude = ()
-
-    def clean(self):
-        # Validation goes here :)
-        supplier = self.cleaned_data.get('supplier')
-        if(supplier and supplier.count() > 1):
-            raise forms.ValidationError("You can select only one supplier")
+from mother_godown.forms import PurchaseEntryForm, IssueEntryForm
 
 
 class PurchaseEntry_Admin(admin.ModelAdmin):
     form = PurchaseEntryForm
     list_display = (
-        'id', 'raw_item', 'fundamental_type', 'unit_price', 'unit_amount', 'total_price', 'date')
+        'id', 'raw_item', 'unit_price', 'unit_amount', 'total_price', 'date')
     list_display_links = ('id', 'raw_item')
     list_filter = ('fundamental_type', 'date', )
     search_fields = ('raw_item', 'supplier')
@@ -63,19 +50,29 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
 
 
 class IssueEntry_Admin(admin.ModelAdmin):
+    form = IssueEntryForm
     list_display = (
-        'id', 'raw_item', 'fundamental_type', 'unit_amount', 'date',)
-    list_display_links = ('id', 'raw_item',)
+        'id', 'raw_item', 'unit_amount', 'date',)
+    # list_display_links = ('id', 'raw_item__name',)
     list_filter = ('fundamental_type', 'date',)
-    search_fields = ('raw_item',)
+    search_fields = ('raw_item__name','raw_item__code')
+    filter_horizontal = ('raw_item_many', )
     # raw_id_fields = ('raw_item',)
     fieldsets = [
+
         (
-            'Select Fundamental Product: ', {'fields': ['fundamental_type']}
+            'Select Raw Item By Searching:', {
+                'fields': ['raw_item_many', ]}
         ),
+
         (
-            'Name Of The Item: ', {'fields': ['raw_item']}
+            'Select Raw Item Info: ',
+            {'fields': ['fundamental_type', 'middle_category_type',
+                        'lower_category_type', 'raw_item_chained']}
         ),
+        # (
+        #     'Name Of The Item: ', {'fields': ['raw_item']}
+        # ),
         (
             'Enter Details: ', {
                 'fields': ['unit_type', 'unit_amount', 'invoice_no']}
@@ -90,6 +87,13 @@ class IssueEntry_Admin(admin.ModelAdmin):
         ),
     ]
 
+    def save_model(self, request, obj, form, change):
+
+        if(obj.raw_item_many):
+            obj.raw_item = obj.raw_item_many.all().first()
+        elif(obj.raw_item_chained):
+            obj.raw_item = obj.raw_item_chained
+        obj.save()
 
 admin.site.register(PurchaseEntry, PurchaseEntry_Admin)
 admin.site.register(IssueEntry, IssueEntry_Admin)

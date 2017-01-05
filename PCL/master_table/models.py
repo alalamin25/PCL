@@ -170,7 +170,14 @@ class RawItem(models.Model):
         sort=True
     )
 
+    grade = models.CharField(max_length=50, blank=True, null=True)
+
+    def get_name(self):
+        return  self.code + ": " + self.name
+    get_name.short_description = 'Name & Code'
+
     def __str__(self):
+        return self.code + ": " + self.name
         return self.name
 
 
