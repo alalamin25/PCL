@@ -3,7 +3,7 @@ import datetime
 from django import forms
 from django.forms import ModelForm
 
-from report.models import FinishedProductReport
+# from report.models import FinishedProductReport
 from master_table.models import FundamentalProductType,\
     FPMiddleCat, FPLowerCat, FPItem, Shift, RawItem
 
@@ -178,33 +178,33 @@ class FPItemForm(forms.Form):
                     (fp.id, fp) for fp in FPItem.objects.all()))
 
 
-class FPReportForm(ModelForm):
+# class FPReportForm(ModelForm):
 
-    # reading_content = forms.ModelChoiceField(queryset=ReadingContent.objects.all(),
-    #  label="Select Reading Content For This Quick Question",
-    #   widget  = forms.CheckboxSelectMultiple,required=True)
+#     # reading_content = forms.ModelChoiceField(queryset=ReadingContent.objects.all(),
+#     #  label="Select Reading Content For This Quick Question",
+#     #   widget  = forms.CheckboxSelectMultiple,required=True)
 
-    middle_cat = forms.ModelChoiceField(
-        queryset=FPMiddleCat.objects.all(),
-        label="Select Middle Category For This Report",
-        widget=forms.CheckboxSelectMultiple, required=False)
+#     middle_cat = forms.ModelChoiceField(
+#         queryset=FPMiddleCat.objects.all(),
+#         label="Select Middle Category For This Report",
+#         widget=forms.CheckboxSelectMultiple, required=False)
 
-    # excel_file = forms.FileField(required=True )
-    tag = forms.CharField(max_length=100, label="Tag", required=False)
-    # total_question = forms.IntegerField(initial=0, required=True)
+#     # excel_file = forms.FileField(required=True )
+#     tag = forms.CharField(max_length=100, label="Tag", required=False)
+#     # total_question = forms.IntegerField(initial=0, required=True)
 
-    # marks = forms.IntegerField(initial=1, required=True, label="Individual Question Marks")
-    # negative_marks = forms.IntegerField(initial=25, required=True,
-    #  label="How Percent Marks Will Be Deducted For Wrong Answer: ")
+#     # marks = forms.IntegerField(initial=1, required=True, label="Individual Question Marks")
+#     # negative_marks = forms.IntegerField(initial=25, required=True,
+#     #  label="How Percent Marks Will Be Deducted For Wrong Answer: ")
 
-    # topic_list =
-    # forms.ModelMultipleChoiceField(queryset=ReadingTopic.objects.all(),
-    # widget  = forms.CheckboxSelectMultiple)
+#     # topic_list =
+#     # forms.ModelMultipleChoiceField(queryset=ReadingTopic.objects.all(),
+#     # widget  = forms.CheckboxSelectMultiple)
 
-    # profile = forms.ModelChoiceField(queryset=Profile.objects.all(),
-    #         widget=forms.HiddenInput())
-    #
-    class Meta:
-        model = FinishedProductReport
-        # fields = ['name']
-        exclude = []
+#     # profile = forms.ModelChoiceField(queryset=Profile.objects.all(),
+#     #         widget=forms.HiddenInput())
+#     #
+#     class Meta:
+#         model = FinishedProductReport
+#         # fields = ['name']
+#         exclude = []

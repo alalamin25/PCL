@@ -225,7 +225,7 @@ class FPLowerCat(models.Model):
 class FPItem(models.Model):
     name = models.CharField(
         "Finished Product Name:", max_length=100, unique=True)
-    code = models.CharField(max_length=30, unique=True)
+    code = models.CharField(max_length=5, unique=True, blank=True, null=True)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FPMiddleCat)
     middle_category_type = ChainedForeignKey(

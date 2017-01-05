@@ -53,3 +53,21 @@ class FPLowerCatForm(forms.ModelForm):
 #     if(FPMiddleCat.objects.filter(code=full_code)):
 #         raise forms.ValidationError(
 # full_code + ' Has already been taken. Please choose another code')
+
+
+class FPItemForm(forms.ModelForm):
+
+    class Meta:
+        model = FPItem
+        exclude = ()
+
+    def clean(self):
+
+        super(FPItemForm, self).clean()
+        code = self.cleaned_data.get('code')
+        lower_category_type = self.cleaned_data.get('lower_category_type')        
+        if(code and lower_category_type):
+            full_code = lower_category_type.code + code.zfill(5)
+            if(FPItem.objects.filter(code=full_code)):
+                raise forms.ValidationError(
+                    full_code + ' Has already been taken. Please choose another code')

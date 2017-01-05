@@ -9,7 +9,7 @@ from master_table.models import Supplier, FundamentalProductType,\
     ExpenseCriteria, FPItem, Shift, CPItem, CPItemEntry, Deport,\
     Customer, Deport, BankAccount, Bank, Code
 
-from master_table.forms import FPMiddleCatForm, FPLowerCatForm
+from master_table.forms import FPMiddleCatForm, FPLowerCatForm, FPItemForm
 
 
 class Code_Admin(admin.ModelAdmin):
@@ -272,7 +272,6 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
         # form.base_fields['code_edit'].initial = code
         return form
 
-
     def get_readonly_fields(self, request, obj=None):
         # This is the case when obj is already created i.e. it's an edit
         if obj:
@@ -287,9 +286,6 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
             code = obj.fundamental_type.fp_code + obj.code
             obj.code = code
         obj.save()
-
-
-
 
 
 class FPLowerCat_Admin(admin.ModelAdmin):
@@ -333,10 +329,6 @@ class FPLowerCat_Admin(admin.ModelAdmin):
             return []
 
     def save_model(self, request, obj, form, change):
-        # code_edit = form.cleaned_data.get('code_edit')
-        # obj.code = code_edit
-        # obj.save()
-
 
         if(not obj.id):
             code = obj.middle_category_type.code + obj.code
@@ -345,6 +337,8 @@ class FPLowerCat_Admin(admin.ModelAdmin):
 
 
 class FPItem_Admin(admin.ModelAdmin):
+
+    form = FPItemForm
     list_display = ('id', 'name', 'code', 'fundamental_type',
                     'middle_category_type', 'lower_category_type')
     list_display_links = ('id', 'name')
@@ -353,7 +347,7 @@ class FPItem_Admin(admin.ModelAdmin):
         'fundamental_type', 'middle_category_type', 'lower_category_type')
     fieldsets = [
         (
-            'Name and Of The Production Item: ', {'fields': ['name', 'code']}
+            'Name and Of The Production Item: ', {'fields': ['name']}
         ),
         (
             'Choose Fundamental Product Type For Production Item:', {
@@ -368,11 +362,40 @@ class FPItem_Admin(admin.ModelAdmin):
                 'fields': ['lower_category_type']}
         ),
         (
+            'Unique Code For This Finished Product Lower Category:', {
+                'fields': ['code']}
+        ),
+
+        (
             'Check Box If This Finished Product Is A Compound Item:', {
                 'fields': ['is_cp']}
         ),
 
     ]
+
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code', 'fundamental_type', 'middle_category_type', 'lower_category_type']
+        else:
+            return []
+
+    def save_model(self, request, obj, form, change):
+
+        if(not obj.id):
+            if(obj.code):
+                code = obj.lower_category_type.code + (obj.code).zfill(5)
+                obj.code = code
+            else:
+                for i in range(1, 99999, 1):
+                    temp = str(i).zfill(5)
+                    temp_code = obj.lower_category_type.code + temp
+                    if(FPItem.objects.filter(code=temp_code)):
+                        continue
+                    obj.code = temp_code
+                    break
+
+        obj.save()
 
 
 class CPItemEntryInline(admin.TabularInline):
