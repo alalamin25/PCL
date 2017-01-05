@@ -9,7 +9,7 @@ from master_table.models import Supplier, FundamentalProductType,\
     ExpenseCriteria, FPItem, Shift, CPItem, CPItemEntry, Deport,\
     Customer, Deport, BankAccount, Bank, Code
 
-from master_table.forms import FPMiddleCatForm
+from master_table.forms import FPMiddleCatForm, FPLowerCatForm
 
 
 class Code_Admin(admin.ModelAdmin):
@@ -289,41 +289,13 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
         obj.save()
 
 
-class FPLowerCatForm(forms.ModelForm):
 
-    code_edit = forms.CharField(max_length=1)
-
-    class Meta:
-        model = FPLowerCat
-        exclude = ()
-
-    # def __init__(self, *args, **kwargs):
-    #     # We can't assume that kwargs['initial'] exists!
-    #     if not kwargs.get('initial'):
-    #         kwargs['initial'] = {}
-    #     kwargs['initial'].update({'description': get_default_content()})
-    #     super(FooAdminForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        # Validation goes here :)
-        # fundamental_type = self.cleaned_data.get('fundamental_type')
-        # code = fundamental_type.fp_code + form.cleaned_data.get('code_edit')
-        super(FPLowerCatForm, self).clean()
-        code_edit = self.cleaned_data.get('code_edit')
-        fundamental_type = self.cleaned_data.get('fundamental_type')
-        middle_category_type = self.cleaned_data.get('middle_category_type')
-        if(code_edit and fundamental_type):
-            if(FPLowerCat.objects.filter(
-                    fundamental_type=fundamental_type,
-                    middle_category_type=middle_category_type,
-                    code=code_edit)):
-                raise forms.ValidationError('The Code Must Be Unique')
 
 
 class FPLowerCat_Admin(admin.ModelAdmin):
     form = FPLowerCatForm
     list_display = (
-        'id', 'name', 'get_code', 'fundamental_type', 'middle_category_type')
+        'id', 'name', 'code', 'fundamental_type', 'middle_category_type')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     list_filter = ('fundamental_type', 'middle_category_type',)
@@ -342,20 +314,33 @@ class FPLowerCat_Admin(admin.ModelAdmin):
 
         (
             'Unique Code For This Finished Product Lower Category:', {
-                'fields': ['code', 'code_edit']}
+                'fields': ['code']}
         ),
 
     ]
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(FPLowerCat_Admin, self).get_form(request, obj, **kwargs)
-        code = obj.code
-        form.base_fields['code_edit'].initial = code
-        return form
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super(FPLowerCat_Admin, self).get_form(request, obj, **kwargs)
+    #     code = obj.code
+    #     form.base_fields['code_edit'].initial = code
+    #     return form
+
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code', 'fundamental_type', 'middle_category_type']
+        else:
+            return []
 
     def save_model(self, request, obj, form, change):
-        code_edit = form.cleaned_data.get('code_edit')
-        obj.code = code_edit
+        # code_edit = form.cleaned_data.get('code_edit')
+        # obj.code = code_edit
+        # obj.save()
+
+
+        if(not obj.id):
+            code = obj.middle_category_type.code + obj.code
+            obj.code = code
         obj.save()
 
 
