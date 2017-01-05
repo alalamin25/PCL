@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 from master_table.models import FPItem, Shift,\
-    FundamentalProductType, RawItem, Shift, FPItem
+    FundamentalProductType, RIMiddleCat, RILowerCat, RawItem, Shift, FPItem
 
 from smart_selects.db_fields import ChainedForeignKey
 
@@ -39,7 +39,8 @@ class ProductionEntry(models.Model):
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
-    enroll_comment_in_report = models.BooleanField("Enroll This Comment In Report:", default=False)
+    enroll_comment_in_report = models.BooleanField(
+        "Enroll This Comment In Report:", default=False)
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
@@ -78,7 +79,8 @@ class RawItemEntry(models.Model):
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
-    enroll_comment_in_report = models.BooleanField("Enroll This Comment In Report:", default=False)
+    enroll_comment_in_report = models.BooleanField(
+        "Enroll This Comment In Report:", default=False)
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
@@ -100,14 +102,44 @@ class RIIssueEntry(models.Model):
 
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # raw_item = models.ForeignKey(RawItem)
-    raw_item = ChainedForeignKey(
-        RawItem,
+    middle_category_type = ChainedForeignKey(
+        RIMiddleCat,
         chained_field="fundamental_type",
         chained_model_field="fundamental_type",
+        blank=True,
+        null=True,
         show_all=False,
         auto_choose=True,
         sort=True
     )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        RILowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+
+    raw_item_chained = ChainedForeignKey(
+        RawItem,
+        chained_field="lower_category_type",
+        chained_model_field="lower_category_type",
+        related_name='p_ri_chained',
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    raw_item_many = models.ManyToManyField(
+        RawItem, blank=True, null=True, related_name='p_ri_many')
+
+    raw_item = models.ForeignKey(RawItem, blank=True, null=True)
+
     shift = ChainedForeignKey(
         Shift,
         chained_field="fundamental_type",
@@ -119,18 +151,21 @@ class RIIssueEntry(models.Model):
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     # invoice_no = models.CharField(max_length=100, blank=True, null=True)
-    enroll_comment_in_report = models.BooleanField("Enroll This Comment In Report:", default=False)
+    enroll_comment_in_report = models.BooleanField(
+        "Enroll This Comment In Report:", default=False)
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them
     date = models.DateTimeField(default=now)
 
     def __str__(self):
-        return self.raw_item.name
 
-    def clean(self):
-        if self.creation_time > self.edit_time:
-            raise ValidationError('Start date is after end date')
+        if(self.raw_item):
+            return self.raw_item.name
+        else:
+            return "No Raw Item Selected"
+
+
 
     class Meta:
         verbose_name = "Issued From Gowdown By Shifts"
@@ -160,7 +195,8 @@ class RIReturnEntry(models.Model):
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     # invoice_no = models.CharField(max_length=100, blank=True, null=True)
-    enroll_comment_in_report = models.BooleanField("Enroll This Comment In Report:", default=False)
+    enroll_comment_in_report = models.BooleanField(
+        "Enroll This Comment In Report:", default=False)
     comment = models.TextField(blank=True, null=True)
 
     # This timefield is added just to keep track of supliers ie log them

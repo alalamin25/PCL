@@ -12,7 +12,7 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
         'id', 'raw_item', 'unit_price', 'unit_amount', 'total_price', 'date')
     list_display_links = ('id', 'raw_item')
     list_filter = ('fundamental_type', 'date', )
-    search_fields = ( 'raw_item__name', 'raw_item__code')
+    search_fields = ('raw_item__name', 'raw_item__code')
     filter_horizontal = ('supplier', 'raw_item_many')
     # raw_id_fields = ('supplier',)
     fieldsets = [
@@ -50,9 +50,10 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
 
         obj.save()
-        if(obj.raw_item_many):
-            obj.raw_item = obj.raw_item_many.all().first()
-        elif(obj.raw_item_chained):
+        raw_item_many = form.cleaned_data.get('raw_item_many')
+        if(raw_item_many):
+            obj.raw_item = raw_item_many[0]
+        if(obj.raw_item_chained):
             obj.raw_item = obj.raw_item_chained
         obj.save()
 
@@ -101,9 +102,10 @@ class IssueEntry_Admin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
 
         obj.save()
-        if(obj.raw_item_many):
-            obj.raw_item = obj.raw_item_many.all().first()
-        elif(obj.raw_item_chained):
+        raw_item_many = form.cleaned_data.get('raw_item_many')
+        if(raw_item_many):
+            obj.raw_item = raw_item_many[0]
+        if(obj.raw_item_chained):
             obj.raw_item = obj.raw_item_chained
         obj.save()
 
