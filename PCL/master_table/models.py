@@ -127,6 +127,7 @@ class RIMiddleCat(models.Model):
 
 class RILowerCat(models.Model):
     name = models.CharField("Raw Item Lower Category Name:", max_length=100)
+    code = models.CharField(max_length=1, unique=True)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
     middle_category_type = ChainedForeignKey(
@@ -197,7 +198,7 @@ class FPMiddleCat(models.Model):
 
 class FPLowerCat(models.Model):
     name = models.CharField("Lower Category Name:", max_length=100)
-    code = models.CharField(max_length=1)
+    code = models.CharField(max_length=1, unique=True)
     fundamental_type = models.ForeignKey(FundamentalProductType)
     # middle_category_type = models.ForeignKey(FinishedProductItemMiddleCategory)
     middle_category_type = ChainedForeignKey(

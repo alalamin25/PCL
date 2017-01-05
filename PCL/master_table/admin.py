@@ -9,7 +9,8 @@ from master_table.models import Supplier, FundamentalProductType,\
     ExpenseCriteria, FPItem, Shift, CPItem, CPItemEntry, Deport,\
     Customer, Deport, BankAccount, Bank, Code
 
-from master_table.forms import FPMiddleCatForm, FPLowerCatForm, FPItemForm, RIMiddleCatForm
+from master_table.forms import FPMiddleCatForm, FPLowerCatForm, FPItemForm,\
+    RIMiddleCatForm, RILowerCatForm
 
 
 class Code_Admin(admin.ModelAdmin):
@@ -209,9 +210,7 @@ class RIMiddleCat_Admin(admin.ModelAdmin):
             return []
 
     def save_model(self, request, obj, form, change):
-        # print("\n\n")
-        # print(form.cleaned_data.get('code'))
-        # print(obj.code)
+
         if(not obj.id):
             code = obj.fundamental_type.ri_code + obj.code
             obj.code = code
@@ -219,7 +218,8 @@ class RIMiddleCat_Admin(admin.ModelAdmin):
 
 
 class RILowerCat_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'fundamental_type', 'middle_category_type')
+    form = RILowerCatForm
+    list_display = ('id', 'name', 'code', 'fundamental_type', 'middle_category_type')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     list_filter = ('fundamental_type', 'middle_category_type',)
@@ -236,8 +236,26 @@ class RILowerCat_Admin(admin.ModelAdmin):
                 'fields': ['middle_category_type']}
         ),
 
+        (
+            'Unique Code For This Finished Product Middle Category:', {
+                'fields': ['code']}
+        ),
+
     ]
 
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code', 'fundamental_type', 'middle_category_type']
+        else:
+            return []
+
+    def save_model(self, request, obj, form, change):
+
+        if(not obj.id):
+            code = obj.middle_category_type.code + obj.code
+            obj.code = code
+        obj.save()
 
 class RawItem_Admin(admin.ModelAdmin):
     list_display = ('id', 'name', 'fundamental_type')
