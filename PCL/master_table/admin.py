@@ -9,6 +9,8 @@ from master_table.models import Supplier, FundamentalProductType,\
     ExpenseCriteria, FPItem, Shift, CPItem, CPItemEntry, Deport,\
     Customer, Deport, BankAccount, Bank, Code
 
+from master_table.forms import FPMiddleCatForm
+
 
 class Code_Admin(admin.ModelAdmin):
     pass
@@ -131,7 +133,8 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
     ]
 
     def get_readonly_fields(self, request, obj=None):
-        if obj: #This is the case when obj is already created i.e. it's an edit
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
             return ['fp_code', 'ri_code']
         else:
             return []
@@ -241,31 +244,13 @@ class RawItem_Admin(admin.ModelAdmin):
     ]
 
 
-class FPMiddleCatForm(forms.ModelForm):
-
-    code_edit = forms.CharField(max_length=1)
-
-    class Meta:
-        model = FPMiddleCat
-        exclude = ()
-
-    def clean(self):
-
-        super(FPMiddleCatForm, self).clean()
-        code_edit = self.cleaned_data.get('code_edit')
-        fundamental_type = self.cleaned_data.get('fundamental_type')
-        if(code_edit and fundamental_type):
-            if(FPMiddleCat.objects.filter(fundamental_type=fundamental_type, code=code_edit)):
-                raise forms.ValidationError('The Code Must Be Unique')
-
-
 class FPMiddleCat_Admin(admin.ModelAdmin):
     form = FPMiddleCatForm
-    list_display = ('id', 'name', 'get_code', 'fundamental_type',)
+    list_display = ('id', 'name', 'code', 'fundamental_type',)
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
-    readonly_fields = ('code',)
+    # readonly_fields = ('code',)
     fieldsets = [
         (
             'Finished Product Middle Category Name: ', {'fields': ['name']}
@@ -276,23 +261,31 @@ class FPMiddleCat_Admin(admin.ModelAdmin):
         ),
         (
             'Unique Code For This Finished Product Middle Category:', {
-                'fields': ['code', 'code_edit']}
+                'fields': ['code']}
         ),
 
     ]
 
-
     def get_form(self, request, obj=None, **kwargs):
         form = super(FPMiddleCat_Admin, self).get_form(request, obj, **kwargs)
-        code = obj.code
-        form.base_fields['code_edit'].initial = code
+        # code = obj.code
+        # form.base_fields['code_edit'].initial = code
         return form
 
+
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code', 'fundamental_type']
+        else:
+            return []
+
     def save_model(self, request, obj, form, change):
-        code_edit = form.cleaned_data.get('code_edit')
+        # code = form.cleaned_data.get('code')
         # fundamental_type = form.cleaned_data.get('fundamental_type')
-        # code = fundamental_type.fp_code + code_edit
-        obj.code = code_edit
+        if(not obj.id):
+            code = obj.fundamental_type.fp_code + obj.code
+            obj.code = code
         obj.save()
 
 
@@ -304,9 +297,8 @@ class FPLowerCatForm(forms.ModelForm):
         model = FPLowerCat
         exclude = ()
 
-
     # def __init__(self, *args, **kwargs):
-    #     # We can't assume that kwargs['initial'] exists! 
+    #     # We can't assume that kwargs['initial'] exists!
     #     if not kwargs.get('initial'):
     #         kwargs['initial'] = {}
     #     kwargs['initial'].update({'description': get_default_content()})

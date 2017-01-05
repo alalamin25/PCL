@@ -176,13 +176,14 @@ class RawItem(models.Model):
 class FPMiddleCat(models.Model):
     name = models.CharField("Middle Category Name:", max_length=100)
     fundamental_type = models.ForeignKey(FundamentalProductType)
-    code = models.CharField(max_length=1)
+    code = models.CharField(max_length=1, unique=True)
 
     def __str__(self):
         return self.name
 
     @property
     def get_code(self):
+        return "code"
         return self.fundamental_type.fp_code + self.code
     # get_code.short_description = 'Full Code'
 
