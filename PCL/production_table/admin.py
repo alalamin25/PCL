@@ -2,7 +2,7 @@ from django.contrib import admin
 from production_table.models import ProductionEntry, RawItemEntry,\
     RIIssueEntry, RIReturnEntry
 
-from production_table.forms import RIIssueEntryForm, RawItemEntryForm
+from production_table.forms import RIIssueEntryForm, RawItemEntryForm, RIReturnEntryForm
 
 
 class ProductionEntry_Admin(admin.ModelAdmin):
@@ -145,21 +145,28 @@ class RIIssueEntry_Admin(admin.ModelAdmin):
 
 class RIReturnEntry_Admin(admin.ModelAdmin):
 
+    form = RIReturnEntryForm
     list_display = (
         'id', 'raw_item', 'fundamental_type', 'shift', 'unit_amount', 'date',)
     list_display_links = ('id', 'raw_item',)
     list_filter = ('fundamental_type', 'shift', 'date',)
-    search_fields = ('raw_item',)
+    search_fields = ('raw_item__name', 'raw_item__code')
     # raw_id_fields = ('raw_item',)
+    filter_horizontal = ('raw_item_many',)
     fieldsets = [
         (
-            'Select Fundamental Product: ', {'fields': ['fundamental_type']}
+            'Select The Shift: ', {'fields': ['fundamental_type', 'shift']}
         ),
+
         (
-            'Name Of The Item: ', {'fields': ['raw_item']}
+            'Select Raw Item By Searching:', {
+                'fields': ['raw_item_many', ]}
         ),
+
         (
-            'Select The Shift: ', {'fields': ['shift']}
+            'Select Raw Item Info: ',
+            {'fields': ['middle_category_type',
+                        'lower_category_type', 'raw_item_chained']}
         ),
         (
             'Enter Details: ', {
@@ -177,6 +184,16 @@ class RIReturnEntry_Admin(admin.ModelAdmin):
         ),
     ]
 
+    def save_model(self, request, obj, form, change):
+
+        obj.save()
+        raw_item_many = form.cleaned_data.get('raw_item_many')
+        if(raw_item_many):
+            obj.raw_item = raw_item_many[0]
+        if(obj.raw_item_chained):
+            obj.raw_item = obj.raw_item_chained
+        obj.save()
+        
 
 admin.site.register(ProductionEntry, ProductionEntry_Admin)
 admin.site.register(RawItemEntry, RawItemEntry_Admin)
