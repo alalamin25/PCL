@@ -12,7 +12,7 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
         'id', 'raw_item', 'unit_price', 'unit_amount', 'total_price', 'date')
     list_display_links = ('id', 'raw_item')
     list_filter = ('fundamental_type', 'date', )
-    search_fields = ('raw_item', 'supplier')
+    search_fields = ( 'raw_item__name', 'raw_item__code')
     filter_horizontal = ('supplier', 'raw_item_many')
     # raw_id_fields = ('supplier',)
     fieldsets = [
