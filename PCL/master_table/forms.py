@@ -3,6 +3,25 @@ from master_table.models import  FundamentalProductType,\
     RIMiddleCat, RILowerCat, RawItem, FPMiddleCat, FPLowerCat, FPItem
 
 
+class RawItemForm(forms.ModelForm):
+
+    class Meta:
+        model = RawItem
+        exclude = ()
+
+    def clean(self):
+
+        super(RawItemForm, self).clean()
+        code = self.cleaned_data.get('code')
+        lower_category_type = self.cleaned_data.get('lower_category_type')
+        if(code and lower_category_type):
+            full_code = lower_category_type.code + code.zfill(5)
+            if(RawItem.objects.filter(code=full_code)):
+                raise forms.ValidationError(
+                    full_code + ' Has already been taken. Please choose another code')
+
+
+
 class RIMiddleCatForm(forms.ModelForm):
 
     # code_edit = forms.CharField(max_length=1)

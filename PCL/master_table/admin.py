@@ -10,7 +10,7 @@ from master_table.models import Supplier, FundamentalProductType,\
     Customer, Deport, BankAccount, Bank, Code
 
 from master_table.forms import FPMiddleCatForm, FPLowerCatForm, FPItemForm,\
-    RIMiddleCatForm, RILowerCatForm
+    RIMiddleCatForm, RILowerCatForm, RawItemForm
 
 
 class Code_Admin(admin.ModelAdmin):
@@ -258,7 +258,8 @@ class RILowerCat_Admin(admin.ModelAdmin):
         obj.save()
 
 class RawItem_Admin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'fundamental_type')
+    form = RawItemForm
+    list_display = ('id', 'name', 'code', 'fundamental_type')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     list_filter = ('fundamental_type',)
@@ -279,9 +280,37 @@ class RawItem_Admin(admin.ModelAdmin):
             'Choose Lower Category For Raw Item:', {
                 'fields': ['lower_category_type']}
         ),
-
+        (
+            'Unique Code For This Finished Product Middle Category:', {
+                'fields': ['code']}
+        ),
 
     ]
+
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code', 'fundamental_type', 'middle_category_type', 'lower_category_type']
+        else:
+            return []
+
+    def save_model(self, request, obj, form, change):
+
+        if(not obj.id):
+            if(obj.code):
+                code = obj.lower_category_type.code + (obj.code).zfill(5)
+                obj.code = code
+            else:
+                for i in range(1, 99999, 1):
+                    temp = str(i).zfill(5)
+                    temp_code = obj.lower_category_type.code + temp
+                    if(RawItem.objects.filter(code=temp_code)):
+                        continue
+                    obj.code = temp_code
+                    break
+
+        obj.save()
+
 
 
 class FPMiddleCat_Admin(admin.ModelAdmin):
