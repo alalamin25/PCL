@@ -2,7 +2,7 @@ cairocffi==0.7.2
 CairoSVG==2.0.0
 cffi==1.9.1
 cssselect==1.0.0
-Django==1.10.3
+Django==1.10.4
 django-ajax-selects==1.5.2
 django-appconf==1.0.2
 django-easy-pdf==0.1.0
@@ -10,6 +10,7 @@ django-grappelli==2.9.1
 django-report-builder==3.4.3
 django-report-utils==0.3.15
 django-reporter==0.1
+django-searchable-select==1.4.3.post1
 Django-Select2==5.8.9
 django-smart-selects==1.2.6
 djangorestframework==3.4.7
