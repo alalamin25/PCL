@@ -13,14 +13,19 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
     list_display_links = ('id', 'raw_item')
     list_filter = ('fundamental_type', 'date', )
     search_fields = ('raw_item', 'supplier')
-    filter_horizontal = ('supplier', )
+    filter_horizontal = ('supplier', 'raw_item_many')
     # raw_id_fields = ('supplier',)
     fieldsets = [
+
         (
-            'Select Fundamental Product: ', {'fields': ['fundamental_type']}
+            'Select Raw Item By Searching:', {
+                'fields': ['raw_item_many', ]}
         ),
+
         (
-            'Name Of The Item: ', {'fields': ['raw_item']}
+            'Select Raw Item Info: ',
+            {'fields': ['fundamental_type', 'middle_category_type',
+                        'lower_category_type', 'raw_item_chained']}
         ),
         (
             'Name Of The Supplier: ', {'fields': ['supplier']}
@@ -42,8 +47,14 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
         ),
     ]
 
-    # def save_model(self, request, obj, form, change):
-    #     raise form.ValidationError("You can't assign more than 1 Supplier")
+    def save_model(self, request, obj, form, change):
+
+        obj.save()
+        if(obj.raw_item_many):
+            obj.raw_item = obj.raw_item_many.all().first()
+        elif(obj.raw_item_chained):
+            obj.raw_item = obj.raw_item_chained
+        obj.save()
 
     class Media:
         js = ('/static/mother_godown/js/calculate_total.js', )
@@ -55,7 +66,7 @@ class IssueEntry_Admin(admin.ModelAdmin):
         'id', 'raw_item', 'unit_amount', 'date',)
     # list_display_links = ('id', 'raw_item__name',)
     list_filter = ('fundamental_type', 'date',)
-    search_fields = ('raw_item__name','raw_item__code')
+    search_fields = ('raw_item__name', 'raw_item__code')
     filter_horizontal = ('raw_item_many', )
     # raw_id_fields = ('raw_item',)
     fieldsets = [
@@ -89,6 +100,7 @@ class IssueEntry_Admin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
 
+        obj.save()
         if(obj.raw_item_many):
             obj.raw_item = obj.raw_item_many.all().first()
         elif(obj.raw_item_chained):

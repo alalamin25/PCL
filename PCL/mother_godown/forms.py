@@ -15,6 +15,11 @@ class PurchaseEntryForm(forms.ModelForm):
         if(supplier and supplier.count() > 1):
             raise forms.ValidationError("You can select only one supplier")
 
+        raw_item_many = self.cleaned_data.get('raw_item_many')
+        if(raw_item_many and raw_item_many.count() > 1):
+            raise forms.ValidationError("You can select only one Raw Item")
+
+
 class IssueEntryForm(forms.ModelForm):
 
     class Meta:

@@ -19,16 +19,46 @@ UNIT_TYPE_CHOICES = (
 
 class PurchaseEntry(models.Model):
 
-    fundamental_type = models.ForeignKey(FundamentalProductType)
-    # raw_item = models.ForeignKey(RawItem)
-    raw_item = ChainedForeignKey(
-        RawItem,
+    fundamental_type = models.ForeignKey(FundamentalProductType,
+                                         blank=True, null=True,)
+
+    middle_category_type = ChainedForeignKey(
+        RIMiddleCat,
         chained_field="fundamental_type",
         chained_model_field="fundamental_type",
+        blank=True,
+        null=True,
         show_all=False,
         auto_choose=True,
         sort=True
     )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        RILowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+
+    raw_item_chained = ChainedForeignKey(
+        RawItem,
+        chained_field="lower_category_type",
+        chained_model_field="lower_category_type",
+        related_name='ri_chained',
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    raw_item_many = models.ManyToManyField(
+        RawItem, blank=True, null=True, related_name='ri_many')
+
+    raw_item = models.ForeignKey(RawItem, blank=True, null=True)
     # supplier = models.ForeignKey(Supplier)
     supplier = models.ManyToManyField(Supplier)
     # suplier2 = models.ForeignKey(Suplier)
@@ -47,7 +77,11 @@ class PurchaseEntry(models.Model):
     # edit_time = models.DateTimeField(default=now, editable=False)
 
     def __str__(self):
-        return self.raw_item.name
+
+        if(self.raw_item):
+            return self.raw_item.name
+        else:
+            return "No Raw Item Selected"
 
     # def clean(self, *args, **kwargs):
 
@@ -129,10 +163,9 @@ class IssueEntry(models.Model):
         else:
             return "No Raw Item Selected"
 
-
     # def get_name(self):
     #     if(self.raw_item_many):
-    #         raw_item = 
+    #         raw_item =
 
     # def clean(self):
     #     if self.creation_time > self.edit_time:
