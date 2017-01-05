@@ -2,7 +2,7 @@ from django.contrib import admin
 from production_table.models import ProductionEntry, RawItemEntry,\
     RIIssueEntry, RIReturnEntry
 
-from production_table.forms import RIIssueEntryForm
+from production_table.forms import RIIssueEntryForm, RawItemEntryForm
 
 
 class ProductionEntry_Admin(admin.ModelAdmin):
@@ -45,18 +45,23 @@ class ProductionEntry_Admin(admin.ModelAdmin):
 
 
 class RawItemEntry_Admin(admin.ModelAdmin):
+    form = RawItemEntryForm
     list_display = (
-        'id', 'raw_item', 'fundamental_type', 'unit_amount', 'date',)
+        'id', 'raw_item', 'unit_amount', 'date',)
     list_display_links = ('id', 'raw_item',)
     list_filter = ('fundamental_type', 'date',)
-    search_fields = ('raw_item',)
-    # raw_id_fields = ('raw_item',)
+    search_fields = ('raw_item__name', 'raw_item__code')
+    filter_horizontal = ('raw_item_many',)
     fieldsets = [
         (
-            'Select Fundamental Product: ', {'fields': ['fundamental_type']}
+            'Select Raw Item By Searching:', {
+                'fields': ['raw_item_many', ]}
         ),
+
         (
-            'Name Of The Item: ', {'fields': ['raw_item']}
+            'Select Raw Item Info: ',
+            {'fields': ['fundamental_type', 'middle_category_type',
+                        'lower_category_type', 'raw_item_chained']}
         ),
         (
             'Enter Details: ', {
@@ -74,6 +79,16 @@ class RawItemEntry_Admin(admin.ModelAdmin):
         ),
     ]
 
+    def save_model(self, request, obj, form, change):
+
+        obj.save()
+        raw_item_many = form.cleaned_data.get('raw_item_many')
+        if(raw_item_many):
+            obj.raw_item = raw_item_many[0]
+        if(obj.raw_item_chained):
+            obj.raw_item = obj.raw_item_chained
+        obj.save()
+
 
 class RIIssueEntry_Admin(admin.ModelAdmin):
 
@@ -82,12 +97,12 @@ class RIIssueEntry_Admin(admin.ModelAdmin):
         'id', 'raw_item', 'fundamental_type', 'shift', 'unit_amount', 'date',)
     list_display_links = ('id', 'raw_item',)
     list_filter = ('fundamental_type', 'shift', 'date',)
-    search_fields = ( 'raw_item__name', 'raw_item__code')
+    search_fields = ('raw_item__name', 'raw_item__code')
     # raw_id_fields = ('raw_item',)
     filter_horizontal = ('raw_item_many',)
     fieldsets = [
         (
-            'Select The Shift: ', {'fields': ['fundamental_type','shift']}
+            'Select The Shift: ', {'fields': ['fundamental_type', 'shift']}
         ),
 
         (
@@ -97,7 +112,7 @@ class RIIssueEntry_Admin(admin.ModelAdmin):
 
         (
             'Select Raw Item Info: ',
-            {'fields': [ 'middle_category_type',
+            {'fields': ['middle_category_type',
                         'lower_category_type', 'raw_item_chained']}
         ),
 
@@ -120,13 +135,12 @@ class RIIssueEntry_Admin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
 
         obj.save()
-        raw_item_many = form.cleaned_data.get('raw_item_many')        
-        if(raw_item_many):            
+        raw_item_many = form.cleaned_data.get('raw_item_many')
+        if(raw_item_many):
             obj.raw_item = raw_item_many[0]
         if(obj.raw_item_chained):
             obj.raw_item = obj.raw_item_chained
         obj.save()
-
 
 
 class RIReturnEntry_Admin(admin.ModelAdmin):

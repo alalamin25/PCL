@@ -66,16 +66,47 @@ class ProductionEntry(models.Model):
 
 class RawItemEntry(models.Model):
 
-    fundamental_type = models.ForeignKey(FundamentalProductType)
+    fundamental_type = models.ForeignKey(
+        FundamentalProductType, blank=True, null=True)
     # raw_item = models.ForeignKey(RawItem)
-    raw_item = ChainedForeignKey(
-        RawItem,
+    middle_category_type = ChainedForeignKey(
+        RIMiddleCat,
         chained_field="fundamental_type",
         chained_model_field="fundamental_type",
+        blank=True,
+        null=True,
         show_all=False,
         auto_choose=True,
         sort=True
     )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        RILowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+
+    raw_item_chained = ChainedForeignKey(
+        RawItem,
+        chained_field="lower_category_type",
+        chained_model_field="lower_category_type",
+        related_name='p_entry_ri_chained',
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    raw_item_many = models.ManyToManyField(
+        RawItem, blank=True, null=True, related_name='p_entry_ri_many')
+
+    raw_item = models.ForeignKey(RawItem, blank=True, null=True)
+
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
@@ -87,11 +118,11 @@ class RawItemEntry(models.Model):
     date = models.DateTimeField(default=now)
 
     def __str__(self):
-        return self.raw_item.name
 
-    def clean(self):
-        if self.creation_time > self.edit_time:
-            raise ValidationError('Start date is after end date')
+        if(self.raw_item):
+            return self.raw_item.name
+        else:
+            return "No Raw Item Selected"
 
     class Meta:
         verbose_name = "Production Godown Raw Item Entry"
@@ -164,8 +195,6 @@ class RIIssueEntry(models.Model):
             return self.raw_item.name
         else:
             return "No Raw Item Selected"
-
-
 
     class Meta:
         verbose_name = "Issued From Gowdown By Shifts"
