@@ -32,7 +32,7 @@ class PurchaseEntry_Admin(admin.ModelAdmin):
         ),
         (
             'Enter Details: ', {
-                'fields': ['unit_price', 'unit_type', 'unit_amount', 'total_price', 'invoice_no']}
+                'fields': ['unit_type', 'unit_amount',  'unit_price',  'total_price', 'invoice_no']}
         ),
 
         (
