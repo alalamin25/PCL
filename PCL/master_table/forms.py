@@ -1,6 +1,24 @@
 from django import forms
 from master_table.models import  FundamentalProductType,\
-    RIMiddleCat, RILowerCat, RawItem, FPMiddleCat, FPLowerCat, FPItem
+    RIMiddleCat, RILowerCat, RawItem, FPMiddleCat, FPLowerCat, FPItem, Supplier, Code
+
+
+class SupplierForm(forms.ModelForm):
+
+    class Meta:
+        model = Supplier
+        exclude = ()
+
+    def clean(self):
+
+        super(SupplierForm, self).clean()
+        code = self.cleaned_data.get('code')
+        base_code = Code.objects.all().first().supplier_code
+        if(code and base_code):
+            full_code = base_code + code.zfill(5)
+            if(Supplier.objects.filter(code=full_code)):
+                raise forms.ValidationError(
+                    full_code + ' Has already been taken. Please choose another code')
 
 
 class RawItemForm(forms.ModelForm):
@@ -19,7 +37,6 @@ class RawItemForm(forms.ModelForm):
             if(RawItem.objects.filter(code=full_code)):
                 raise forms.ValidationError(
                     full_code + ' Has already been taken. Please choose another code')
-
 
 
 class RIMiddleCatForm(forms.ModelForm):

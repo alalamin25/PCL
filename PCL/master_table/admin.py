@@ -10,7 +10,7 @@ from master_table.models import Supplier, FundamentalProductType,\
     Customer, Deport, BankAccount, Bank, Code
 
 from master_table.forms import FPMiddleCatForm, FPLowerCatForm, FPItemForm,\
-    RIMiddleCatForm, RILowerCatForm, RawItemForm
+    RIMiddleCatForm, RILowerCatForm, RawItemForm, SupplierForm
 
 
 class Code_Admin(admin.ModelAdmin):
@@ -154,8 +154,8 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
 
 
 class Supplier_Admin(admin.ModelAdmin):
-    # form = SuplierForm
-    list_display = ('id', 'name')
+    form = SupplierForm
+    list_display = ('id', 'name', 'code')
     list_display_links = ('id', 'name',)
     list_filter = ()
     search_fields = ('name',)
@@ -179,6 +179,31 @@ class Supplier_Admin(admin.ModelAdmin):
                 'fields': ['phone1', 'phone2', 'phone3', 'phone4', 'phone5']}
         ),
     ]
+
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code']
+        else:
+            return []
+
+    def save_model(self, request, obj, form, change):
+
+        base_code = Code.objects.all().first().supplier_code
+        if(not obj.id):
+            if(obj.code):
+                code = base_code + (obj.code).zfill(5)
+                obj.code = code
+            else:
+                for i in range(1, 99999, 1):
+                    temp = str(i).zfill(5)
+                    temp_code = base_code + temp
+                    if(Supplier.objects.filter(code=temp_code)):
+                        continue
+                    obj.code = temp_code
+                    break
+
+        obj.save()
 
 
 class RIMiddleCat_Admin(admin.ModelAdmin):

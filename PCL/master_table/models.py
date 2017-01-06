@@ -16,10 +16,16 @@ def get_unique_code(id):
 
 
 class Code(models.Model):
-    fp = models.CharField(
-        "Finished Product Fundamental Type Code: ", max_length=1)
-    ri = models.CharField(
-        "Raw Item Fundamental Type Code: ", max_length=1)
+
+    supplier_code = models.CharField(
+        "Supplier Code: ", max_length=3)
+    Customer_code = models.CharField(
+        "Customer Code: ", max_length=3)
+    bank_code = models.CharField(
+        "Bank Code: ", max_length=3)
+
+    deport_code = models.CharField(
+        "Deport Code: ", max_length=3)
 
     def clean(self, *args, **kwargs):
 
@@ -94,7 +100,7 @@ class Supplier(models.Model):
     name = models.CharField(max_length=100)
     fundamental_type = models.ManyToManyField(FundamentalProductType)
     # Customer = models.ForeignKey(Customer)
-    code = models.CharField(max_length=30, unique=True)
+    code = models.CharField(max_length=5, unique=True, blank=True, null=True)
     address = models.TextField()
     phone1 = models.CharField(max_length=30, blank=True, null=True)
     phone2 = models.CharField(max_length=30, blank=True, null=True)
@@ -173,7 +179,7 @@ class RawItem(models.Model):
     grade = models.CharField(max_length=50, blank=True, null=True)
 
     def get_name(self):
-        return  self.code + ": " + self.name
+        return self.code + ": " + self.name
     get_name.short_description = 'Name & Code'
 
     def __str__(self):
