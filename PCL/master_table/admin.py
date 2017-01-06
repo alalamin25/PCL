@@ -10,7 +10,7 @@ from master_table.models import Supplier, FundamentalProductType,\
     Customer, Deport, BankAccount, Bank, Code
 
 from master_table.forms import FPMiddleCatForm, FPLowerCatForm, FPItemForm,\
-    RIMiddleCatForm, RILowerCatForm, RawItemForm, SupplierForm
+    RIMiddleCatForm, RILowerCatForm, RawItemForm, SupplierForm, CustomerForm, DeportForm, BankForm
 
 
 class Code_Admin(admin.ModelAdmin):
@@ -56,6 +56,8 @@ class BankAccount_Admin(admin.ModelAdmin):
 
 
 class Bank_Admin(admin.ModelAdmin):
+
+    form = BankForm
     list_display = ('name', 'code')
     list_display_links = ('name',)
     search_fields = ('name', 'code')
@@ -72,8 +74,35 @@ class Bank_Admin(admin.ModelAdmin):
 
     ]
 
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code']
+        else:
+            return []
+
+    def save_model(self, request, obj, form, change):
+
+        base_code = Code.objects.all().first().bank_code
+        if(not obj.id):
+            if(obj.code):
+                code = base_code + (obj.code).zfill(5)
+                obj.code = code
+            else:
+                for i in range(1, 99999, 1):
+                    temp = str(i).zfill(5)
+                    temp_code = base_code + temp
+                    if(Bank.objects.filter(code=temp_code)):
+                        continue
+                    obj.code = temp_code
+                    break
+
+        obj.save()
+
 
 class Deport_Admin(admin.ModelAdmin):
+
+    form = DeportForm
     list_display = ('name', 'code')
     list_display_links = ('name',)
     search_fields = ('name', 'code')
@@ -93,8 +122,35 @@ class Deport_Admin(admin.ModelAdmin):
 
     ]
 
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code']
+        else:
+            return []
+
+    def save_model(self, request, obj, form, change):
+
+        base_code = Code.objects.all().first().deport_code
+        if(not obj.id):
+            if(obj.code):
+                code = base_code + (obj.code).zfill(5)
+                obj.code = code
+            else:
+                for i in range(1, 99999, 1):
+                    temp = str(i).zfill(5)
+                    temp_code = base_code + temp
+                    if(Deport.objects.filter(code=temp_code)):
+                        continue
+                    obj.code = temp_code
+                    break
+
+        obj.save()
+
 
 class Customer_Admin(admin.ModelAdmin):
+
+    form = CustomerForm
     list_display = ('name', 'code', 'deport_code')
     list_display_links = ('name',)
     search_fields = ('name',)
@@ -118,6 +174,31 @@ class Customer_Admin(admin.ModelAdmin):
         ),
 
     ]
+
+    def get_readonly_fields(self, request, obj=None):
+        # This is the case when obj is already created i.e. it's an edit
+        if obj:
+            return ['code']
+        else:
+            return []
+
+    def save_model(self, request, obj, form, change):
+
+        base_code = Code.objects.all().first().customer_code
+        if(not obj.id):
+            if(obj.code):
+                code = base_code + (obj.code).zfill(5)
+                obj.code = code
+            else:
+                for i in range(1, 99999, 1):
+                    temp = str(i).zfill(5)
+                    temp_code = base_code + temp
+                    if(Customer.objects.filter(code=temp_code)):
+                        continue
+                    obj.code = temp_code
+                    break
+
+        obj.save()
 
 
 class FundamentalProductType_Admin(admin.ModelAdmin):
@@ -154,6 +235,7 @@ class FundamentalProductType_Admin(admin.ModelAdmin):
 
 
 class Supplier_Admin(admin.ModelAdmin):
+
     form = SupplierForm
     list_display = ('id', 'name', 'code')
     list_display_links = ('id', 'name',)
@@ -244,7 +326,8 @@ class RIMiddleCat_Admin(admin.ModelAdmin):
 
 class RILowerCat_Admin(admin.ModelAdmin):
     form = RILowerCatForm
-    list_display = ('id', 'name', 'code', 'fundamental_type', 'middle_category_type')
+    list_display = (
+        'id', 'name', 'code', 'fundamental_type', 'middle_category_type')
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     list_filter = ('fundamental_type', 'middle_category_type',)
@@ -281,6 +364,7 @@ class RILowerCat_Admin(admin.ModelAdmin):
             code = obj.middle_category_type.code + obj.code
             obj.code = code
         obj.save()
+
 
 class RawItem_Admin(admin.ModelAdmin):
     form = RawItemForm
@@ -340,7 +424,6 @@ class RawItem_Admin(admin.ModelAdmin):
                     break
 
         obj.save()
-
 
 
 class FPMiddleCat_Admin(admin.ModelAdmin):

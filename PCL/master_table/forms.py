@@ -1,6 +1,61 @@
 from django import forms
 from master_table.models import  FundamentalProductType,\
-    RIMiddleCat, RILowerCat, RawItem, FPMiddleCat, FPLowerCat, FPItem, Supplier, Code
+    RIMiddleCat, RILowerCat, RawItem, FPMiddleCat,\
+    FPLowerCat, FPItem, Supplier, Code, Customer, Deport, Bank
+
+
+class BankForm(forms.ModelForm):
+
+    class Meta:
+        model = Bank
+        exclude = ()
+
+    def clean(self):
+
+        super(BankForm, self).clean()
+        code = self.cleaned_data.get('code')
+        base_code = Code.objects.all().first().bank_code
+        if(code and base_code):
+            full_code = base_code + code.zfill(5)
+            if(Bank.objects.filter(code=full_code)):
+                raise forms.ValidationError(
+                    full_code + ' Has already been taken. Please choose another code')
+
+
+class DeportForm(forms.ModelForm):
+
+    class Meta:
+        model = Deport
+        exclude = ()
+
+    def clean(self):
+
+        super(DeportForm, self).clean()
+        code = self.cleaned_data.get('code')
+        base_code = Code.objects.all().first().deport_code
+        if(code and base_code):
+            full_code = base_code + code.zfill(5)
+            if(Deport.objects.filter(code=full_code)):
+                raise forms.ValidationError(
+                    full_code + ' Has already been taken. Please choose another code')
+
+
+class CustomerForm(forms.ModelForm):
+
+    class Meta:
+        model = Customer
+        exclude = ()
+
+    def clean(self):
+
+        super(CustomerForm, self).clean()
+        code = self.cleaned_data.get('code')
+        base_code = Code.objects.all().first().customer_code
+        if(code and base_code):
+            full_code = base_code + code.zfill(5)
+            if(Customer.objects.filter(code=full_code)):
+                raise forms.ValidationError(
+                    full_code + ' Has already been taken. Please choose another code')
 
 
 class SupplierForm(forms.ModelForm):

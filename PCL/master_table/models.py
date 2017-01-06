@@ -19,7 +19,7 @@ class Code(models.Model):
 
     supplier_code = models.CharField(
         "Supplier Code: ", max_length=3)
-    Customer_code = models.CharField(
+    customer_code = models.CharField(
         "Customer Code: ", max_length=3)
     bank_code = models.CharField(
         "Bank Code: ", max_length=3)
@@ -39,7 +39,7 @@ class Code(models.Model):
 class Bank(models.Model):
     name = models.CharField("Bank Name", max_length=100)
     # address = models.TextField(blank=True, null=True)
-    code = models.CharField(max_length=30, unique=True)
+    code = models.CharField(max_length=5, unique=True, blank=True, null=True)
     # account_no = models.ManyToManyField(BankAccount)
 
     def __str__(self):
@@ -69,7 +69,7 @@ class ExpenseCriteria(models.Model):
 class Deport(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField(blank=True, null=True)
-    code = models.CharField(max_length=30, unique=True)
+    code = models.CharField(max_length=5, unique=True, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -78,7 +78,7 @@ class Deport(models.Model):
 class Customer(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField(blank=True, null=True)
-    code = models.CharField(max_length=30, unique=True)
+    code = models.CharField(max_length=5, unique=True, blank=True, null=True)
     deport_code = models.ForeignKey(Deport, to_field='code')
 
     def __str__(self):
