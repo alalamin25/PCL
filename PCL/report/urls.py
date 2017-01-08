@@ -7,6 +7,14 @@ from django.views.generic import TemplateView
 urlpatterns = [
     url(r'^$', TemplateView.as_view(
         template_name="report/index.html"), name='index'),
+
+    url(r'^sales/$', TemplateView.as_view(
+        template_name="report/sales.html"), name='sales'),
+    url(r'^production/$', TemplateView.as_view(
+        template_name="report/production.html"), name='production'),
+    url(r'^mother_godown/$', TemplateView.as_view(
+        template_name="report/mother_godown.html"), name='mother_godown'),
+
     # url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^fp_report/$', views.FpReportView.as_view(), name='fp_report'),
     url(r'^fp_report/middle_cat$',
