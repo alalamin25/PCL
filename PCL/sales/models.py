@@ -53,19 +53,22 @@ class DeportOperation(models.Model):
         null=True
     )
     # production_item = models.ForeignKey(FinishedProductItem)
-    finished_product_item = ChainedForeignKey(
+    fp_item_chained = ChainedForeignKey(
         FPItem,
         chained_field="lower_category_type",
         chained_model_field="lower_category_type",
+        related_name="sale_fp_chained",
         show_all=False,
         auto_choose=True,
         sort=True,
         blank=True,
-        null=True
+        null=True,
     )
 
-    product_id = models.ForeignKey(
-        FPItem, related_name='product_id', blank=True, null=True)
+    fp_item_many = models.ManyToManyField(
+        FPItem, blank=True, related_name='sales_fp_many')
+
+    fp_item = models.ForeignKey(FPItem, blank=True, null=True)
 
     deport_from_code = models.ForeignKey(
         Deport, to_field='code',
@@ -73,18 +76,18 @@ class DeportOperation(models.Model):
         related_name="deport_from_code",
         blank=True,
         null=True)
-    customer_code = models.ForeignKey(
-        Customer, to_field='code',
-        verbose_name="Party",
-        blank=True,
-        null=True
-    )
+    customer = models.ManyToManyField(
+        Customer, verbose_name="Customer", blank=True)
     # chalan_no = models.ForeignKey(
     #     Customer, to_field='code', verbose_name="Party")
 
     def __str__(self):
         return self.deport_operation
 
+    @property
+    def get_customer(self):
+        return self.customer.first()
+    get_customer.fget.short_description = "Customer"
 
 class ExpenseDetail(models.Model):
 

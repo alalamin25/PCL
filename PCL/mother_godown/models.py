@@ -56,7 +56,7 @@ class PurchaseEntry(models.Model):
         sort=True
     )
     raw_item_many = models.ManyToManyField(
-        RawItem, blank=True, null=True, related_name='ri_many')
+        RawItem, blank=True, related_name='ri_many')
 
     raw_item = models.ForeignKey(RawItem, blank=True, null=True)
     # supplier = models.ForeignKey(Supplier)
@@ -143,7 +143,7 @@ class IssueEntry(models.Model):
     raw_item = models.ForeignKey(RawItem, blank=True, null=True)
 
     raw_item_many = models.ManyToManyField(
-        RawItem, blank=True, null=True, related_name='raw_item_many')
+        RawItem, blank=True, related_name='raw_item_many')
 
     unit_type = models.CharField(choices=UNIT_TYPE_CHOICES, max_length=30)
     unit_amount = models.FloatField()

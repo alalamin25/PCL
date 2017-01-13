@@ -50,7 +50,7 @@ class ProductionEntry(models.Model):
     )
 
     fp_item_many = models.ManyToManyField(
-        FPItem, blank=True, null=True, related_name='p_entry_fp_many')
+        FPItem, blank=True, related_name='p_entry_fp_many')
 
     fp_item = models.ForeignKey(FPItem, blank=True, null=True)
 
@@ -130,7 +130,7 @@ class RawItemEntry(models.Model):
         sort=True
     )
     raw_item_many = models.ManyToManyField(
-        RawItem, blank=True, null=True, related_name='p_entry_ri_many')
+        RawItem, blank=True, related_name='p_entry_ri_many')
 
     raw_item = models.ForeignKey(RawItem, blank=True, null=True)
 
@@ -194,7 +194,7 @@ class RIIssueEntry(models.Model):
         sort=True
     )
     raw_item_many = models.ManyToManyField(
-        RawItem, blank=True, null=True, related_name='p_ri_many')
+        RawItem, blank=True, related_name='p_ri_many')
 
     raw_item = models.ForeignKey(RawItem, blank=True, null=True)
 
@@ -266,7 +266,7 @@ class RIReturnEntry(models.Model):
         sort=True
     )
     raw_item_many = models.ManyToManyField(
-        RawItem, blank=True, null=True, related_name='p_return_ri_many')
+        RawItem, blank=True, related_name='p_return_ri_many')
 
     raw_item = models.ForeignKey(RawItem, blank=True, null=True)
     shift = ChainedForeignKey(

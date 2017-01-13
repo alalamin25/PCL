@@ -3,7 +3,7 @@ from django.contrib import admin
 from sales.models import Payment, Sell, ExpenseDetail, SellDetailInfo, DeportOperation
 from django.forms import TextInput, Textarea
 from django.db import models
-from sales.forms import ExpenseDetailForm, PaymentForm
+from sales.forms import ExpenseDetailForm, PaymentForm, DeportOperationForm
 
 
 class ExpenseDetail_Admin(admin.ModelAdmin):
@@ -97,26 +97,33 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
 
 
 class DeportOperation_Admin(admin.ModelAdmin):
+
+    form = DeportOperationForm
     list_display = (
-        'date', 'deport_operation', 'deport_code')
+        'date', 'deport_operation', 'deport_code', 'fp_item')
     # search_fields = ('serial_no',)
     list_filter = ('date', 'deport_code')
-    raw_id_fields = (
-        'deport_code', 'customer_code', 'product_id', 'deport_from_code',)
+    # raw_id_fields = ('fp_item',)
+    filter_horizontal = ('fp_item_many', 'customer')
     fieldsets = [
         (
             'Basic Info: ', {
                 'fields': ['deport_operation', 'deport_code',  'date', ]}
         ),
+
+        (
+            'Select Finished Item By Searching:', {
+                'fields': ['fp_item_many', ]}
+        ),
         (
             'Select Product by Chaining', {'fields': [
                 'fundamental_type', 'middle_category_type',  'lower_category_type',
-                'finished_product_item', ]}
+                'fp_item_chained', ]}
         ),
 
-        (
-            'Select Product by Product Code: ', {'fields': ['product_id', ]}
-        ),
+        # (
+        #     'Select Product by Product Code: ', {'fields': ['fp_item', ]}
+        # ),
 
         (
             'If Deport Operation is From Other Deport Then Fill this up :', {
@@ -125,9 +132,20 @@ class DeportOperation_Admin(admin.ModelAdmin):
 
         (
             'If Deport Operation is Sales Return Then Fill this up :', {
-                'fields': ['customer_code', ]}
+                'fields': ['customer', ]}
         ),
     ]
+
+    def save_model(self, request, obj, form, change):
+
+        obj.save()
+        fp_item_many = form.cleaned_data.get('fp_item_many')
+        if(fp_item_many):
+            obj.fp_item = fp_item_many[0]
+        if(obj.fp_item_chained):
+            obj.fp_item = obj.fp_item_chained
+        obj.save()
+
 
 
 admin.site.register(Payment, Payment_Admin)
