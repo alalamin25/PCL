@@ -5,9 +5,35 @@ from django.forms import ModelForm
 
 # from report.models import FinishedProductReport
 from master_table.models import FundamentalProductType,\
-    FPMiddleCat, FPLowerCat, FPItem, Shift, RawItem
+    FPMiddleCat, FPLowerCat, FPItem, Shift, RawItem, Customer
+from report.models import Report
 
 
+class ReportForm(forms.ModelForm):
+
+    name = forms.CharField()
+
+    class Meta:
+        model = Report
+        exclude = ()
+
+
+    def clean(self):
+        pass
+
+
+class SelectionForm(forms.Form):
+
+    start_date = forms.DateField(
+        initial=datetime.date.today
+    )
+    date = datetime.date.today() + datetime.timedelta(-30)
+    end_date = forms.DateField(initial=date)
+    customer = forms.ModelChoiceField(
+        queryset=Customer.objects.all(),
+        help_text="Select Customer",
+        # required=False,
+    )
 
 
 class RawItemSelectForm(forms.Form):
@@ -36,8 +62,6 @@ class RawItemSelectForm(forms.Form):
                     (s.id, s) for s in RawItem.objects.all()))
 
 
-
-
 class ShiftSelectForm(forms.Form):
 
     attrs = {"class": "form-control", 'required': 'required'}
@@ -62,11 +86,6 @@ class ShiftSelectForm(forms.Form):
             self.fields['shift'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple, choices=(
                     (s.id, s) for s in Shift.objects.all()))
-
-
-
-
-
 
 
 class FundamentalForm(forms.Form):

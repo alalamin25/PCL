@@ -5,10 +5,9 @@ import json
 import datetime
 
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView
@@ -21,13 +20,38 @@ from django.template.loader import get_template
 # from easy_pdf.views import PDFTemplateView
 import pdfkit
 
-from report.forms import FPBasicForm, FPMiddleCatForm, FPLowerCatForm, FPItemForm,\
-    FundamentalForm, ShiftSelectForm, RawItemSelectForm
-from master_table.models import FundamentalProductType, FPMiddleCat, FPLowerCat,\
-    FPItem, Shift, RawItem
+from report.forms import FPBasicForm, FPMiddleCatForm, FPLowerCatForm,\
+    FPItemForm, FundamentalForm, ShiftSelectForm, RawItemSelectForm,\
+    SelectionForm
+
+from master_table.models import FundamentalProductType, FPMiddleCat,\
+    FPLowerCat, FPItem, Shift, RawItem
 from production_table.models import ProductionEntry, RIIssueEntry
 
 from report.util import FPResult, FPInfo
+
+
+class SalesReportSpecificationView(View):
+
+    form = SelectionForm
+    template_name = 'report/selection.html'
+    template_post = 'report/sales/report_specification.html'
+    url = '/admin/report/report/add/'
+
+    def get(self, request, *args, **kwargs):
+
+        # self.form = DateSelectForm
+        # form = self.form_class(initial=self.initial)
+        return redirect(self.url)
+        return render(request, self.template_name,
+                      {'adminform': self.form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST)
+        if(not form.is_valid()):
+            print(form.errors)
+            return HttpResponse (form.errors)
+        return render(request, self.template_post)
 
 
 class RawItemView(View):

@@ -1,0 +1,74 @@
+{% extends "common/base_report.html" %}
+{% load staticfiles %}
+
+
+
+
+{% block content %}
+
+<div class="table-class">
+        <p align="left">Monthly Party Statement(up/ci/all) </p>
+        <p>Date From: </p>
+        <p>Date To: </p>
+  <div class="container">
+        
+
+ 
+       
+    <table class="table table-bordered" border="5">
+      <thead>
+        <tr>
+          <th>PartyId</th>
+          <th>Party Name</th>
+          <th>Party Address</th>
+          <th>Opening Due</th>
+          <th>Opening Advance</th>
+          <th>Gross Sale</th>
+          <th>Discount</th>
+
+          <th>Net Sale</th>
+          <th>Total Due</th>
+          <th>Due Collection</th>
+          <th>Advance Collection</th>
+          <th>Sales Return</th>
+          <th>Present Due</th>
+          <th>Present Advance</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for rawitem in rawitem_list %}
+      <tr>
+        <td>  </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>  </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+
+  <br><br><br><br><br><br>
+
+
+
+
+    
+  </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>

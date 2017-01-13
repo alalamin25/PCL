@@ -3,6 +3,8 @@ from django.db import models
 from django import forms
 from django.forms import CheckboxSelectMultiple
 from searchableselect.widgets import SearchableSelect
+from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
 
 from master_table.models import Supplier, FundamentalProductType,\
     RIMiddleCat, RILowerCat, RawItem, FPMiddleCat, FPLowerCat,\
@@ -98,6 +100,10 @@ class Bank_Admin(admin.ModelAdmin):
                     break
 
         obj.save()
+
+    def response_change(self, request, obj, post_url_continue=None):
+        print("\n in response post add method")
+        return HttpResponse("/dsaf")
 
 
 class Deport_Admin(admin.ModelAdmin):

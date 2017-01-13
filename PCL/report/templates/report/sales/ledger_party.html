@@ -1,0 +1,64 @@
+{% extends "common/base_report.html" %}
+{% load staticfiles %}
+
+
+
+
+{% block content %}
+
+<div class="table-class">
+        <p align="left">General Ledger </p>
+        <p>Date From: </p>
+        <p>Date To: </p>
+  <div class="container">
+        
+
+
+
+
+
+ 
+       
+    <table class="table table-bordered" border="5">
+      <thead>
+        <tr>
+
+          <th>Date</th>
+          <th>Specification </th>
+          <th>TranNo</th>
+          <th>Gross Sale</th>
+          <th>Commission</th>
+          <th>Net Sell</th>
+
+          <th>Collection</th>
+
+        </tr>
+      </thead>
+      <tbody>
+      {% for rawitem in rawitem_list %}
+      <tr>
+        <td> {{ rawitem }} </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+
+  <br><br><br><br><br><br>
+
+    
+  </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>

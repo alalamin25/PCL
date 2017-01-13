@@ -1,0 +1,76 @@
+{% extends "common/base_report.html" %}
+{% load staticfiles %}
+
+
+
+
+{% block content %}
+
+<div class="table-class">
+        <p align="left">Monthly Stock Statement(All Deport) </p>
+        <p>Date From: </p>
+        <p>Date To: </p>
+  <div class="container">
+        
+
+ 
+       
+    <table class="table table-bordered" border="5">
+      <thead>
+        <tr>
+          <th>Deport Code</th>
+          <th>Deport Name</th>
+          <!-- <th>Specification</th> -->
+          <th>Opening Stock</th>
+          <th>New Arrival</th>
+          <th>Received From Other Deport</th>
+          <th>Sales Return</th>
+
+          <th>Total Stock</th>
+          <th>Sale</th>
+          <th>Send To Other Deport</th>
+          <th>Return To Factory</th>
+          <th>Total Outgoing</th>
+          <th>Closing Stock</th>
+          <th>Unit Price</th>
+          <th>Gross Price</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for rawitem in rawitem_list %}
+      <tr>
+
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>  </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+
+  <br><br><br><br><br><br>
+
+
+
+
+    
+  </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>

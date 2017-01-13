@@ -9,11 +9,31 @@ urlpatterns = [
         template_name="report/index.html"), name='index'),
 
     url(r'^sales/$', TemplateView.as_view(
-        template_name="report/sales.html"), name='sales'),
+        template_name="report/sales/sales.html"), name='sales'),
+    url(r'^sales/report_specification/$',
+        views.SalesReportSpecificationView.as_view(),
+        name='report_specification'),
+
+
+
+
+
+
+
     url(r'^production/$', TemplateView.as_view(
         template_name="report/production.html"), name='production'),
     url(r'^mother_godown/$', TemplateView.as_view(
         template_name="report/mother_godown.html"), name='mother_godown'),
+
+
+
+
+
+
+
+
+
+
 
     # url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^fp_report/$', views.FpReportView.as_view(), name='fp_report'),
@@ -27,12 +47,14 @@ urlpatterns = [
         name='fp_item_report'),
 
     url(r'^shiftwise/$', views.ShiftWiseView.as_view(), name='shiftwise'),
-    url(r'^shiftwise/select$', views.ShiftSelectView.as_view(), name='shiftselect'),
+    url(r'^shiftwise/select$',
+        views.ShiftSelectView.as_view(), name='shiftselect'),
     url(r'^shiftwise/report$', views.ShiftWiseReportView.as_view(),
         name='shfitwise_report'),
 
     url(r'^rawitem/$', views.RawItemView.as_view(), name='rawitem'),
-    url(r'^rawitem/select$', views.RawItemSelectView.as_view(), name='rawitem_select'),
+    url(r'^rawitem/select$', views.RawItemSelectView.as_view(),
+        name='rawitem_select'),
     url(r'^rawitem/report$', views.RawItemReportView.as_view(),
         name='rawitem_report'),
 
