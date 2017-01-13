@@ -3,7 +3,7 @@ from django.contrib import admin
 from sales.models import Payment, Sell, ExpenseDetail, SellDetailInfo, DeportOperation
 from django.forms import TextInput, Textarea
 from django.db import models
-from sales.forms import ExpenseDetailForm, PaymentForm, DeportOperationForm
+from sales.forms import ExpenseDetailForm, PaymentForm, DeportOperationForm, SellForm
 
 
 class ExpenseDetail_Admin(admin.ModelAdmin):
@@ -54,17 +54,20 @@ class SellDetailInfoInline(admin.TabularInline):
 
 
 class Sell_Admin(admin.ModelAdmin):
+
+    form = SellForm
+    filter_horizontal = ('customer',)
     list_display = (
-        'date', 'transection_no', 'deport_code', 'customer_code', 'grand_total', 'total_commission', 'net_total')
+        'date', 'transection_no', 'deport_code', 'get_customer', 'grand_total', 'total_commission', 'net_total')
     # search_fields = ('serial_no',)
     list_filter = ('date', 'deport_code')
-    raw_id_fields = ('deport_code', 'customer_code')
+    # raw_id_fields = ( 'customer_code')
     inlines = [SellDetailInfoInline]
 
     fieldsets = [
         (
             'Head Info: ', {'fields': ['transection_no', 'date', 'memo_no',
-                                       'deport_code', 'customer_code',
+                                       'deport_code', 'customer',
                                        ]}
         ),
         (

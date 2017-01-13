@@ -89,6 +89,7 @@ class DeportOperation(models.Model):
         return self.customer.first()
     get_customer.fget.short_description = "Customer"
 
+
 class ExpenseDetail(models.Model):
 
     date = models.DateTimeField(default=now)
@@ -110,7 +111,6 @@ class ExpenseDetail(models.Model):
     invoice_no = models.CharField(max_length=100, unique=True)
     amount = models.IntegerField(default=0)
 
-
     def __str__(self):
         # print(self.expense_criteria.first().name)
         return self.get_expense_criteria.name
@@ -124,7 +124,6 @@ class ExpenseDetail(models.Model):
     def get_expense_criteria(self):
         return self.expense_criteria.first()
     get_expense_criteria.fget.short_description = "Expense Name"
-
 
 
 class Payment(models.Model):
@@ -175,13 +174,14 @@ class Payment(models.Model):
         return self.customer.first()
     get_customer.fget.short_description = "Customer"
 
+
 class Sell(models.Model):
 
-    transection_no = models.CharField(max_length=100, unique=True)
+    transection_no = models.CharField(max_length=100)
     date = models.DateTimeField(default=now)
-    memo_no = models.CharField(max_length=100, unique=True)
+    memo_no = models.CharField(max_length=100)
     deport_code = models.ForeignKey(Deport, to_field='code')
-    customer_code = models.ForeignKey(Customer, to_field='code')
+    customer = models.ManyToManyField(Customer)
 
     grand_total_text = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="Grand Total")
@@ -219,6 +219,11 @@ class Sell(models.Model):
         return 66
 
     total = property(net_total)
+
+    @property
+    def get_customer(self):
+        return self.customer.first()
+    get_customer.fget.short_description = "Customer"
 
     def __str__(self):
         return self.transection_no

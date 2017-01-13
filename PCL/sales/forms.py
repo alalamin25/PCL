@@ -1,6 +1,28 @@
 from django import forms
 
-from sales.models import ExpenseDetail, Payment, DeportOperation
+from sales.models import ExpenseDetail, Payment, DeportOperation, Sell
+
+
+
+class SellForm(forms.ModelForm):
+
+    class Meta:
+        model = Sell
+        exclude = ()
+
+    def clean(self):
+        # Validation goes here :)
+        customer = self.cleaned_data.get('customer')
+        if(customer and customer.count() > 1):
+            raise forms.ValidationError("You can select only one customer")
+
+        deport = self.cleaned_data.get('deport_code')
+        if(deport and customer):
+            if(customer.first().deport_code != deport):
+                raise forms.ValidationError(
+                    "This customer Does not belong to this deport. Select another customer or another deport")
+
+
 
 
 
