@@ -90,9 +90,13 @@ class ExpenseDetail(models.Model):
 
     date = models.DateTimeField(default=now)
     # serial_no = models.CharField(max_length=100, unique=True)
-    deport_code = models.ForeignKey(Deport, to_field='code')
-    expense_criteria = models.ForeignKey(
-        ExpenseCriteria, to_field='code', verbose_name="Expense Specification")
+    # deport_many = models.ManyToManyField(Deport, blank=True, related_name='ed_deport_m')
+    deport = models.ManyToManyField(Deport)
+    # expense_criteria_many = models.ManyToManyField(
+    # ExpenseCriteria, verbose_name="Expense Specification",
+    # related_name='ed_exc_m')
+    expense_criteria = models.ManyToManyField(
+        ExpenseCriteria, verbose_name="Expense Specification")
     # customer_code = models.ForeignKey(Customer, to_field='code')
 
     detail = models.TextField(blank=True, null=True)
@@ -103,8 +107,21 @@ class ExpenseDetail(models.Model):
     invoice_no = models.CharField(max_length=100, unique=True)
     amount = models.IntegerField(default=0)
 
+
     def __str__(self):
-        return self.expense_criteria.name
+        # print(self.expense_criteria.first().name)
+        return self.get_expense_criteria.name
+
+    @property
+    def get_deport(self):
+        return self.deport.first()
+    get_deport.fget.short_description = "Deport Name"
+
+    @property
+    def get_expense_criteria(self):
+        return self.expense_criteria.first()
+    get_expense_criteria.fget.short_description = "Expense Name"
+
 
 
 class Payment(models.Model):
@@ -213,7 +230,6 @@ class SellDetailInfo(models.Model):
 
     product_code_text = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="")
-
 
     rate = models.FloatField(default=1)
     quantity = models.FloatField(default=1)

@@ -3,15 +3,17 @@ from django.contrib import admin
 from sales.models import Payment, Sell, ExpenseDetail, SellDetailInfo, DeportOperation
 from django.forms import TextInput, Textarea
 from django.db import models
+from sales.forms import ExpenseDetailForm
 
 
 class ExpenseDetail_Admin(admin.ModelAdmin):
 
+    form = ExpenseDetailForm
     list_display = (
-        'date', 'deport_code', 'invoice_no', 'expense_criteria', 'amount', 'detail')
+        'date', 'get_deport','invoice_no', 'get_expense_criteria', 'amount', 'detail')
     search_fields = ('expense_criteria',)
-    list_filter = ('date', 'expense_criteria', 'deport_code', )
-    raw_id_fields = ('deport_code', )
+    list_filter = ('date', 'expense_criteria', 'deport', )
+    filter_horizontal = ('deport', 'expense_criteria')
 
 
 class Payment_Admin(admin.ModelAdmin):
