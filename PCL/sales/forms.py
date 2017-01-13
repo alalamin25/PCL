@@ -1,6 +1,6 @@
 from django import forms
 
-from sales.models import ExpenseDetail
+from sales.models import ExpenseDetail, Payment
 
 
 class ExpenseDetailForm(forms.ModelForm):
@@ -17,13 +17,24 @@ class ExpenseDetailForm(forms.ModelForm):
 
         expense_criteria = self.cleaned_data.get('expense_criteria')
         if(expense_criteria and expense_criteria.count() > 1):
-            raise forms.ValidationError("You can select only one Expense Criteria")
+            raise forms.ValidationError(
+                "You can select only one Expense Criteria")
 
-        # raw_item_chained = self.cleaned_data.get('raw_item_chained')
-        # if(expense_criteria and raw_item_chained):
-        #     raise forms.ValidationError(
-        #         "You can not select Raw Item from two source")
 
-        # if(not(expense_criteria or raw_item_chained)):
-        #     raise forms.ValidationError(
-        #         "You must select Raw Item from any of two source")
+class PaymentForm(forms.ModelForm):
+
+    class Meta:
+        model = Payment
+        exclude = ()
+
+    def clean(self):
+        # Validation goes here :)
+        customer = self.cleaned_data.get('customer')
+        if(customer and customer.count() > 1):
+            raise forms.ValidationError("You can select only one customer")
+
+        deport = self.cleaned_data.get('deport')
+        if(deport and customer):
+            if(customer.first().deport_code != deport):
+                raise forms.ValidationError(
+                    "This customer Does not belong to this deport. Select another customer or another deport")

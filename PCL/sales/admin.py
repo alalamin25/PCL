@@ -3,7 +3,7 @@ from django.contrib import admin
 from sales.models import Payment, Sell, ExpenseDetail, SellDetailInfo, DeportOperation
 from django.forms import TextInput, Textarea
 from django.db import models
-from sales.forms import ExpenseDetailForm
+from sales.forms import ExpenseDetailForm, PaymentForm
 
 
 class ExpenseDetail_Admin(admin.ModelAdmin):
@@ -17,20 +17,24 @@ class ExpenseDetail_Admin(admin.ModelAdmin):
 
 
 class Payment_Admin(admin.ModelAdmin):
-    list_display = (
-        'date', 'serial_no', 'deport_code', 'customer_code', 'amount')
-    search_fields = ('serial_no',)
-    list_filter = ('date', 'deport_code', 'customer_code')
-    raw_id_fields = ('deport_code', 'customer_code',)
-    # readonly_fields = ('deport_code_text',)
 
+    form = PaymentForm
+    list_display = (
+        'date', 'serial_no', 'deport', 'get_customer', 'amount')
+    search_fields = ('serial_no',)
+    list_filter = ('date', 'deport')
+    # raw_id_fields = ( 'customer_code',)
+    # readonly_fields = ('deport_code_text',)
+    filter_horizontal = ('customer',)
     fieldsets = [
         (
             'Complete Basic Info: ',
             {'fields': ['serial_no',
-                        ('deport_code', 'deport_code_text'),
-                        'customer_code',
+                        'transection_no',
+                        ('deport'),
+                        'customer',
                         'date', 'particular',
+                        'amount',
                         'payment_option']}
         ),
         (

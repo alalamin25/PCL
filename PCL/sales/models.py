@@ -127,13 +127,13 @@ class ExpenseDetail(models.Model):
 class Payment(models.Model):
 
     serial_no = models.CharField(max_length=100, unique=True)
-    deport_code = models.ForeignKey(
-        Deport, to_field='code', verbose_name="Deport")
-    deport_code_text = models.CharField(
-        max_length=100, blank=True, null=True, verbose_name="")
+    deport = models.ForeignKey(
+        Deport, verbose_name="Deport")
+    # deport_code_text = models.CharField(
+    #     max_length=100, blank=True, null=True, verbose_name="")
 
-    customer_code = models.ForeignKey(
-        Customer, to_field='code', verbose_name="Customer")
+    customer = models.ManyToManyField(
+        Customer, verbose_name="Customer")
     date = models.DateTimeField(default=now)
     particular = models.TextField(blank=True, null=True)
     payment_option = models.CharField(choices=PAYMENT_OPTION_CHOICES,
@@ -167,6 +167,10 @@ class Payment(models.Model):
     def __str__(self):
         return self.serial_no
 
+    @property
+    def get_customer(self):
+        return self.customer.first()
+    get_customer.fget.short_description = "Customer"
 
 class Sell(models.Model):
 
