@@ -17,9 +17,27 @@ class ReportForm(forms.ModelForm):
         model = Report
         exclude = ()
 
+    def __init__(self, *args, **kwargs):
+        super(ReportForm, self).__init__(*args, **kwargs)
+
+        if self.data and self.data.get('name') == 'ledger_party':
+            self.fields.get('deport').required = True
+        else:
+            print("self data does not exist")
 
     def clean(self):
-        pass
+
+        customer = self.cleaned_data.get('customer')
+        if(customer and customer.count() > 1):
+            raise forms.ValidationError("You can select only one customer")
+
+        deport = self.cleaned_data.get('deport')
+        if(deport and customer):
+            if(customer.first().deport != deport):
+                raise forms.ValidationError(
+                    "This customer Does not belong to this deport. Select another customer or another deport")
+
+
 
 
 class SelectionForm(forms.Form):

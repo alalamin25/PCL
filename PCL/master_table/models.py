@@ -79,7 +79,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField(blank=True, null=True)
     code = models.CharField(max_length=5, unique=True, blank=True, null=True)
-    deport_code = models.ForeignKey(Deport, to_field='code')
+    deport = models.ForeignKey(Deport)
 
     def __str__(self):
         return self.code + ' ' + self.name

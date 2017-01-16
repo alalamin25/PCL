@@ -29,9 +29,10 @@ class Report_Admin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
 
+        type = request.GET.get('type')
         form = super(Report_Admin, self).get_form(request, obj, **kwargs)
         if(form.base_fields.get('name')):
-            form.base_fields['name'].initial = 'abcd'
+            form.base_fields['name'].initial = type
         if(form.base_fields.get('end_time')):
             form.base_fields['end_time'].initial = now()
         date = datetime.date.today() + relativedelta(months=-1)

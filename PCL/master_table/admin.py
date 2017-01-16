@@ -157,11 +157,11 @@ class Deport_Admin(admin.ModelAdmin):
 class Customer_Admin(admin.ModelAdmin):
 
     form = CustomerForm
-    list_display = ('name', 'code', 'deport_code')
+    list_display = ('name', 'code', 'deport')
     list_display_links = ('name',)
     search_fields = ('name',)
-    list_filter = ('deport_code',)
-    raw_id_fields = ('deport_code',)
+    list_filter = ('deport',)
+    # raw_id_fields = ('deport',)
     fieldsets = [
         (
             'Name Of The Customer: ', {'fields': ['name']}
@@ -172,7 +172,7 @@ class Customer_Admin(admin.ModelAdmin):
         ),
 
         (
-            'Select Deport Code: ', {'fields': ['deport_code']}
+            'Select Deport Code: ', {'fields': ['deport']}
         ),
 
         (
