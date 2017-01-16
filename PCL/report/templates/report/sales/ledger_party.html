@@ -6,18 +6,38 @@
 
 {% block content %}
 
+<div class="container">
+<br><br><br>
+
+        <div >
+          <div align="center" >          
+          <p >General Ledger </p>
+          <p>Date From: </p>
+          <p>Date To: </p>
+          <p>Opening Due: {{ opening_due}} </p>
+          <p>Opening Advance: {{ opening_advance }} </p>          
+          </div>
+
+          <div align="left" >
+            <p>Deport Code: {{ deport.code }}</p>
+            <p>Deport Address: {{ deport.address }}</p>
+            
+          </div>
+
+
+          <div align="right" >
+            <p>Party Code: {{ customer.code }}</p>
+            <p>Party Name: {{ customer.name }}</p>
+            <p>Party Address: {{ customer.address }}</p>
+            
+          </div>
+        </div>
+
+
 <div class="table-class">
-        <p align="left">General Ledger </p>
-        <p>Date From: </p>
-        <p>Date To: </p>
-  <div class="container">
-        
 
 
 
-
-
- 
        
     <table class="table table-bordered" border="5">
       <thead>
@@ -35,30 +55,37 @@
         </tr>
       </thead>
       <tbody>
-      {% for rawitem in rawitem_list %}
+      {% for r in result %}
       <tr>
-        <td> {{ rawitem }} </td>
+        <td> {{ r.date }} </td>
+        <td> {{ r.specification }}</td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td> {{ r.grand_total }}</td>
+        <td> {{ r.total_commission }} </td>
+        <td> {{ r.net_total }}</td>
+        <td> {{ r.amount }}</td>
 
       </tr>
       {% endfor %}
       </tbody>
     </table>
 
+  <br><br>
 
-
-  <br><br><br><br><br><br>
-
-    
   </div>
+
+    <div align="center" > 
+      <p>closing Due: {{ closing_due}} </p>
+      <p>closing Advance: {{ closing_advance }} </p>          
+    </div>
 </div>
 
+
+  <br><br><br><br><br><br> 
+
 {% endblock %}
+
+
 
 </body>
 </html>

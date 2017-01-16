@@ -38,9 +38,9 @@ class DeportOperationForm(forms.ModelForm):
         if(customer and customer.count() > 1):
             raise forms.ValidationError("You can select only one customer")
 
-        deport = self.cleaned_data.get('deport_code')
+        deport = self.cleaned_data.get('deport')
         if(deport and customer):
-            if(customer.first().deport_code != deport):
+            if(customer.first().deport != deport):
                 raise forms.ValidationError(
                     "This customer Does not belong to this deport. Select another customer or another deport")
 
@@ -91,6 +91,6 @@ class PaymentForm(forms.ModelForm):
 
         deport = self.cleaned_data.get('deport')
         if(deport and customer):
-            if(customer.first().deport_code != deport):
+            if(customer.first().deport != deport):
                 raise forms.ValidationError(
                     "This customer Does not belong to this deport. Select another customer or another deport")

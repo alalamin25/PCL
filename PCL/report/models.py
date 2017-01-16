@@ -22,3 +22,8 @@ class Report(models.Model):
     fp_item = models.ManyToManyField(FPItem, blank=True)
 
 
+    @property
+    def get_customer(self):
+        if(self.customer):
+            return self.customer.first()
+        return None

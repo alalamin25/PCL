@@ -22,6 +22,7 @@ class ReportForm(forms.ModelForm):
 
         if self.data and self.data.get('name') == 'ledger_party':
             self.fields.get('deport').required = True
+            self.fields.get('customer').required = True
         else:
             print("self data does not exist")
 

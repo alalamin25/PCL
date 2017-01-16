@@ -2,7 +2,7 @@
     $(function(){
         $(document).ready(function() {
         	$("#id_memo_no").val("alamin");
-        	$(".vForeignKeyRawIdAdminField").bind('keyup', type_change);
+        	$(".vForeignKeyRawIdAdminField").bind('keyup focusout change', type_change);
         	
         	$(".field-rate, .field-quantity, .field-commission").on('change keyup', calculateTotal);
         	// 
@@ -64,8 +64,8 @@ function calculateTotal()
     var quantity_id =  basic_id + '-quantity';
     var commission_id = basic_id + '-commission';
     var rate_id = basic_id + '-rate';
-    var total_text_id = basic_id + '-total_text';
-    var net_total_text_id = basic_id + '-net_total_text';
+    var total_text_id = basic_id + '-total';
+    var net_total_text_id = basic_id + '-net_total';
 
 
     var quantity = $('#'+quantity_id).val();
@@ -82,18 +82,22 @@ function calculateTotal()
 	console.log("Going to calculate Total");
 	console.log(rate);
 	console.log(quantity);
+  console.log(commission);
 
+
+  total = Number(total.toFixed(2));
+  net_total = Number(net_total.toFixed(2));
 	$('#'+total_text_id).val(total);
 	$('#'+net_total_text_id).val(net_total);
 
 
-    var net_grand_total = 0;
+  var net_grand_total = 0;
 	var net_net_total = 0;
 	var net_total_commission = 0;
 
 
  	for(var i=0; i<100; i++){
- 		var val = $('#id_selldetailinfo_set-' + i + '-total_text').val();
+ 		var val = $('#id_selldetailinfo_set-' + i + '-total').val();
     	if(isNumber( val)){
     		val = parseFloat(val);
     		net_grand_total += val;
@@ -106,7 +110,7 @@ function calculateTotal()
 // id_selldetailinfo_set-0-net_total_text
 
  	for(var i=0; i<100; i++){
- 		var val = $('#id_selldetailinfo_set-' + i + '-net_total_text').val();
+ 		var val = $('#id_selldetailinfo_set-' + i + '-net_total').val();
     	if(isNumber( val)){
     		val = parseFloat(val);
     		net_net_total += val;
@@ -120,9 +124,15 @@ function calculateTotal()
 
     net_total_commission = net_grand_total - net_net_total;
 
-    $("#id_grand_total_text").val(net_grand_total);
-    $("#id_total_commission_text").val(net_total_commission);
-    $("#id_net_total_text").val(net_net_total);
+    
+    net_grand_total = Number(net_grand_total.toFixed(2));
+    net_total_commission = Number(net_total_commission.toFixed(2));
+    net_net_total = Number(net_net_total.toFixed(2));
+
+
+    $("#id_grand_total").val(net_grand_total);
+    $("#id_total_commission").val(net_total_commission);
+    $("#id_net_total").val(net_net_total);
 
 
 

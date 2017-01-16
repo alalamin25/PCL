@@ -72,7 +72,7 @@ class Sell_Admin(admin.ModelAdmin):
         ),
         (
             'Calculation :', {
-                'fields': ['grand_total_text', 'total_commission_text', 'net_total_text']}
+                'fields': ['grand_total', 'total_commission', 'net_total']}
         ),
     ]
     # change_form_template = 'commo/change_form.html'

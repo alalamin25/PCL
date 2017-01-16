@@ -183,13 +183,13 @@ class Sell(models.Model):
     deport_code = models.ForeignKey(Deport, to_field='code')
     customer = models.ManyToManyField(Customer)
 
-    grand_total_text = models.CharField(
-        max_length=100, blank=True, null=True, verbose_name="Grand Total")
+    grand_total = models.FloatField(
+        verbose_name="Grand Total")
 
-    total_commission_text = models.CharField(
-        max_length=100, blank=True, null=True, verbose_name="Total Commission")
-    net_total_text = models.CharField(
-        max_length=100, blank=True, null=True, verbose_name="Net Total")
+    total_commission = models.FloatField(
+        verbose_name="Total Commission")
+    net_total = models.FloatField(
+        verbose_name="Net Total")
     # product_id = models.ForeignKey(FPItem)
     # rate = models.IntegerField(default=0)
     # # product_id = models.ForeignKey(FPItem)
@@ -202,21 +202,21 @@ class Sell(models.Model):
     #
     total = models.CharField(max_length=100)
 
-    @property
-    def grand_total(self):
-        sell_info = SellDetailInfo.objects.filter(sell=self)
-        grand_total = 0
-        for sell in sell_info:
-            grand_total += sell.total
-        return grand_total
+    # @property
+    # def grand_total(self):
+    #     sell_info = SellDetailInfo.objects.filter(sell=self)
+    #     grand_total = 0
+    #     for sell in sell_info:
+    #         grand_total += sell.total
+    #     return grand_total
 
-    @property
-    def total_commission(self):
-        return 45
+    # @property
+    # def total_commission(self):
+    #     return 45
 
-    @property
-    def net_total(self):
-        return 66
+    # @property
+    # def net_total(self):
+    #     return 66
 
     total = property(net_total)
 
@@ -243,14 +243,14 @@ class SellDetailInfo(models.Model):
     product_code_text = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="")
 
-    rate = models.FloatField(default=1)
+    rate = models.FloatField(default=0)
     quantity = models.FloatField(default=1)
 
-    total_text = models.FloatField(
-        max_length=100, blank=True, null=True, verbose_name="Total")
-    commission = models.FloatField(default=1)
-    net_total_text = models.FloatField(
-        max_length=100, blank=True, null=True, verbose_name="Net Total")
+    total = models.FloatField(verbose_name="Total", default=0)
+
+    commission = models.FloatField(default=0)
+    net_total = models.FloatField(
+         verbose_name="Net Total")
 
     fundamental_type = models.ForeignKey(
         FundamentalProductType,
@@ -293,9 +293,9 @@ class SellDetailInfo(models.Model):
         sort=True
     )
 
-    @property
-    def total(self):
-        return self.rate + self.quantity
+    # @property
+    # def total(self):
+    #     return self.rate + self.quantity
 
     # total = property(total)
 
