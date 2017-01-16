@@ -36,21 +36,23 @@
         </tr>
       </thead>
       <tbody>
-      {% for rawitem in rawitem_list %}
+      {% for r in result %}
       <tr>
+        <td> {{ r.code }} </td>
+        <td> {{ r.name }} </td>
+
+        <td> {{ r.opening_due }} </td>
+        <td> {{ r.opening_advance }} </td>
+        <td> {{ r.grand_total }} </td>
+        <td> {{ r.total_commission }} </td>
+        <td> {{ r.net_total }} </td>
+        <td> {{ r.total_due }} </td>
+        <td> {{ r.payment }} </td>
         <td>  </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>  </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td> {{ ss }} </td>
+        <td> {{ r.closing_due }} </td>
+        <td> {{ r.closing_advance }} </td>
+
 
       </tr>
       {% endfor %}

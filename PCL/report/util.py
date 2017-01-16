@@ -7,14 +7,19 @@ from django.db.models import Count, Sum, Max
 
 from report.models import Report
 from sales.models import Payment, Sell, SellDetailInfo
-from master_table.models import Customer
+from master_table.models import Customer, Deport
 
 
-def get_grand_total(customer, start_time, end_time):
+def get_grand_total(customer=None, deport=None, start_time=None, end_time=None):
 
-    expense = Sell.objects.filter(
-        customer=customer, date__date__gte=start_time,
-        date__date__lte=end_time).aggregate(grand_total=Sum('grand_total'))
+    if(customer):
+        expense = Sell.objects.filter(
+            customer=customer, date__date__gte=start_time,
+            date__date__lte=end_time).aggregate(grand_total=Sum('grand_total'))
+    else:
+        expense = Sell.objects.filter(
+            deport=deport, date__date__gte=start_time,
+            date__date__lte=end_time).aggregate(grand_total=Sum('grand_total'))
     if(expense['grand_total']):
         expense = expense['grand_total']
     else:
@@ -22,12 +27,19 @@ def get_grand_total(customer, start_time, end_time):
     return round(expense, 2)
 
 
-def get_total_commission(customer, start_time, end_time):
+def get_total_commission(customer=None, deport=None, start_time=None, end_time=None):
 
-    expense = Sell.objects.filter(
-        customer=customer, date__date__gte=start_time,
-        date__date__lte=end_time).aggregate(total_commission=Sum
-                                            ('total_commission'))
+    if(customer):
+        expense = Sell.objects.filter(
+            customer=customer, date__date__gte=start_time,
+            date__date__lte=end_time).aggregate(total_commission=Sum
+                                                ('total_commission'))
+
+    else:
+        expense = Sell.objects.filter(
+            deport=deport, date__date__gte=start_time,
+            date__date__lte=end_time).aggregate(total_commission=Sum
+                                                ('total_commission'))
     if(expense['total_commission']):
         expense = expense['total_commission']
     else:
@@ -35,11 +47,16 @@ def get_total_commission(customer, start_time, end_time):
     return round(expense, 2)
 
 
-def get_net_total(customer, start_time, end_time):
+def get_net_total(customer=None, deport=None, start_time=None, end_time=None):
 
-    expense = Sell.objects.filter(
-        customer=customer, date__date__gte=start_time,
-        date__date__lte=end_time).aggregate(net_total=Sum('net_total'))
+    if(customer):
+        expense = Sell.objects.filter(
+            customer=customer, date__date__gte=start_time,
+            date__date__lte=end_time).aggregate(net_total=Sum('net_total'))
+    else:
+        expense = Sell.objects.filter(
+            deport=deport, date__date__gte=start_time,
+            date__date__lte=end_time).aggregate(net_total=Sum('net_total'))
     if(expense['net_total']):
         expense = expense['net_total']
     else:
@@ -47,7 +64,7 @@ def get_net_total(customer, start_time, end_time):
     return round(expense, 2)
 
 
-def get_payment(customer, start_time, end_time):
+def get_payment(customer=None, deport=None, start_time=None, end_time=None):
 
     payment = Payment.objects.filter(
         customer=customer, date__date__gte=start_time,
@@ -59,21 +76,27 @@ def get_payment(customer, start_time, end_time):
     return round(payment, 2)
 
 
-
-def get_due(customer, date):
+def get_due(customer=None, date=None, deport=None):
 
     # print("\n\nin get due method")
     # print(customer)
-    # print(date)
-    expense = Sell.objects.filter(
-        customer=customer, date__date__lt=date).aggregate(Sum('net_total'))
+    if(deport):
+        expense = Sell.objects.filter(
+            deport=deport, date__date__lt=date).aggregate(Sum('net_total'))
+    else:
+        expense = Sell.objects.filter(
+            customer=customer, date__date__lt=date).aggregate(Sum('net_total'))
     if(expense['net_total__sum']):
         expense = expense['net_total__sum']
     else:
         expense = 0
 
-    payment = Payment.objects.filter(
-        customer=customer, date__date__lt=date).aggregate(Sum('amount'))
+    if(deport):
+        payment = Payment.objects.filter(
+            deport=deport, date__date__lt=date).aggregate(Sum('amount'))
+    else:
+        payment = Payment.objects.filter(
+            customer=customer, date__date__lt=date).aggregate(Sum('amount'))
     if(payment['amount__sum']):
         payment = payment['amount__sum']
     else:

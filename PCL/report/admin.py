@@ -12,7 +12,7 @@ from django.db.models import Value, FloatField
 # from report.forms import FPReportForm
 from report.models import Report
 from sales.models import Payment, Sell, SellDetailInfo
-from master_table.models import Customer
+from master_table.models import Customer, Deport
 from report.forms import ReportForm
 from report.util import get_due, get_grand_total, get_total_commission,\
     get_net_total, get_payment
@@ -180,15 +180,12 @@ class Report_Admin(admin.ModelAdmin):
 
         elif(type == 'monthly_party'):
 
-            result = Sell.objects.filter(date__date__gte=obj.start_time,
-                                         date__date__lte=obj.end_time)
-
             result = Customer.objects.all().values()
 
             for r in result:
                 # r.namee = 'alamin'
                 customer = Customer.objects.get(id=r['id'])
-                due = get_due(customer, obj.start_time)
+                due = get_due(customer=customer, date=obj.start_time)
                 o_due = 0
                 o_adv = 0
                 if(due > 0):
@@ -209,7 +206,7 @@ class Report_Admin(admin.ModelAdmin):
                     customer, obj.start_time, obj.end_time)
 
                 due = get_due(
-                    customer, obj.end_time+datetime.timedelta(days=1))
+                    customer=customer, date=obj.end_time+datetime.timedelta(days=1))
                 c_due = 0
                 c_adv = 0
                 if(due >= 0):
@@ -223,49 +220,63 @@ class Report_Admin(admin.ModelAdmin):
             print(len(result))
             # print(result)
 
-            # result = result.values('customer').annotate(
-            #     cus_net_total=Sum('net_total'),
-            #     cus_total_commission=Sum('total_commission'),
-            #     cus_grand_total=Sum('grand_total'),
-            #     # due = Sum('net_total') + 10,
-            #     total_payment=Sum('payment__amount')
-
-            #     )
-            # result = result.extra(select=('due': 'net_total + grand_total'))
-            # print(result[0]['customer'])
-
-            # result = result.values('customer').filter(SellDetailInfo)
-            # r = result[0]
-            # print(r.customer)
-            # print(r.payment__set.all())
-            # sell = Sell.objects.all().distinct().values('customer')
-            # print(sell)
-            # # print(sell[0]['customer'])
-            # # print(sell[0].customer.all())
-            # # print(sell.values())
-            # sell = sell.annotate(total_payment=Sum('customer__payment__amount')).distinct().order_by('-date')
-            # print(sell.all())
-            # sell = set(sell)
-            # print(type(sell))
-            # sell_list = list(sell)
-            # sell_list = set(sell_list)
-            # print(sell_list)
-
-            # print(len(sell))
-
-            # print(customer)
-            # # print(customer.payment_set.all())
-            # customer = customer.annotate(total_payment=Sum('payment__amount'))
-            # print(customer.values())
-            # print(len(result))
-            print(result)
+            # print(result)
             context = {'result': result,
                        'start_time': obj.start_time,
                        'end_time': obj.end_time,
                        }
             return render(request, 'report/sales/monthly_party.html', context)
+
         elif(type == 'monthly_party_gross'):
-            return render(request, 'report/sales/monthly_party_gross.html')
+
+            result = Deport.objects.all().values()
+
+            for r in result:
+                # r.namee = 'alamin'
+                deport = Deport.objects.get(id=r['id'])
+                due = get_due(deport=deport, date=obj.start_time)
+                o_due = 0
+                o_adv = 0
+                if(due > 0):
+                    o_due = due
+                else:
+                    o_adv = -1 * due
+
+                r['opening_due'] = o_due
+                r['opening_advance'] = o_adv
+                r['grand_total'] = get_grand_total(
+                    deport=deport, start_time=obj.start_time,
+                    end_time=obj.end_time)
+                r['total_commission'] = get_total_commission(
+                    deport=deport, start_time=obj.start_time,
+                    end_time=obj.end_time)
+                r['net_total'] = get_net_total(
+                    deport=deport, start_time=obj.start_time,
+                    end_time=obj.end_time)
+                r['total_due'] = r['opening_due'] + r['net_total']
+                r['payment'] = get_payment(
+                    deport=deport, start_time=obj.start_time,
+                    end_time=obj.end_time)
+
+                due = get_due(
+                    deport=deport, date=obj.end_time+datetime.timedelta(days=1))
+                c_due = 0
+                c_adv = 0
+                if(due >= 0):
+                    c_due = due
+                else:
+                    c_adv = -1 * due
+
+                r['closing_due'] = c_due
+                r['closing_advance'] = c_adv
+
+            print(result)
+
+            context = {'result': result,
+                       'start_time': obj.start_time,
+                       'end_time': obj.end_time,
+                       }
+            return render(request, 'report/sales/monthly_party_gross.html', context)
         elif(type == 'monthly_stock'):
             return render(request, 'report/sales/monthly_stock.html')
         elif(type == 'monthly_stock_gross'):
