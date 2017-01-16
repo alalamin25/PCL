@@ -6,19 +6,18 @@
 
 {% block content %}
 
+
+<div class="container">
+<br><br><br>
+  <div align="center">  
+    <p>Sales report Specification</p>
+    <p>Date From: {{ start_time }}</p>
+    <p>Date To: {{ end_time }} </p>
+  </div>
+
 <div class="table-class">
-        <p align="left">Sales report </p>
-        <p>Date From: </p>
-        <p>Date To: </p>
-  <div class="container">
-        
-
-
-
-
-
- 
-       
+    
+      
     <table class="table table-bordered" border="5">
       <thead>
         <tr>
@@ -37,15 +36,21 @@
         </tr>
       </thead>
       <tbody>
-      {% for rawitem in rawitem_list %}
+      {% load mathfilters %}
+      {% for r in result %}
       <tr>
-        <td> {{ rawitem }} </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td> {{ r.sell.memo_no }} </td>
+        <td> {{ r.sell.date }}</td>
+        <td> {{ r.product_code.code }} </td>
+        <td> {{ r.sell.get_customer }} </td>
+        <td> {{ r.product_code.name }} </td>
+        <td> {{ ee }} </td>
+        <td> {{ r.rate|floatformat:-2 }} </td>
+        <td> {{ r.quantity|floatformat:-2 }} </td>
+        <td> {{ r.total|floatformat:-2 }} </td>
+        <td> {{ r.total|sub:r.net_total|floatformat:-2 }} </td> 
+        <td> {{ r.net_total|floatformat:-2 }} </td>
+
 
       </tr>
       {% endfor %}

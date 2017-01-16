@@ -180,7 +180,7 @@ class Sell(models.Model):
     transection_no = models.CharField(max_length=100)
     date = models.DateTimeField(default=now)
     memo_no = models.CharField(max_length=100)
-    deport_code = models.ForeignKey(Deport, to_field='code')
+    deport = models.ForeignKey(Deport)
     customer = models.ManyToManyField(Customer)
 
     grand_total = models.FloatField(
@@ -250,7 +250,7 @@ class SellDetailInfo(models.Model):
 
     commission = models.FloatField(default=0)
     net_total = models.FloatField(
-         verbose_name="Net Total")
+        verbose_name="Net Total")
 
     fundamental_type = models.ForeignKey(
         FundamentalProductType,
@@ -298,8 +298,14 @@ class SellDetailInfo(models.Model):
     #     return self.rate + self.quantity
 
     # total = property(total)
+    # date = models.DateTimeField(editable=False)
 
-    # bank_code = models.ForeignKey(Bank)
+    def save(self, *args, **kw):
+        if(self.finished_product_item):
+            self.product_code = self.finished_product_item
+        # if(self.sell):
+        #     self.date = self.sell.date
+        super(SellDetailInfo, self).save(*args, **kw)
 
     def __str__(self):
         return self.sell.transection_no

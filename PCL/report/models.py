@@ -19,7 +19,7 @@ class Report(models.Model):
         FundamentalProductType, blank=True)
     middle_category_type = models.ManyToManyField(FPMiddleCat, blank=True)
     lower_category_type = models.ManyToManyField(FPLowerCat, blank=True)
-    fp_item = models.ManyToManyField(FPItem, blank=True)
+    fp_item = models.ManyToManyField(FPItem, blank=True, verbose_name="Finished Product")
 
 
     @property

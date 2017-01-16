@@ -11,7 +11,7 @@ from django.db.models import Count, Sum
 
 # from report.forms import FPReportForm
 from report.models import Report
-from sales.models import Payment, Sell
+from sales.models import Payment, Sell, SellDetailInfo
 from report.forms import ReportForm
 # from report.util import FinishedProductReport_PDF
 
@@ -38,6 +38,7 @@ def get_due(customer, date):
     # return 0
     val = expense - payment
     return round(val, 2)
+
 
 class Report_Admin(admin.ModelAdmin):
 
@@ -109,6 +110,14 @@ class Report_Admin(admin.ModelAdmin):
             fields.remove('customer')
             fields.remove('fp_item')
             fields.remove('deport')
+        elif(type == 'specification'):
+            pass
+            # fields.remove('fundamental_type')
+            # fields.remove('middle_category_type')
+            # fields.remove('lower_category_type')
+            # fields.remove('customer')
+            # fields.remove('fp_item')
+            # fields.remove('deport')
 
         return fields
 
@@ -133,7 +142,8 @@ class Report_Admin(admin.ModelAdmin):
             result = sorted(result, key=itemgetter('date'))
             print(result)
             print(len(payment))
-            opening_due = get_due(customer=obj.get_customer, date=obj.start_time)
+            opening_due = get_due(
+                customer=obj.get_customer, date=obj.start_time)
             closing_due = get_due(customer=obj.get_customer, date=obj.end_time)
             opening_advance = 0
             closing_advance = 0
@@ -144,18 +154,47 @@ class Report_Admin(admin.ModelAdmin):
                 closing_advance = -1 * closing_due
                 closing_due = 0
 
-
             context = {'result': result,
-                        'opening_due': opening_due,
-                        'closing_due': closing_due,
-                        'opening_advance': opening_advance,
-                        'closing_advance': closing_advance,
-                        'deport': obj.deport,
-                        'customer': obj.get_customer,
-
-            }
+                       'opening_due': opening_due,
+                       'closing_due': closing_due,
+                       'opening_advance': opening_advance,
+                       'closing_advance': closing_advance,
+                       'deport': obj.deport,
+                       'customer': obj.get_customer,
+                       'start_time': obj.start_time,
+                       'end_time': obj.end_time,
+                       }
 
             return render(request, 'report/sales/ledger_party.html', context)
+
+        elif(type == 'specification'):
+            result = SellDetailInfo.objects.filter(sell__date__date__gte=obj.start_time,
+                                                   sell__date__date__lte=obj.end_time)
+            if(obj.deport):
+                result = result.filter(sell__deport=obj.deport)
+
+            if(obj.get_customer):
+                result = result.filter(sell__customer=obj.get_customer)
+            if(obj.fundamental_type.all()):
+                result = result.filter(
+                    product_code__fundamental_type=obj.fundamental_type.all())
+            if(obj.middle_category_type.all()):
+                result = result.filter(
+                    product_code__middle_category_type=obj.middle_category_type.all())
+            if(obj.lower_category_type.all()):
+                result = result.filter(
+                    product_code__lower_category_type=obj.lower_category_type.all())
+            if(obj.fp_item.all()):
+                print(obj.fp_item.all())
+                result = result.filter(
+                    product_code__in=obj.fp_item.all())
+
+            print(result)
+            context = {'result': result,
+                       'start_time': obj.start_time,
+                       'end_time': obj.end_time,
+                       }
+            return render(request, 'report/sales/report_specification.html', context)
         elif(type == 'ledger_product'):
             return render(request, 'report/sales/ledger_product.html')
         elif(type == 'monthly_party'):

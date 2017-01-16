@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     # 'django_select2',
     'django.contrib.admin',
     'searchableselect',
+    'mathfilters',
     # 'ajax_select',
     # 'grappelli',
     
