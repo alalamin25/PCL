@@ -37,23 +37,24 @@
         </tr>
       </thead>
       <tbody>
-      {% for rawitem in rawitem_list %}
+      {% for r in result %}
       <tr>
-        <td>  </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>  </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td> {{ r.code }} </td>
+        <td> {{ r.name }} </td>
+        <td> {{ r.fundamental_type_id__name }} </td>
+        <td> {{ r.opening_stock }} </td>
+        <td> {{ r.new }} </td>
+        <td> {{ r.received_from_other_deport }} </td>
+        <td> {{ r.sales_return }} </td>
+        <td> {{ r.total_stock }} </td>
+        <td> {{ r.sell }} </td>
+        <td> {{ r.return_to_other_deport }} </td>
+        <td> {{ r.factory_return }} </td>
+        <td> {{ r.total_outgoing }} </td>
+        <td> {{ r.closing_stock }} </td>
+        <td> {{ r.unit_price }} </td>
+        <td> {{ r.gross_total }} </td>
+
       </tr>
       {% endfor %}
       </tbody>

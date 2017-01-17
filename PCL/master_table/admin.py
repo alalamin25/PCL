@@ -527,7 +527,7 @@ class FPLowerCat_Admin(admin.ModelAdmin):
 class FPItem_Admin(admin.ModelAdmin):
 
     form = FPItemForm
-    list_display = ('id', 'name', 'code', 'fundamental_type',
+    list_display = ('id', 'name', 'code', 'unit_price', 'fundamental_type',
                     'middle_category_type', 'lower_category_type')
     list_display_links = ('id', 'name')
     search_fields = ('name',)
@@ -535,7 +535,7 @@ class FPItem_Admin(admin.ModelAdmin):
         'fundamental_type', 'middle_category_type', 'lower_category_type')
     fieldsets = [
         (
-            'Name and Of The Production Item: ', {'fields': ['name']}
+            'Name and Of The Production Item: ', {'fields': ['name', 'unit_price']}
         ),
         (
             'Choose Fundamental Product Type For Production Item:', {

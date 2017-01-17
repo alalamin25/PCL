@@ -27,7 +27,7 @@ class DeportOperation(models.Model):
     deport_code = models.ForeignKey(
         Deport, to_field='code', related_name="deport_code")
     date = models.DateTimeField(default=now)
-
+    quantity = models.FloatField(default=1)
     fundamental_type = models.ForeignKey(FundamentalProductType, blank=True,
                                          null=True)
     # middle_category_type = models.ForeignKey(FPMiddleCat)

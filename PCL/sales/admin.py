@@ -94,7 +94,7 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
 
 
     list_display = (
-        'rate', 'quantity', 'total')
+         'product_code', 'rate', 'quantity', 'total')
 
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size': '5'})},
@@ -107,7 +107,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
 
     form = DeportOperationForm
     list_display = (
-        'date', 'deport_operation', 'deport_code', 'fp_item')
+        'date', 'deport_operation', 'deport_code', 'fp_item', 'quantity')
     # search_fields = ('serial_no',)
     list_filter = ('date', 'deport_code')
     # raw_id_fields = ('fp_item',)
@@ -115,7 +115,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
     fieldsets = [
         (
             'Basic Info: ', {
-                'fields': ['deport_operation', 'deport_code',  'date', ]}
+                'fields': ['deport_operation', 'deport_code',  'date', 'quantity']}
         ),
 
         (
