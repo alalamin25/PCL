@@ -26,6 +26,7 @@ class Report_Admin(admin.ModelAdmin):
                          'middle_category_type', 'lower_category_type', 'fp_item')
     # exclude = ('name',)
     # readonly_fields=('name',)
+
     class Media:
         js = ['/static/js/report.js']
 
@@ -47,8 +48,10 @@ class Report_Admin(admin.ModelAdmin):
         if(form.base_fields.get('end_time')):
             form.base_fields['end_time'].initial = now()
         date = datetime.date.today() + relativedelta(months=-1)
+
         if(form.base_fields.get('start_time')):
             form.base_fields['start_time'].initial = date
+
         # self.initial['memo_no'] = self.transection_no
         #
         # self.exclude = ['name']
@@ -58,51 +61,49 @@ class Report_Admin(admin.ModelAdmin):
         fields = super(Report_Admin, self).get_fields(request, obj)
         # fields.remove('customer')
         type = request.GET.get('type')
+        fields.remove('shift')
+        fields.remove('fundamental_type')
+        fields.remove('fundamental_type_chained')
+        fields.remove('middle_category_type')
+        fields.remove('lower_category_type')
+        fields.remove('fp_item')
+        fields.remove('customer')
+        fields.remove('deport')
+        fields.remove('raw_item_report_choices')
         if(type == 'ledger_party'):
-            print("\n\n going to remove")
-            fields.remove('fundamental_type')
-            fields.remove('middle_category_type')
-            fields.remove('lower_category_type')
-            fields.remove('fp_item')
+            fields.append('deport')
+            fields.append('customer')
         elif(type == 'ledger_product'):
-            fields.remove('fundamental_type')
-            fields.remove('middle_category_type')
-            fields.remove('lower_category_type')
-            fields.remove('customer')
+            fields.append('deport')
+            fields.append('fp_item')
         elif(type == 'monthly_party'):
             # fields.remove('fundamental_type')
-            fields.remove('middle_category_type')
-            fields.remove('lower_category_type')
-            fields.remove('fp_item')
+            fields.append('deport')
+            fields.append('customer')
+            fields.append('fundamental_type')
         elif(type == 'monthly_party_gross'):
-            fields.remove('fundamental_type')
-            fields.remove('middle_category_type')
-            fields.remove('lower_category_type')
-            fields.remove('customer')
-            fields.remove('fp_item')
-            fields.remove('deport')
-        elif(type == 'monthly_stock'):
-            fields.remove('fundamental_type')
-            fields.remove('middle_category_type')
-            fields.remove('lower_category_type')
-            fields.remove('customer')
-            fields.remove('fp_item')
-        elif(type == 'monthly_stock_gross'):
-            fields.remove('fundamental_type')
-            fields.remove('middle_category_type')
-            fields.remove('lower_category_type')
-            fields.remove('customer')
-            fields.remove('fp_item')
-            fields.remove('deport')
-        elif(type == 'specification'):
             pass
-            # fields.remove('fundamental_type')
-            # fields.remove('middle_category_type')
-            # fields.remove('lower_category_type')
-            # fields.remove('customer')
-            # fields.remove('fp_item')
-            # fields.remove('deport')
-        # fields.remove('name')
+
+        elif(type == 'monthly_stock'):
+            fields.append('deport')
+        elif(type == 'monthly_stock_gross'):
+            pass
+        elif(type == 'specification'):
+            fields.append('deport')
+            fields.append('customer')
+            fields.append('fundamental_type')
+            fields.append('middle_category_type')
+            fields.append('lower_category_type')
+            fields.append('fp_item')            
+        elif(type == 'daily_production'):
+            fields.remove('end_time')
+        elif(type == 'shift_daily_production'):
+            fields.remove('end_time')
+            fields.append('fundamental_type_chained')
+            fields.append('shift')
+        elif(type == 'raw_item_stock'):
+            fields.append('raw_item_report_choices')
+
         return fields
 
     def response_add(self, request, obj, post_url_continue=None):
@@ -257,7 +258,8 @@ class Report_Admin(admin.ModelAdmin):
                 # r.namee = 'alamin'
                 customer = Customer.objects.get(id=r['id'])
                 due = get_due(customer=customer, date=obj.start_time)
-                due -= get_customer_sales_return(customer=customer, start_time=obj.start_time, end_time=obj.end_time)
+                due -= get_customer_sales_return(
+                    customer=customer, start_time=obj.start_time, end_time=obj.end_time)
                 o_due = 0
                 o_adv = 0
                 if(due > 0):
@@ -276,7 +278,6 @@ class Report_Admin(admin.ModelAdmin):
                 r['total_due'] = r['opening_due'] + r['net_total']
                 r['payment'] = get_payment(
                     customer=customer, start_time=obj.start_time, end_time=obj.end_time)
-
 
                 r['sales_return'] = get_customer_sales_return(customer=customer,
                                                               start_time=obj.start_time,
@@ -312,7 +313,8 @@ class Report_Admin(admin.ModelAdmin):
                 # r.namee = 'alamin'
                 deport = Deport.objects.get(id=r['id'])
                 due = get_due(deport=deport, date=obj.start_time)
-                due -= get_deport_sales_return(deport=deport, start_time=obj.start_time, end_time=obj.end_time)
+                due -= get_deport_sales_return(deport=deport,
+                                               start_time=obj.start_time, end_time=obj.end_time)
                 o_due = 0
                 o_adv = 0
                 if(due > 0):
@@ -336,11 +338,11 @@ class Report_Admin(admin.ModelAdmin):
                     deport=deport, start_time=obj.start_time,
                     end_time=obj.end_time)
                 r['sales_return'] = get_deport_sales_return(deport=deport,
-                                                              start_time=obj.start_time,
-                                                              end_time=obj.end_time)
+                                                            start_time=obj.start_time,
+                                                            end_time=obj.end_time)
                 due = get_due(
                     deport=deport, date=obj.end_time+datetime.timedelta(days=1))
-                due = due - r['sales_return']               
+                due = due - r['sales_return']
                 c_due = 0
                 c_adv = 0
                 if(due >= 0):
@@ -480,6 +482,69 @@ class Report_Admin(admin.ModelAdmin):
                        }
 
             return render(request, 'report/sales/monthly_stock_gross.html', context)
+
+        elif(type == 'daily_production'):
+
+            result = ""
+
+            context = {'result': result,
+                       'start_time': obj.start_time,
+                       # 'end_time': obj.end_time,
+                       }
+
+            return render(request, 'report/others/daily_production.html', context)
+
+        elif(type == 'shift_daily_production'):
+
+            result = ""
+
+            context = {'result': result,
+                       'start_time': obj.start_time,
+                       'shift': obj.shift
+                       }
+
+            return render(request, 'report/others/shift_daily_production.html', context)
+
+        elif(type == 'raw_item_purchase'):
+
+            result = ""
+
+            context = {'result': result,
+                       'start_time': obj.start_time,
+                       'end_time': obj.end_time,
+                       'shift': obj.shift
+                       }
+
+            return render(request, 'report/others/ri_purchase.html', context)
+
+
+        elif(type == 'raw_item_stock'):
+
+            result = ""
+
+            if(obj.raw_item_report_choices == 'mother_godown'):
+                context = {'result': result,
+                           'start_time': obj.start_time,
+                           'shift': obj.shift
+                           }
+
+                return render(request, 'report/others/ri_stock_mother_godown.html', context)
+
+            if(obj.raw_item_report_choices == 'production_godown'):
+                context = {'result': result,
+                           'start_time': obj.start_time,
+                           'shift': obj.shift
+                           }
+
+                return render(request, 'report/others/ri_stock_production_godown.html', context)
+
+            if(obj.raw_item_report_choices == 'total'):
+                context = {'result': result,
+                           'start_time': obj.start_time,
+                           'shift': obj.shift
+                           }
+
+                return render(request, 'report/others/ri_stock_total.html', context)
 
         print("\n in response post add method")
         return render(request, 'report/sales/report_specification.html', {})

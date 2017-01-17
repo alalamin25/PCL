@@ -1,0 +1,130 @@
+{% extends "common/base_report.html" %}
+{% load staticfiles %}
+
+
+
+
+{% block content %}
+
+<div class="table-class">
+        <p align="left">Daily Production Report </p>
+
+        <p>Date  {{ start_time }}</p>
+
+        
+  <div class="container">
+        
+
+ 
+    <h1> Product Table</h1>     
+    <table class="table table-bordered" border="5">
+      <thead>
+        <tr>
+          <th>Product Id</th>
+          <th>Product Name</th>
+          <th>Quantity</th>
+          <th>Weight(KG)</th>
+          <th>Remarks</th>
+
+        </tr>
+      </thead>
+      <tbody>
+      {% for r in result %}
+      <tr>
+        <td> {{ r.code }} </td>
+        <td> {{ r.name }} </td>
+        <td> {{ r.fundamental_type_id__name }} </td>
+        <td> {{ r.opening_stock }} </td>
+        <td> {{ r.new }} </td>
+        <td> {{ r.received_from_other_deport }} </td>
+
+
+
+      </tr>
+      {% endfor %}
+
+      <tr>
+        <td>  </td>
+        <td>  </td>
+        <td>  </td>
+        <td> {{ opening_stock_total }} </td>
+        <td> {{ new_total }} </td>
+        <td> {{ received_from_other_deport_total }} </td>
+        <td> {{ sales_return_total }} </td>
+        <td> {{ total_stock_total }} </td>
+
+
+
+      </tr>
+
+
+
+
+
+      </tbody>
+    </table>
+
+
+
+  <br><br><br><br><br><br>
+
+
+
+
+    <h1> Mixture/Raw Material Table</h1>     
+    <table class="table table-bordered" border="5">
+      <thead>
+        <tr>
+          <th>Product Id</th>
+          <th>Product Name</th>
+          <th>Weight(KG)</th>
+          <th>Remarks</th>
+
+
+        </tr>
+      </thead>
+      <tbody>
+      {% for r in result %}
+      <tr>
+        <td> {{ r.code }} </td>
+        <td> {{ r.name }} </td>
+        <td> {{ r.fundamental_type_id__name }} </td>
+        <td> {{ r.opening_stock }} </td>
+
+
+
+      </tr>
+      {% endfor %}
+
+      <tr>
+        <td>  </td>
+        <td>  </td>
+        <td>  </td>
+        <td> {{ opening_stock_total }} </td>
+        <td> {{ new_total }} </td>
+        <td> {{ received_from_other_deport_total }} </td>
+        <td> {{ sales_return_total }} </td>
+        <td> {{ total_stock_total }} </td>
+
+
+      </tr>
+
+
+
+
+
+      </tbody>
+    </table>
+
+
+
+
+
+    
+  </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>

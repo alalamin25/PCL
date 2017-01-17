@@ -1,0 +1,78 @@
+{% extends "common/base_report.html" %}
+{% load staticfiles %}
+
+
+
+
+{% block content %}
+
+
+<div class="container">
+<br><br><br>
+  <div align="center">  
+    <p>Raw Material Purchase Report</p>
+    <p>Date From: {{ start_time }}</p>
+    <p>Date To: {{ end_time }} </p>
+  </div>
+
+<div class="table-class">
+    
+      
+    <table class="table table-bordered" border="5">
+      <thead>
+        <tr>
+          <th>Product Id</th>
+          <th>Product Name</th>
+          <th>Quantity(KG)</th>
+          <th>Unit Price</th>
+          <th>Total Price</th>
+          <th>Remarks</th>
+
+
+
+        </tr>
+      </thead>
+      <tbody>
+      {% load mathfilters %}
+      {% for r in result %}
+      <tr>
+        <td> {{ r.sell.memo_no }} </td>
+        <td> {{ r.sell.date }}</td>
+        <td> {{ r.product_code.code }} </td>
+        <td> {{ r.sell.get_customer }} </td>
+        <td> {{ r.product_code.name }} </td>
+        <td> {{ ee }} </td>
+        <td> {{ r.rate|floatformat:-2 }} </td>
+        <td> {{ r.quantity|floatformat:-2 }} </td>
+        <td> {{ r.total|floatformat:-2 }} </td>
+        <td> {{ r.total|sub:r.net_total|floatformat:-2 }} </td> 
+        <td> {{ r.net_total|floatformat:-2 }} </td>
+
+
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+
+  <br><br><br><br><br><br>
+
+
+
+
+
+
+
+
+
+
+    <br><br><br><br><br><br>
+    
+  </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>

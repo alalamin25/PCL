@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Sum, Q
-# from django.utils.timezone import now
+from smart_selects.db_fields import ChainedForeignKey
 
 
 from smart_selects.db_fields import ChainedManyToManyField
@@ -9,11 +9,19 @@ from master_table.models import FundamentalProductType,\
 from sales.models import DeportOperation, SellDetailInfo
 
 
+RAW_ITEM_REPORT_CHOICES = (
+    ('mother_godown', 'Mother Godown Raw Item Stock Report'),
+    ('production_godown', 'Factory Godown Raw Item Stock Report'),
+    ('total', 'Total Raw Item Stock Report'),
+
+)
+
+
 class Report(models.Model):
 
     # name = models.CharField(max_length=100, editable=False)
-    start_time = models.DateField()
-    end_time = models.DateField()
+    start_time = models.DateField(blank=True, null=True)
+    end_time = models.DateField(blank=True, null=True)
 
     deport = models.ForeignKey(Deport, blank=True, null=True)
     customer = models.ManyToManyField(Customer, blank=True)
@@ -23,6 +31,26 @@ class Report(models.Model):
     lower_category_type = models.ManyToManyField(FPLowerCat, blank=True)
     fp_item = models.ManyToManyField(
         FPItem, blank=True, verbose_name="Finished Product")
+
+    fundamental_type_chained = models.ForeignKey(FundamentalProductType,
+                                                 blank=True, null=True,
+                                                 related_name='report_chained',
+                                                 verbose_name='Fundamental Type')
+    shift = ChainedForeignKey(
+        Shift,
+        chained_field="fundamental_type_chained",
+        chained_model_field="fundamental_type",
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    raw_item_report_choices = models.CharField(choices=RAW_ITEM_REPORT_CHOICES,
+                                               max_length=30,
+                                               help_text='Select Report Category: ',
+                                               blank=True,
+                                               null=True)
 
     @property
     def get_customer(self):
@@ -182,4 +210,3 @@ class Report(models.Model):
         total_out = sell + factory_return
 
         return total_in - total_out
-

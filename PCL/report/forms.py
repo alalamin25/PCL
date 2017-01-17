@@ -32,6 +32,15 @@ class ReportForm(forms.ModelForm):
             self.fields.get('customer').required = True
         elif (self.data and self.data.get('name') == 'monthly_stock'):
             self.fields.get('deport').required = True
+        elif (self.data and self.data.get('name') == 'shift_daily_production'):
+            self.fields.get('fundamental_type_chained').required = True
+            self.fields.get('shift').required = True
+        elif (self.data and self.data.get('name') == 'raw_item_stock'):
+            self.fields.get('raw_item_report_choices').required = True
+
+        # elif (self.data and self.data.get('name') == 'shift_daily_production'):
+        #     self.fields.get('fundamental_type_chained').required = True
+        #     self.fields.get('shift').required = True            
 
         #     print("\n\n.....nothing done")
             # self.data.get('name')
