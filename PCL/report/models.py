@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, Q
 # from django.utils.timezone import now
 
 
@@ -29,20 +29,29 @@ class Report(models.Model):
             return self.customer.first()
         return None
 
-    def get_deport_opening_stock(self, fp_item):
+    def get_deport_opening_stock(self, fp_item=None, deport=None):
 
-        stock = DeportOperation.objects.filter(
-            date__date__lt=self.start_time, fp_item=fp_item,
-            deport_code=self.deport).aggregate(total=Sum('quantity'))
-
+        if(fp_item):
+            stock = DeportOperation.objects.filter(
+                date__date__lt=self.start_time, fp_item=fp_item,
+                deport_code=self.deport).aggregate(total=Sum('quantity'))
+        else:
+            stock = DeportOperation.objects.filter(
+                date__date__lt=self.start_time,
+                deport_code=deport).aggregate(total=Sum('quantity'))
         if(stock['total']):
             stock = stock['total']
         else:
             stock = 0
 
-        sell = SellDetailInfo.objects.filter(
-            sell__date__date__lt=self.start_time, product_code=fp_item,
-            sell__deport=self.deport).aggregate(total=Sum('quantity'))
+        if(fp_item):
+            sell = SellDetailInfo.objects.filter(
+                sell__date__date__lt=self.start_time, product_code=fp_item,
+                sell__deport=self.deport).aggregate(total=Sum('quantity'))
+        else:
+            sell = SellDetailInfo.objects.filter(
+                sell__date__date__lt=self.start_time,
+                sell__deport=deport).aggregate(total=Sum('quantity'))
         if(sell['total']):
             sell = sell['total']
         else:
@@ -51,12 +60,18 @@ class Report(models.Model):
         val = stock - sell
         return round(val, 2)
 
-    def get_deport_operation(self, fp_item, op_type):
+    def get_deport_operation(self, fp_item=None, deport=None, op_type=None):
 
-        result = DeportOperation.objects.filter(
-            date__date__gte=self.start_time, date__date__lte=self.end_time,
-            fp_item=fp_item, deport_operation=op_type,
-            deport_code=self.deport).aggregate(total=Sum('quantity'))
+        if(fp_item):
+            result = DeportOperation.objects.filter(
+                date__date__gte=self.start_time, date__date__lte=self.end_time,
+                fp_item=fp_item, deport_operation=op_type,
+                deport_code=self.deport).aggregate(total=Sum('quantity'))
+        else:
+            result = DeportOperation.objects.filter(
+                date__date__gte=self.start_time, date__date__lte=self.end_time,
+                deport_operation=op_type,
+                deport_code=deport).aggregate(total=Sum('quantity'))
 
         if(result['total']):
             result = result['total']
@@ -65,12 +80,17 @@ class Report(models.Model):
 
         return round(result, 2)
 
-    def get_deport_sell(self, fp_item):
+    def get_deport_sell(self, fp_item=None, deport=deport):
 
-        result = SellDetailInfo.objects.filter(
-            sell__date__date__gte=self.start_time, sell__date__date__lte=self.end_time,
-            product_code=fp_item,
-            sell__deport=self.deport).aggregate(total=Sum('quantity'))
+        if(fp_item):
+            result = SellDetailInfo.objects.filter(
+                sell__date__date__gte=self.start_time, sell__date__date__lte=self.end_time,
+                product_code=fp_item,
+                sell__deport=self.deport).aggregate(total=Sum('quantity'))
+        else:
+            result = SellDetailInfo.objects.filter(
+                sell__date__date__gte=self.start_time, sell__date__date__lte=self.end_time,
+                sell__deport=deport).aggregate(total=Sum('quantity'))
 
         if(result['total']):
             result = result['total']
@@ -79,12 +99,16 @@ class Report(models.Model):
 
         return round(result, 2)
 
-    def get_deport_to_other(self, fp_item):
-
-        result = DeportOperation.objects.filter(
-            date__date__gte=self.start_time, date__date__lte=self.end_time,
-            fp_item=fp_item,
-            deport_from_code=self.deport).aggregate(total=Sum('quantity'))
+    def get_deport_to_other(self, fp_item=None, deport=None):
+        if(fp_item):
+            result = DeportOperation.objects.filter(
+                date__date__gte=self.start_time, date__date__lte=self.end_time,
+                fp_item=fp_item,
+                deport_from_code=self.deport).aggregate(total=Sum('quantity'))
+        else:
+            result = DeportOperation.objects.filter(
+                date__date__gte=self.start_time, date__date__lte=self.end_time,
+                deport_from_code=deport).aggregate(total=Sum('quantity'))
 
         if(result['total']):
             result = result['total']
@@ -92,3 +116,29 @@ class Report(models.Model):
             result = 0
 
         return round(result, 2)
+
+    def get_deport_gross_total(self, deport=None):
+
+        self.deport = deport
+        fp_item = FPItem.objects.all()
+
+        total = 0
+
+        for item in fp_item:
+            total_stock = self.get_deport_opening_stock(fp_item=item) +\
+                self.get_deport_operation(fp_item=item, op_type='new') +\
+                self.get_deport_operation(fp_item=item, op_type='sales_return') +\
+                self.get_deport_operation(
+                    fp_item=item, op_type='received_from_other_deport')
+
+            total_out = self.get_deport_sell(
+                fp_item=item) +\
+                self.get_deport_operation(fp_item=item, op_type='factory_return') +\
+                self.get_deport_to_other(fp_item=item)
+
+            total_stock = total_stock - total_out
+            # if(total_stock < 0):
+            #     total_stock = 0
+
+            total += total_stock * item.unit_price
+        return round(total, 2)

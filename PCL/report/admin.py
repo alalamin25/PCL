@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.timezone import now
-from django.db.models import Count, Sum, Max
+from django.db.models import Count, Sum, Max, Q
 from django.db.models import Value, FloatField
 
 # from report.forms import FPReportForm
@@ -280,33 +280,36 @@ class Report_Admin(admin.ModelAdmin):
 
         elif(type == 'monthly_stock'):
 
-            result = FPItem.objects.filter(
-                deportoperation__deport_code=obj.deport).distinct().values()
+            result = FPItem.objects.all().distinct().values()
+
+            # result = FPItem.objects.filter(Q(deportoperation__deport_code=obj.deport) | Q(deportoperation__deport_from_code=obj.deport)).distinct().values()
             for r in result:
                 # print(r)
                 fp_item = FPItem.objects.get(id=r['id'])
                 # print(fp_item)
-                r['opening_stock'] = obj.get_deport_opening_stock(fp_item)
-                r['new'] = obj.get_deport_operation(fp_item, op_type='new')
+                r['opening_stock'] = obj.get_deport_opening_stock(
+                    fp_item=fp_item)
+                r['new'] = obj.get_deport_operation(
+                    fp_item=fp_item, op_type='new')
                 r['received_from_other_deport'] = obj.get_deport_operation(
-                    fp_item,
+                    fp_item=fp_item,
                     op_type='received_from_other_deport')
 
                 # r['received_from_other_deport'] = obj.get_deport_operation(
                 #     fp_item,
                 #     op_type='received_from_other_deport')
                 r['sales_return'] = obj.get_deport_operation(
-                    fp_item,
+                    fp_item=fp_item,
                     op_type='sales_return')
                 r['total_stock'] = r['opening_stock'] + r['new'] +\
                     r['received_from_other_deport'] + r['sales_return']
 
-                r['sell'] = obj.get_deport_sell(fp_item)
+                r['sell'] = obj.get_deport_sell(fp_item=fp_item)
                 r['factory_return'] = obj.get_deport_operation(
-                    fp_item,
+                    fp_item=fp_item,
                     op_type='factory_return')
                 r['return_to_other_deport'] = obj.get_deport_to_other(
-                    fp_item)
+                    fp_item=fp_item)
                 r['total_outgoing'] = r['sell'] + \
                     r['factory_return'] + r['return_to_other_deport']
                 r['closing_stock'] = r['total_stock'] - r['total_outgoing']
@@ -316,10 +319,87 @@ class Report_Admin(admin.ModelAdmin):
             context = {'result': result,
                        'start_time': obj.start_time,
                        'end_time': obj.end_time,
+                       'deport': obj.deport,
                        }
+            deport = obj.deport
+            context['opening_stock_total'] = obj.get_deport_opening_stock(
+                deport=deport)
+            context['new_total'] = obj.get_deport_operation(
+                deport=deport, op_type='new')
+            context['received_from_other_deport_total'] = obj.get_deport_operation(
+                deport=deport,
+                op_type='received_from_other_deport')
+
+            # context['received_from_other_deport'] = obj.get_deport_operation(
+            #     deport,
+            #     op_type='received_from_other_deport')
+            context['sales_return_total'] = obj.get_deport_operation(
+                deport=deport,
+                op_type='sales_return')
+            context['total_stock_total'] = context['opening_stock_total'] + context['new_total'] +\
+                context['received_from_other_deport_total'] + \
+                context['sales_return_total']
+
+            context['sell_total'] = obj.get_deport_sell(deport=deport)
+            context['factory_return_total'] = obj.get_deport_operation(
+                deport=deport,
+                op_type='factory_return')
+            context['return_to_other_deport_total'] = obj.get_deport_to_other(
+                deport=deport)
+            context['total_outgoing_total'] = context['sell_total'] + \
+                context['factory_return_total'] + \
+                context['return_to_other_deport_total']
+
+            context['closing_stock_total'] = context[
+                'total_stock_total'] - context['total_outgoing_total']
+            context['gross_total_total'] = obj.get_deport_gross_total(
+                deport=deport)
+
             return render(request, 'report/sales/monthly_stock.html', context)
+
         elif(type == 'monthly_stock_gross'):
-            return render(request, 'report/sales/monthly_stock_gross.html')
+
+            result = Deport.objects.all().distinct().values()
+            for r in result:
+                # print(r)
+                deport = Deport.objects.get(id=r['id'])
+                # print(fp_item)
+                r['opening_stock'] = obj.get_deport_opening_stock(
+                    deport=deport)
+                r['new'] = obj.get_deport_operation(
+                    deport=deport, op_type='new')
+                r['received_from_other_deport'] = obj.get_deport_operation(
+                    deport=deport,
+                    op_type='received_from_other_deport')
+
+                # r['received_from_other_deport'] = obj.get_deport_operation(
+                #     deport,
+                #     op_type='received_from_other_deport')
+                r['sales_return'] = obj.get_deport_operation(
+                    deport=deport,
+                    op_type='sales_return')
+                r['total_stock'] = r['opening_stock'] + r['new'] +\
+                    r['received_from_other_deport'] + r['sales_return']
+
+                r['sell'] = obj.get_deport_sell(deport=deport)
+                r['factory_return'] = obj.get_deport_operation(
+                    deport=deport,
+                    op_type='factory_return')
+                r['return_to_other_deport'] = obj.get_deport_to_other(
+                    deport=deport)
+                r['total_outgoing'] = r['sell'] + \
+                    r['factory_return'] + r['return_to_other_deport']
+                r['closing_stock'] = r['total_stock'] - r['total_outgoing']
+                r['gross_total'] = obj.get_deport_gross_total(deport=deport)
+            print(result)
+
+            context = {'result': result,
+                       'start_time': obj.start_time,
+                       'end_time': obj.end_time,
+                       }
+
+            return render(request, 'report/sales/monthly_stock_gross.html', context)
+
         print("\n in response post add method")
         return render(request, 'report/sales/report_specification.html', {})
 

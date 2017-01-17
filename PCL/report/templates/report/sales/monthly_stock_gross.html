@@ -8,8 +8,8 @@
 
 <div class="table-class">
         <p align="left">Monthly Stock Statement(All Deport) </p>
-        <p>Date From: </p>
-        <p>Date To: </p>
+        <p>Date From: {{ start_time }}</p>
+        <p>Date To: {{ end_time }} </p>
   <div class="container">
         
 
@@ -37,23 +37,24 @@
         </tr>
       </thead>
       <tbody>
-      {% for rawitem in rawitem_list %}
+      {% for r in result %}
       <tr>
+        <td> {{ r.code }} </td>
+        <td> {{ r.name }} </td>
 
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>  </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td> {{ r.opening_stock }} </td>
+        <td> {{ r.new }} </td>
+        <td> {{ r.received_from_other_deport }} </td>
+        <td> {{ r.sales_return }} </td>
+        <td> {{ r.total_stock }} </td>
+        <td> {{ r.sell }} </td>
+        <td> {{ r.return_to_other_deport }} </td>
+        <td> {{ r.factory_return }} </td>
+        <td> {{ r.total_outgoing }} </td>
+        <td> {{ r.closing_stock }} </td>
+        <td> {{ r.unit_price }} </td>
+        <td> {{ r.gross_total }} </td>
+
       </tr>
       {% endfor %}
       </tbody>

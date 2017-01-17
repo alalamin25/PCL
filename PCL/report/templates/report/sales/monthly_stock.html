@@ -8,8 +8,9 @@
 
 <div class="table-class">
         <p align="left">Monthly Stock Statement </p>
-        <p>Date From: </p>
-        <p>Date To: </p>
+        <p>Deport: {{ deport }} </p>
+        <p>Date From: {{ start_time }}</p>
+        <p>Date To: {{ end_time }} </p>
   <div class="container">
         
 
@@ -57,6 +58,30 @@
 
       </tr>
       {% endfor %}
+
+      <tr>
+        <td>  </td>
+        <td>  </td>
+        <td>  </td>
+        <td> {{ opening_stock_total }} </td>
+        <td> {{ new_total }} </td>
+        <td> {{ received_from_other_deport_total }} </td>
+        <td> {{ sales_return_total }} </td>
+        <td> {{ total_stock_total }} </td>
+        <td> {{ sell_total }} </td>
+        <td> {{ return_to_other_deport_total }} </td>
+        <td> {{ factory_return_total }} </td>
+        <td> {{ total_outgoing_total }} </td>
+        <td> {{ closing_stock_total }} </td>
+        <td> {{ unit_price_total }} </td>
+        <td> {{ gross_total_total }} </td>
+
+      </tr>
+
+
+
+
+
       </tbody>
     </table>
 
