@@ -23,8 +23,9 @@ class ReportForm(forms.ModelForm):
         if self.data and self.data.get('name') == 'ledger_party':
             self.fields.get('deport').required = True
             self.fields.get('customer').required = True
-        else:
-            print("self data does not exist")
+        elif (self.data and self.data.get('name') == 'ledger_product'):
+            self.fields.get('deport').required = True
+            self.fields.get('fp_item').required = True
 
     def clean(self):
 
@@ -38,7 +39,10 @@ class ReportForm(forms.ModelForm):
                 raise forms.ValidationError(
                     "This customer Does not belong to this deport. Select another customer or another deport")
 
-
+        elif (self.cleaned_data.get('name') == 'ledger_product'):
+            fp_item = self.cleaned_data.get('fp_item')
+            if(fp_item and fp_item.count() > 1):
+                raise forms.ValidationError("You can select only one product")
 
 
 class SelectionForm(forms.Form):

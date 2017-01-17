@@ -29,6 +29,12 @@ class Report(models.Model):
             return self.customer.first()
         return None
 
+    @property
+    def get_fp_item(self):
+        if(self.fp_item):
+            return self.fp_item.first()
+        return None
+
     def get_deport_opening_stock(self, fp_item=None, deport=None):
 
         if(fp_item):
@@ -142,3 +148,36 @@ class Report(models.Model):
 
             total += total_stock * item.unit_price
         return round(total, 2)
+
+    def get_deport_product_initial_stock(self):
+
+        incoming = DeportOperation.objects.filter(
+            date__date__lt=self.start_time,
+            fp_item=self.get_fp_item,
+            deport_code=self.deport
+        ).aggregate(total_in=Sum('quantity'))['total_in']
+        incoming = int(incoming or 0)
+
+        factory_return = DeportOperation.objects.filter(
+            date__date__lt=self.start_time,
+            fp_item=self.get_fp_item,
+            deport_code=self.deport,
+            deport_operation='factory_return'
+
+        ).aggregate(total_in=Sum('quantity'))['total_in']
+        # print(factory_return)
+        factory_return = int(factory_return or 0)
+
+        sell = SellDetailInfo.objects.filter(
+            sell__date__date__lt=self.start_time,
+            product_code=self.get_fp_item,
+            sell__deport=self.deport,
+        ).aggregate(total_in=Sum('quantity'))['total_in']
+        sell = int(sell or 0)
+        print(incoming)
+        print(factory_return)
+
+        total_in = incoming - factory_return
+        total_out = sell + factory_return
+
+        return total_in - total_out

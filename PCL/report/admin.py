@@ -11,7 +11,7 @@ from django.db.models import Value, FloatField
 
 # from report.forms import FPReportForm
 from report.models import Report
-from sales.models import Payment, Sell, SellDetailInfo
+from sales.models import Payment, Sell, SellDetailInfo, DeportOperation
 from master_table.models import Customer, Deport, FPItem
 from report.forms import ReportForm
 from report.util import get_due, get_grand_total, get_total_commission,\
@@ -147,6 +147,74 @@ class Report_Admin(admin.ModelAdmin):
 
             return render(request, 'report/sales/ledger_party.html', context)
 
+        elif(type == 'ledger_product'):
+
+            result = DeportOperation.objects.filter(
+                date__date__gte=obj.start_time,
+                date__date__lte=obj.end_time,
+                fp_item=obj.get_fp_item,
+                deport_code=obj.deport
+            ).values()
+
+            final_result = []
+            for r in result:
+                if(r['deport_operation'] == 'new'):
+                    r['specification'] = 'New Arrival'
+                    r['in'] = r['quantity']
+                elif(r['deport_operation'] == 'received_from_other_deport'):
+                    r['specification'] = 'Received From Other Deport'
+                    r['in'] = r['quantity']
+                elif(r['deport_operation'] == 'sales_return'):
+                    r['specification'] = 'Sales Return'
+                    r['in'] = r['quantity']
+                elif(r['deport_operation'] == 'factory_return'):
+                    r['specification'] = 'Factory Return'
+                    r['out'] = r['quantity']
+
+                final_result.append(r)
+
+            # final_result = list(result)
+
+            result = SellDetailInfo.objects.filter(
+                sell__date__date__gte=obj.start_time,
+                sell__date__date__lte=obj.end_time,
+                product_code=obj.get_fp_item,
+                sell__deport=obj.deport,
+            ).values('sell__date', 'quantity')   
+
+            for r in result:
+                r['date'] =r['sell__date']
+                r['specification'] = 'Sale'
+                r['out'] = r['quantity']
+                final_result.append(r)
+                print(r)
+
+            result = final_result
+            in_total = 0
+            out_total = 0
+            for r in result:
+                if(r.get('in')):
+                    in_total += r['in']
+                elif(r.get('out')):
+                    out_total += r['out']
+            opening_stock = obj.get_deport_product_initial_stock()
+            closing_stock = opening_stock + in_total - out_total
+            value = obj.get_fp_item.unit_price * closing_stock
+
+            context = {
+                'result': result,
+                'deport': obj.deport,
+                'fp_item': obj.get_fp_item,
+                'start_time': obj.start_time,
+                'end_time': obj.end_time,
+                'in_total': in_total,
+                'out_total': out_total,
+                'opening_stock': opening_stock,
+                'closing_stock': closing_stock,
+                'value':  value,
+            }
+            return render(request, 'report/sales/ledger_product.html', context)
+
         elif(type == 'specification'):
             result = SellDetailInfo.objects.filter(sell__date__date__gte=obj.start_time,
                                                    sell__date__date__lte=obj.end_time)
@@ -175,8 +243,6 @@ class Report_Admin(admin.ModelAdmin):
                        'end_time': obj.end_time,
                        }
             return render(request, 'report/sales/report_specification.html', context)
-        elif(type == 'ledger_product'):
-            return render(request, 'report/sales/ledger_product.html')
 
         elif(type == 'monthly_party'):
 

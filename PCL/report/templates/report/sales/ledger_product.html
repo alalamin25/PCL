@@ -8,8 +8,11 @@
 
 <div class="table-class">
         <p align="left">General Ledger(product)</p>
-        <p>Date From: </p>
-        <p>Date To: </p>
+        <p>Deport: {{ deport }} </p>
+        <p> {{ fp_item }}</p>
+        <p>Date From: {{ start_time }}</p>
+        <p>Date To: {{ end_time }} </p>
+        <p>{{ opening_stock }}</p>
   <div class="container">
         
 
@@ -33,24 +36,31 @@
         </tr>
       </thead>
       <tbody>
-      {% for rawitem in rawitem_list %}
+      {% for r in result %}
       <tr>
-        <td> </td>
-        <td></td>
-        <td></td>
-        <td></td>
-
-
+        <td> {{ r.date }} </td>
+        <td> {{ r.specification }} </td>
+        <td> {{ r.in }} </td>
+        <td> {{ r.out }} </td>
       </tr>
       {% endfor %}
+      <tr>
+        <td>  </td>
+        <td> </td>
+        <td> {{ in_total }} </td>
+        <td> {{ out_total }} </td>
+      </tr>
+
+
       </tbody>
     </table>
 
 
 
-  <br><br><br><br><br><br>
-
-    
+  <br><br><br>
+<p>Closing Stock: {{ closing_stock }}</p>
+<p>Value: {{ value }}</p>
+    <br><br><br><br><br><br>
   </div>
 </div>
 
