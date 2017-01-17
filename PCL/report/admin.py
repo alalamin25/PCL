@@ -26,6 +26,8 @@ class Report_Admin(admin.ModelAdmin):
                          'middle_category_type', 'lower_category_type', 'fp_item')
     # exclude = ('name',)
     # readonly_fields=('name',)
+    class Media:
+        js = ['/static/js/report.js']
 
     def save_model(self, request, obj, form, change):
         obj.save()

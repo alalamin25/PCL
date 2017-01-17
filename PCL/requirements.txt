@@ -7,6 +7,7 @@ django-ajax-selects==1.5.2
 django-appconf==1.0.2
 django-easy-pdf==0.1.0
 django-grappelli==2.9.1
+django-mathfilters==0.4.0
 django-report-builder==3.4.3
 django-report-utils==0.3.15
 django-reporter==0.1
