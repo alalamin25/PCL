@@ -19,6 +19,47 @@ DEPORT_OPERATION_CHOICES = (
 )
 
 
+class Sell(models.Model):
+
+    transection_no = models.CharField(max_length=100)
+    date = models.DateTimeField(default=now)
+    memo_no = models.CharField(max_length=100)
+    deport = models.ForeignKey(Deport)
+    customer = models.ManyToManyField(Customer)
+
+    grand_total = models.FloatField(
+        verbose_name="Grand Total")
+
+    total_commission = models.FloatField(
+        verbose_name="Total Commission")
+    net_total = models.FloatField(
+        verbose_name="Net Total")
+    # product_id = models.ForeignKey(FPItem)
+    # rate = models.IntegerField(default=0)
+    # # product_id = models.ForeignKey(FPItem)
+    # # quantity = models.IntegerField(default=1)
+
+    # quantity = models.IntegerField(default=1)
+    # commission = models.FloatField(default=1)
+
+    # bank_code = models.ForeignKey(Bank)
+    #
+    total = models.CharField(max_length=100)
+
+
+
+    total = property(net_total)
+
+    @property
+    def get_customer(self):
+        return self.customer.first()
+    get_customer.fget.short_description = "Customer"
+
+    def __str__(self):
+        return self.transection_no
+
+
+
 class DeportOperation(models.Model):
 
     deport_operation = models.CharField(choices=DEPORT_OPERATION_CHOICES,
@@ -78,6 +119,8 @@ class DeportOperation(models.Model):
         null=True)
     customer = models.ManyToManyField(
         Customer, verbose_name="Customer", blank=True)
+    transection_no = models.ForeignKey(Sell, blank=True, null=True)
+    return_rate = models.FloatField(default=0)
     # chalan_no = models.ForeignKey(
     #     Customer, to_field='code', verbose_name="Party")
 
@@ -175,58 +218,7 @@ class Payment(models.Model):
     get_customer.fget.short_description = "Customer"
 
 
-class Sell(models.Model):
 
-    transection_no = models.CharField(max_length=100)
-    date = models.DateTimeField(default=now)
-    memo_no = models.CharField(max_length=100)
-    deport = models.ForeignKey(Deport)
-    customer = models.ManyToManyField(Customer)
-
-    grand_total = models.FloatField(
-        verbose_name="Grand Total")
-
-    total_commission = models.FloatField(
-        verbose_name="Total Commission")
-    net_total = models.FloatField(
-        verbose_name="Net Total")
-    # product_id = models.ForeignKey(FPItem)
-    # rate = models.IntegerField(default=0)
-    # # product_id = models.ForeignKey(FPItem)
-    # # quantity = models.IntegerField(default=1)
-
-    # quantity = models.IntegerField(default=1)
-    # commission = models.FloatField(default=1)
-
-    # bank_code = models.ForeignKey(Bank)
-    #
-    total = models.CharField(max_length=100)
-
-    # @property
-    # def grand_total(self):
-    #     sell_info = SellDetailInfo.objects.filter(sell=self)
-    #     grand_total = 0
-    #     for sell in sell_info:
-    #         grand_total += sell.total
-    #     return grand_total
-
-    # @property
-    # def total_commission(self):
-    #     return 45
-
-    # @property
-    # def net_total(self):
-    #     return 66
-
-    total = property(net_total)
-
-    @property
-    def get_customer(self):
-        return self.customer.first()
-    get_customer.fget.short_description = "Customer"
-
-    def __str__(self):
-        return self.transection_no
 
 
 class SellDetailInfo(models.Model):

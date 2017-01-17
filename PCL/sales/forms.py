@@ -55,13 +55,39 @@ class DeportOperationForm(forms.ModelForm):
         model = DeportOperation
         exclude = ()
 
+
+    def __init__(self, *args, **kwargs):
+        super(DeportOperationForm, self).__init__(*args, **kwargs)
+        # request = kwargs.get('request')
+        # print(request)
+        if self.data and self.data.get('deport_operation') == 'received_from_other_deport':
+            self.fields.get('deport_from_code').required = True
+        if self.data and self.data.get('deport_operation') == 'sales_return':
+            self.fields.get('customer').required = True
+            # self.fields.get('transection_no').required = True
+        if self.data and self.data.get('deport_operation') == 'factory_return':
+            self.fields.get('deport_from_code').required = True
+
+
+            # self.fields.get('customer').required = True
+        # elif (self.data and self.data.get('name') == 'ledger_product'):
+        #     self.fields.get('deport').required = True
+        #     self.fields.get('fp_item').required = True
+        # elif (self.data and self.data.get('name') == 'monthly_party'):
+        #     self.fields.get('deport').required = True
+        #     self.fields.get('customer').required = True
+        # elif (self.data and self.data.get('name') == 'monthly_stock'):
+        #     self.fields.get('deport').required = True
+
+
+
     def clean(self):
         # Validation goes here :)
         customer = self.cleaned_data.get('customer')
         if(customer and customer.count() > 1):
             raise forms.ValidationError("You can select only one customer")
 
-        deport = self.cleaned_data.get('deport')
+        deport = self.cleaned_data.get('deport_code')
         if(deport and customer):
             if(customer.first().deport != deport):
                 raise forms.ValidationError(

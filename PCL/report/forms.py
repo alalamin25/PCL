@@ -19,13 +19,22 @@ class ReportForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ReportForm, self).__init__(*args, **kwargs)
-
+        # request = kwargs.get('request')
+        # print(request)
         if self.data and self.data.get('name') == 'ledger_party':
             self.fields.get('deport').required = True
             self.fields.get('customer').required = True
         elif (self.data and self.data.get('name') == 'ledger_product'):
             self.fields.get('deport').required = True
             self.fields.get('fp_item').required = True
+        elif (self.data and self.data.get('name') == 'monthly_party'):
+            self.fields.get('deport').required = True
+            self.fields.get('customer').required = True
+        elif (self.data and self.data.get('name') == 'monthly_stock'):
+            self.fields.get('deport').required = True
+
+        #     print("\n\n.....nothing done")
+            # self.data.get('name')
 
     def clean(self):
 

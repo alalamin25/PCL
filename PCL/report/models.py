@@ -11,6 +11,7 @@ from sales.models import DeportOperation, SellDetailInfo
 
 class Report(models.Model):
 
+    # name = models.CharField(max_length=100, editable=False)
     start_time = models.DateField()
     end_time = models.DateField()
 
@@ -181,3 +182,4 @@ class Report(models.Model):
         total_out = sell + factory_return
 
         return total_in - total_out
+

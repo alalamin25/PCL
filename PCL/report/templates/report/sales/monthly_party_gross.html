@@ -8,8 +8,8 @@
 
 <div class="table-class">
         <p align="left">Monthly Party Statement(up/ci/all) </p>
-        <p>Date From: </p>
-        <p>Date To: </p>
+        <p>Date From: {{ start_time }}</p>
+        <p>Date To: {{ end_time }} </p>
   <div class="container">
         
 
@@ -49,7 +49,7 @@
         <td> {{ r.total_due }} </td>
         <td> {{ r.payment }} </td>
         <td>  </td>
-        <td> {{ ss }} </td>
+        <td> {{ r.sales_return }} </td>
         <td> {{ r.closing_due }} </td>
         <td> {{ r.closing_advance }} </td>
 

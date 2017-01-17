@@ -1,4 +1,6 @@
 import datetime
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 from io import BytesIO
 from reportlab.pdfgen import canvas
 
@@ -6,7 +8,7 @@ from django.http import HttpResponse
 from django.db.models import Count, Sum, Max
 
 from report.models import Report
-from sales.models import Payment, Sell, SellDetailInfo
+from sales.models import Payment, Sell, SellDetailInfo, DeportOperation
 from master_table.models import Customer, Deport
 
 
@@ -76,10 +78,34 @@ def get_payment(customer=None, deport=None, start_time=None, end_time=None):
     return round(payment, 2)
 
 
+def get_customer_sales_return(customer, start_time, end_time):
+    result = DeportOperation.objects.filter(
+        date__date__gte=start_time,
+        date__date__lte=end_time,
+        deport_operation='sales_return',
+        customer=customer)
+    ret = 0
+    for r in result:
+        ret += r.quantity * r.return_rate
+    # print("\n\n ret price.....")
+    # print(ret)
+    return round(ret, 2)
+
+
+def get_deport_sales_return(deport, start_time, end_time):
+
+    customer = Customer.objects.filter(deport=deport)
+    result = 0
+    for c in customer:
+        result += get_customer_sales_return(c,  start_time=start_time, end_time=end_time)
+
+    return round(result, 2)
+
+
 def get_due(customer=None, date=None, deport=None):
 
     # print("\n\nin get due method")
-    # print(customer)
+    sales_return = 0
     if(deport):
         expense = Sell.objects.filter(
             deport=deport, date__date__lt=date).aggregate(Sum('net_total'))
@@ -94,15 +120,23 @@ def get_due(customer=None, date=None, deport=None):
     if(deport):
         payment = Payment.objects.filter(
             deport=deport, date__date__lt=date).aggregate(Sum('amount'))
+
     else:
         payment = Payment.objects.filter(
             customer=customer, date__date__lt=date).aggregate(Sum('amount'))
+
+        # sales_return = get_customer_sales_return(
+        #     customer=customer, start_time=date+relativedelta(years=10), end_time=date)
+
+        # print("\n\n updaign sales return")
+        # print(sales_return)
+
     if(payment['amount__sum']):
         payment = payment['amount__sum']
     else:
         payment = 0
 
-    val = expense - payment
+    val = expense - payment 
     print(val)
     return round(val, 2)
 

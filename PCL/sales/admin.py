@@ -59,7 +59,7 @@ class Sell_Admin(admin.ModelAdmin):
     filter_horizontal = ('customer',)
     list_display = (
         'date', 'transection_no', 'deport', 'get_customer', 'grand_total', 'total_commission', 'net_total')
-    # search_fields = ('serial_no',)
+    search_fields = ('transection_no', 'memo_no')
     list_filter = ('date', 'deport')
     # raw_id_fields = ( 'customer_code')
     inlines = [SellDetailInfoInline]
@@ -110,7 +110,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
         'date', 'deport_operation', 'deport_code', 'fp_item', 'quantity')
     # search_fields = ('serial_no',)
     list_filter = ('date', 'deport_code')
-    # raw_id_fields = ('fp_item',)
+    raw_id_fields = ('transection_no',)
     filter_horizontal = ('fp_item_many', 'customer')
     fieldsets = [
         (
@@ -139,7 +139,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
 
         (
             'If Deport Operation is Sales Return Then Fill this up :', {
-                'fields': ['customer', ]}
+                'fields': ['customer', 'return_rate', 'transection_no']}
         ),
     ]
 

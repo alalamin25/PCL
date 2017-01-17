@@ -15,7 +15,7 @@ from sales.models import Payment, Sell, SellDetailInfo, DeportOperation
 from master_table.models import Customer, Deport, FPItem
 from report.forms import ReportForm
 from report.util import get_due, get_grand_total, get_total_commission,\
-    get_net_total, get_payment
+    get_net_total, get_payment, get_customer_sales_return, get_deport_sales_return
 # from report.util import FinishedProductReport_PDF
 
 
@@ -24,6 +24,8 @@ class Report_Admin(admin.ModelAdmin):
     form = ReportForm
     filter_horizontal = ('customer', 'fundamental_type',
                          'middle_category_type', 'lower_category_type', 'fp_item')
+    # exclude = ('name',)
+    # readonly_fields=('name',)
 
     def save_model(self, request, obj, form, change):
         obj.save()
@@ -76,6 +78,7 @@ class Report_Admin(admin.ModelAdmin):
             fields.remove('lower_category_type')
             fields.remove('customer')
             fields.remove('fp_item')
+            fields.remove('deport')
         elif(type == 'monthly_stock'):
             fields.remove('fundamental_type')
             fields.remove('middle_category_type')
@@ -97,7 +100,7 @@ class Report_Admin(admin.ModelAdmin):
             # fields.remove('customer')
             # fields.remove('fp_item')
             # fields.remove('deport')
-
+        # fields.remove('name')
         return fields
 
     def response_add(self, request, obj, post_url_continue=None):
@@ -180,10 +183,10 @@ class Report_Admin(admin.ModelAdmin):
                 sell__date__date__lte=obj.end_time,
                 product_code=obj.get_fp_item,
                 sell__deport=obj.deport,
-            ).values('sell__date', 'quantity')   
+            ).values('sell__date', 'quantity')
 
             for r in result:
-                r['date'] =r['sell__date']
+                r['date'] = r['sell__date']
                 r['specification'] = 'Sale'
                 r['out'] = r['quantity']
                 final_result.append(r)
@@ -252,6 +255,7 @@ class Report_Admin(admin.ModelAdmin):
                 # r.namee = 'alamin'
                 customer = Customer.objects.get(id=r['id'])
                 due = get_due(customer=customer, date=obj.start_time)
+                due -= get_customer_sales_return(customer=customer, start_time=obj.start_time, end_time=obj.end_time)
                 o_due = 0
                 o_adv = 0
                 if(due > 0):
@@ -262,28 +266,33 @@ class Report_Admin(admin.ModelAdmin):
                 r['opening_due'] = o_due
                 r['opening_advance'] = o_adv
                 r['grand_total'] = get_grand_total(
-                    customer, obj.start_time, obj.end_time)
+                    customer=customer, start_time=obj.start_time, end_time=obj.end_time)
                 r['total_commission'] = get_total_commission(
-                    customer, obj.start_time, obj.end_time)
+                    customer=customer, start_time=obj.start_time, end_time=obj.end_time)
                 r['net_total'] = get_net_total(
-                    customer, obj.start_time, obj.end_time)
+                    customer=customer, start_time=obj.start_time, end_time=obj.end_time)
                 r['total_due'] = r['opening_due'] + r['net_total']
                 r['payment'] = get_payment(
-                    customer, obj.start_time, obj.end_time)
+                    customer=customer, start_time=obj.start_time, end_time=obj.end_time)
+
+
+                r['sales_return'] = get_customer_sales_return(customer=customer,
+                                                              start_time=obj.start_time,
+                                                              end_time=obj.end_time)
 
                 due = get_due(
                     customer=customer, date=obj.end_time+datetime.timedelta(days=1))
+                due -= r['sales_return']
                 c_due = 0
                 c_adv = 0
                 if(due >= 0):
                     c_due = due
                 else:
                     c_adv = -1 * due
-
                 r['closing_due'] = c_due
                 r['closing_advance'] = c_adv
             # print(result)
-            print(len(result))
+            # print(len(result))
             # print(result)
 
             # print(result)
@@ -301,6 +310,7 @@ class Report_Admin(admin.ModelAdmin):
                 # r.namee = 'alamin'
                 deport = Deport.objects.get(id=r['id'])
                 due = get_due(deport=deport, date=obj.start_time)
+                due -= get_deport_sales_return(deport=deport, start_time=obj.start_time, end_time=obj.end_time)
                 o_due = 0
                 o_adv = 0
                 if(due > 0):
@@ -323,9 +333,12 @@ class Report_Admin(admin.ModelAdmin):
                 r['payment'] = get_payment(
                     deport=deport, start_time=obj.start_time,
                     end_time=obj.end_time)
-
+                r['sales_return'] = get_deport_sales_return(deport=deport,
+                                                              start_time=obj.start_time,
+                                                              end_time=obj.end_time)
                 due = get_due(
                     deport=deport, date=obj.end_time+datetime.timedelta(days=1))
+                due = due - r['sales_return']               
                 c_due = 0
                 c_adv = 0
                 if(due >= 0):

@@ -82,7 +82,7 @@ class Customer(models.Model):
     deport = models.ForeignKey(Deport)
 
     def __str__(self):
-        return self.code + ' ' + self.name
+        return self.code + ' ' + self.deport.name + ' ' + self.name
 
 
 class FundamentalProductType(models.Model):
