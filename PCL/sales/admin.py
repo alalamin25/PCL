@@ -10,7 +10,7 @@ class ExpenseDetail_Admin(admin.ModelAdmin):
 
     form = ExpenseDetailForm
     list_display = (
-        'date', 'get_deport','invoice_no', 'get_expense_criteria', 'amount', 'detail')
+        'date', 'get_deport', 'invoice_no', 'get_expense_criteria', 'amount', 'detail')
     search_fields = ('expense_criteria',)
     list_filter = ('date', 'expense_criteria', 'deport', )
     filter_horizontal = ('deport', 'expense_criteria')
@@ -47,8 +47,14 @@ class Payment_Admin(admin.ModelAdmin):
         js = ['/static/js/custom.js']
 
 
-class SellDetailInfoInline(admin.TabularInline):
+class SellDetailInfoInline(admin.StackedInline):
     raw_id_fields = ('product_code', )
+    # readonly_fields = ('product_code_text',)
+    fields = ('product_code', 'product_code_text', 'fundamental_type',
+    'middle_category_type', 'lower_category_type', 'finished_product_item', 'rate', 'quantity',
+    'total', 'commission', 'net_total', )
+
+
     model = SellDetailInfo
     extra = 0
 
@@ -59,12 +65,13 @@ class Sell_Admin(admin.ModelAdmin):
     filter_horizontal = ('customer',)
     list_display = (
         'date', 'transection_no', 'deport', 'get_customer', 'grand_total', 'total_commission', 'net_total')
-    search_fields = ('transection_no', 'memo_no')
-    list_filter = ('date', 'deport')
+    search_fields=('transection_no', 'memo_no')
+    list_filter=('date', 'deport')
     # raw_id_fields = ( 'customer_code')
-    inlines = [SellDetailInfoInline]
+    inlines=[SellDetailInfoInline]
+    # StackedInline = [SellDetailInfoInline]
 
-    fieldsets = [
+    fieldsets=[
         (
             'Head Info: ', {'fields': ['transection_no', 'date', 'memo_no',
                                        'deport', 'customer',
@@ -76,7 +83,6 @@ class Sell_Admin(admin.ModelAdmin):
         ),
     ]
     # change_form_template = 'commo/change_form.html'
-
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(Sell_Admin, self).get_form(request, obj, **kwargs)
@@ -92,11 +98,10 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
 
     form = SellDetailInfoForm
 
-
     list_display = (
-         'product_code', 'rate', 'quantity', 'total')
+        'product_code', 'rate', 'quantity', 'total')
 
-    formfield_overrides = {
+    formfield_overrides={
         models.CharField: {'widget': TextInput(attrs={'size': '5'})},
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
@@ -109,10 +114,10 @@ class DeportOperation_Admin(admin.ModelAdmin):
     list_display = (
         'date', 'deport_operation', 'deport_code', 'fp_item', 'quantity')
     # search_fields = ('serial_no',)
-    list_filter = ('date', 'deport_code')
-    raw_id_fields = ('transection_no',)
-    filter_horizontal = ('fp_item_many', 'customer')
-    fieldsets = [
+    list_filter=('date', 'deport_code')
+    raw_id_fields=('transection_no',)
+    filter_horizontal=('fp_item_many', 'customer')
+    fieldsets=[
         (
             'Basic Info: ', {
                 'fields': ['deport_operation', 'deport_code',  'date', 'quantity']}
@@ -152,7 +157,6 @@ class DeportOperation_Admin(admin.ModelAdmin):
         if(obj.fp_item_chained):
             obj.fp_item = obj.fp_item_chained
         obj.save()
-
 
 
 admin.site.register(Payment, Payment_Admin)

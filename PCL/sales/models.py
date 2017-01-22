@@ -123,7 +123,7 @@ class DeportOperation(models.Model):
     customer = models.ManyToManyField(
         Customer, verbose_name="Customer", blank=True)
     transection_no = models.ForeignKey(Sell, blank=True, null=True)
-    return_rate = models.FloatField(default=0)
+    return_rate = models.FloatField()
     # chalan_no = models.ForeignKey(
     #     Customer, to_field='code', verbose_name="Party")
 
@@ -236,7 +236,7 @@ class SellDetailInfo(models.Model):
     )
 
     product_code_text = models.CharField(
-        max_length=100, blank=True, null=True, verbose_name="")
+        max_length=30, blank=True, null=True, verbose_name="code")
 
     rate = models.FloatField(default=0)
     quantity = models.FloatField(default=1)
