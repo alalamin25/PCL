@@ -323,6 +323,12 @@ class CPItemEntry(models.Model):
     def __str__(self):
         return self.cp_item.fp_item.name
 
+    def clean(self, *args, **kwargs):
+        if (self.finished_production_item.is_cp):
+            raise ValidationError('A Compound Item cant consist of another compound Item')
+        super(CPItemEntry, self).clean(*args, **kwargs)
+
+
 
 class Shift(models.Model):
     name = models.CharField(max_length=100)
