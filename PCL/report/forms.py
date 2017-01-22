@@ -29,7 +29,7 @@ class ReportForm(forms.ModelForm):
             self.fields.get('fp_item').required = True
         elif (self.data and self.data.get('name') == 'monthly_party'):
             self.fields.get('deport').required = True
-            self.fields.get('customer').required = True
+            # self.fields.get('customer').required = True
         elif (self.data and self.data.get('name') == 'monthly_stock'):
             self.fields.get('deport').required = True
         elif (self.data and self.data.get('name') == 'shift_daily_production'):

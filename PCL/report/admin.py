@@ -79,7 +79,7 @@ class Report_Admin(admin.ModelAdmin):
         elif(type == 'monthly_party'):
             # fields.remove('fundamental_type')
             fields.append('deport')
-            fields.append('customer')
+            # fields.append('customer')
             fields.append('fundamental_type')
         elif(type == 'monthly_party_gross'):
             pass
@@ -252,7 +252,7 @@ class Report_Admin(admin.ModelAdmin):
 
         elif(type == 'monthly_party'):
 
-            result = Customer.objects.all().values()
+            result = Customer.objects.filter(deport=obj.deport).values()
 
             for r in result:
                 # r.namee = 'alamin'
@@ -300,6 +300,7 @@ class Report_Admin(admin.ModelAdmin):
 
             # print(result)
             context = {'result': result,
+                        'deport': obj.deport,
                        'start_time': obj.start_time,
                        'end_time': obj.end_time,
                        }
