@@ -24,7 +24,7 @@ class Sell(models.Model):
     transection_no = models.CharField(max_length=100)
     date = models.DateTimeField(default=now)
     memo_no = models.CharField(max_length=100)
-    deport = models.ForeignKey(Deport)
+    deport = models.ForeignKey(Deport, verbose_name='Depot')
     customer = models.ManyToManyField(Customer)
 
     grand_total = models.FloatField(
@@ -45,10 +45,13 @@ class Sell(models.Model):
     # bank_code = models.ForeignKey(Bank)
     #
     total = models.CharField(max_length=100)
-
-
-
     total = property(net_total)
+
+    class Meta:
+        verbose_name = "Sale "
+        verbose_name_plural = "Sales"
+
+
 
     @property
     def get_customer(self):
@@ -113,7 +116,7 @@ class DeportOperation(models.Model):
 
     deport_from_code = models.ForeignKey(
         Deport, to_field='code',
-        verbose_name="Deport From",
+        verbose_name="Depot From",
         related_name="deport_from_code",
         blank=True,
         null=True)
@@ -138,7 +141,7 @@ class ExpenseDetail(models.Model):
     date = models.DateTimeField(default=now)
     # serial_no = models.CharField(max_length=100, unique=True)
     # deport_many = models.ManyToManyField(Deport, blank=True, related_name='ed_deport_m')
-    deport = models.ManyToManyField(Deport)
+    deport = models.ManyToManyField(Deport, verbose_name='Depot')
     # expense_criteria_many = models.ManyToManyField(
     # ExpenseCriteria, verbose_name="Expense Specification",
     # related_name='ed_exc_m')
@@ -161,7 +164,7 @@ class ExpenseDetail(models.Model):
     @property
     def get_deport(self):
         return self.deport.first()
-    get_deport.fget.short_description = "Deport Name"
+    get_deport.fget.short_description = "Depot Name"
 
     @property
     def get_expense_criteria(self):
@@ -173,7 +176,7 @@ class Payment(models.Model):
 
     serial_no = models.CharField(max_length=100, unique=True)
     deport = models.ForeignKey(
-        Deport, verbose_name="Deport")
+        Deport, verbose_name="Depot")
     # deport_code_text = models.CharField(
     #     max_length=100, blank=True, null=True, verbose_name="")
 

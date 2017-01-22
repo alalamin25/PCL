@@ -25,7 +25,7 @@ class Code(models.Model):
         "Bank Code: ", max_length=3)
 
     deport_code = models.CharField(
-        "Deport Code: ", max_length=3)
+        "Depot Code: ", max_length=3)
 
     def clean(self, *args, **kwargs):
 
@@ -74,12 +74,17 @@ class Deport(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Depot"
+        verbose_name_plural = "Depotes"
+
+
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField(blank=True, null=True)
     code = models.CharField(max_length=5, unique=True, blank=True, null=True)
-    deport = models.ForeignKey(Deport)
+    deport = models.ForeignKey(Deport, verbose_name='Depot')
 
     def __str__(self):
         return self.code + ' ' + self.deport.name + ' ' + self.name
@@ -325,9 +330,9 @@ class CPItemEntry(models.Model):
 
     def clean(self, *args, **kwargs):
         if (self.finished_production_item.is_cp):
-            raise ValidationError('A Compound Item cant consist of another compound Item')
+            raise ValidationError(
+                'A Compound Item cant consist of another compound Item')
         super(CPItemEntry, self).clean(*args, **kwargs)
-
 
 
 class Shift(models.Model):

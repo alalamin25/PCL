@@ -158,5 +158,5 @@ class DeportOperation_Admin(admin.ModelAdmin):
 admin.site.register(Payment, Payment_Admin)
 admin.site.register(Sell, Sell_Admin)
 admin.site.register(ExpenseDetail, ExpenseDetail_Admin)
-admin.site.register(SellDetailInfo, SellDetailInfo_Admin)
+# admin.site.register(SellDetailInfo, SellDetailInfo_Admin)
 admin.site.register(DeportOperation, DeportOperation_Admin)
