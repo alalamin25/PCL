@@ -71,7 +71,7 @@ class Report_Admin(admin.ModelAdmin):
         fields.remove('deport')
         fields.remove('raw_item_report_choices')
         if(type == 'ledger_party'):
-            fields.append('deport')
+            # fields.append('deport')
             fields.append('customer')
         elif(type == 'ledger_product'):
             fields.append('deport')
@@ -80,7 +80,7 @@ class Report_Admin(admin.ModelAdmin):
             # fields.remove('fundamental_type')
             fields.append('deport')
             # fields.append('customer')
-            fields.append('fundamental_type')
+            # fields.append('fundamental_type')
         elif(type == 'monthly_party_gross'):
             pass
 
@@ -112,7 +112,7 @@ class Report_Admin(admin.ModelAdmin):
 
         if(type == 'ledger_party'):
             result = []
-            print(obj.get_customer)
+            # print(obj.get_customer)
             payment = Payment.objects.filter(
                 customer=obj.get_customer).values()
 
@@ -125,8 +125,8 @@ class Report_Admin(admin.ModelAdmin):
                 item['specification'] = 'Sale'
                 result.append(item)
             result = sorted(result, key=itemgetter('date'))
-            print(result)
-            print(len(payment))
+            # print(result)
+            # print(len(payment))
             opening_due = get_due(
                 customer=obj.get_customer, date=obj.start_time)
             closing_due = get_due(
@@ -231,13 +231,13 @@ class Report_Admin(admin.ModelAdmin):
                 result = result.filter(sell__customer=obj.get_customer)
             if(obj.fundamental_type.all()):
                 result = result.filter(
-                    product_code__fundamental_type=obj.fundamental_type.all())
+                    product_code__fundamental_type__in=obj.fundamental_type.all())
             if(obj.middle_category_type.all()):
                 result = result.filter(
-                    product_code__middle_category_type=obj.middle_category_type.all())
+                    product_code__middle_category_type__in=obj.middle_category_type.all())
             if(obj.lower_category_type.all()):
                 result = result.filter(
-                    product_code__lower_category_type=obj.lower_category_type.all())
+                    product_code__lower_category_type__in=obj.lower_category_type.all())
             if(obj.fp_item.all()):
                 # print(obj.fp_item.all())
                 result = result.filter(
@@ -262,7 +262,7 @@ class Report_Admin(admin.ModelAdmin):
                     customer=customer, start_time=obj.start_time, end_time=obj.end_time)
                 o_due = 0
                 o_adv = 0
-                if(due > 0):
+                if(due >= 0):
                     o_due = due
                 else:
                     o_adv = -1 * due
@@ -318,7 +318,7 @@ class Report_Admin(admin.ModelAdmin):
                                                start_time=obj.start_time, end_time=obj.end_time)
                 o_due = 0
                 o_adv = 0
-                if(due > 0):
+                if(due >= 0):
                     o_due = due
                 else:
                     o_adv = -1 * due

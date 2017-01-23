@@ -22,7 +22,7 @@ class ReportForm(forms.ModelForm):
         # request = kwargs.get('request')
         # print(request)
         if self.data and self.data.get('name') == 'ledger_party':
-            self.fields.get('deport').required = True
+            # self.fields.get('deport').required = True
             self.fields.get('customer').required = True
         elif (self.data and self.data.get('name') == 'ledger_product'):
             self.fields.get('deport').required = True
@@ -62,6 +62,21 @@ class ReportForm(forms.ModelForm):
             if(fp_item and fp_item.count() > 1):
                 raise forms.ValidationError("You can select only one product")
 
+        # select = self.cleaned_data.get('fundamental_type')
+        # if(select and select.count() > 1):
+        #     raise forms.ValidationError("You can select only one fundamental type")
+
+        # select = self.cleaned_data.get('middle_category_type')
+        # if(select and select.count() > 1):
+        #     raise forms.ValidationError("You can select only one middle category type")
+
+        # select = self.cleaned_data.get('lower_category_type')
+        # if(select and select.count() > 1):
+        #     raise forms.ValidationError("You can select only one Lower Category type")
+
+        # select = self.cleaned_data.get('fundamental_type')
+        # if(select and select.count() > 1):
+        #     raise forms.ValidationError("You can select only one fundamental type")
 
 class SelectionForm(forms.Form):
 
