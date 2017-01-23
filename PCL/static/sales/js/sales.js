@@ -57,7 +57,10 @@ function isNumber(n) {
 function calculateTotal()
 {
 
-    var basic_id = $(this).find(':first-child').attr('id');
+    // var basic_id = $(this).find(':first-child').attr('id');
+    var basic_id = $(this).find('input').attr('id');
+    console.log("basic id");
+    console.log(basic_id);
     var index = basic_id.lastIndexOf('-');
     basic_id = basic_id.substring(0, index);
 
