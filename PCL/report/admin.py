@@ -36,7 +36,7 @@ class Report_Admin(admin.ModelAdmin):
     def add_view(self, request, extra_context=None):
 
         extra_context = extra_context or {}
-        extra_context['title'] = 'alamin'
+        extra_context['title'] = 'Report'
         return super(Report_Admin, self).add_view(request, extra_context=extra_context)
 
     def get_form(self, request, obj=None, **kwargs):
