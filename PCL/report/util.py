@@ -137,7 +137,7 @@ def get_due(customer=None, date=None, deport=None):
         payment = 0
 
     val = expense - payment 
-    print(val)
+    # print(val)
     return round(val, 2)
 
 

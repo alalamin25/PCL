@@ -203,8 +203,8 @@ class Report(models.Model):
             sell__deport=self.deport,
         ).aggregate(total_in=Sum('quantity'))['total_in']
         sell = int(sell or 0)
-        print(incoming)
-        print(factory_return)
+        # print(incoming)
+        # print(factory_return)
 
         total_in = incoming - factory_return
         total_out = sell + factory_return
