@@ -110,159 +110,7 @@ class Report_Admin(admin.ModelAdmin):
 
         type = request.GET.get('type')
 
-        if(type == 'ledger_party'):
-            result = []
-            # print(obj.get_customer)
-            payment = Payment.objects.filter(
-                customer=obj.get_customer).values()
-
-            sell = Sell.objects.filter(customer=obj.get_customer).values()
-
-            for item in payment:
-                item['specification'] = 'Payment'
-                result.append(item)
-            for item in sell:
-                item['specification'] = 'Sale'
-                result.append(item)
-            result = sorted(result, key=itemgetter('date'))
-            # print(result)
-            # print(len(payment))
-            opening_due = get_due(
-                customer=obj.get_customer, date=obj.start_time)
-            closing_due = get_due(
-                customer=obj.get_customer, date=obj.end_time+datetime.timedelta(days=1))
-            opening_advance = 0
-            closing_advance = 0
-            if(opening_due < 0):
-                opening_advance = -1 * opening_due
-                opening_due = 0
-            if(closing_due < 0):
-                closing_advance = -1 * closing_due
-                closing_due = 0
-
-            context = {'result': result,
-                       'opening_due': opening_due,
-                       'closing_due': closing_due,
-                       'opening_advance': opening_advance,
-                       'closing_advance': closing_advance,
-                       'deport': obj.deport,
-                       'customer': obj.get_customer,
-                       'start_time': obj.start_time,
-                       'end_time': obj.end_time,
-                       }
-
-            return render(request, 'report/sales/ledger_party.html', context)
-
-        elif(type == 'ledger_product'):
-
-            result = DeportOperation.objects.filter(
-                date__date__gte=obj.start_time,
-                date__date__lte=obj.end_time,
-                fp_item=obj.get_fp_item,
-                deport_code=obj.deport
-            ).values()
-
-            final_result = []
-            for r in result:
-                if(r['deport_operation'] == 'new'):
-                    r['specification'] = 'New Arrival'
-                    r['in'] = r['quantity']
-                elif(r['deport_operation'] == 'received_from_other_deport'):
-                    r['specification'] = 'Received From Other Deport'
-                    r['in'] = r['quantity']
-                elif(r['deport_operation'] == 'sales_return'):
-                    r['specification'] = 'Sales Return'
-                    r['in'] = r['quantity']
-                elif(r['deport_operation'] == 'factory_return'):
-                    r['specification'] = 'Factory Return'
-                    r['out'] = r['quantity']
-
-                final_result.append(r)
-
-            # final_result = list(result)
-
-            result = SellDetailInfo.objects.filter(
-                sell__date__date__gte=obj.start_time,
-                sell__date__date__lte=obj.end_time,
-                product_code=obj.get_fp_item,
-                sell__deport=obj.deport,
-            ).values('sell__date', 'quantity')
-
-            for r in result:
-                r['date'] = r['sell__date']
-                r['specification'] = 'Sale'
-                r['out'] = r['quantity']
-                final_result.append(r)
-                print(r)
-
-            result = final_result
-            in_total = 0
-            out_total = 0
-            for r in result:
-                if(r.get('in')):
-                    in_total += r['in']
-                elif(r.get('out')):
-                    out_total += r['out']
-            opening_stock = obj.get_deport_product_initial_stock()
-            closing_stock = opening_stock + in_total - out_total
-            value = obj.get_fp_item.unit_price * closing_stock
-
-            context = {
-                'result': result,
-                'deport': obj.deport,
-                'fp_item': obj.get_fp_item,
-                'start_time': obj.start_time,
-                'end_time': obj.end_time,
-                'in_total': in_total,
-                'out_total': out_total,
-                'opening_stock': opening_stock,
-                'closing_stock': closing_stock,
-                'value':  value,
-            }
-            return render(request, 'report/sales/ledger_product.html', context)
-
-        elif(type == 'specification'):
-
-            result = SellDetailInfo.objects.filter(sell__date__date__gte=obj.start_time,
-                                                   sell__date__date__lte=obj.end_time)
-            if(obj.deport):
-                result = result.filter(sell__deport=obj.deport)
-
-            if(obj.get_customer):
-                result = result.filter(sell__customer=obj.get_customer)
-            if(obj.fundamental_type.all()):
-                result = result.filter(
-                    product_code__fundamental_type__in=obj.fundamental_type.all())
-            if(obj.middle_category_type.all()):
-                result = result.filter(
-                    product_code__middle_category_type__in=obj.middle_category_type.all())
-            if(obj.lower_category_type.all()):
-                result = result.filter(
-                    product_code__lower_category_type__in=obj.lower_category_type.all())
-            if(obj.fp_item.all()):
-                # print(obj.fp_item.all())
-                result = result.filter(
-                    product_code__in=obj.fp_item.all())
-
-            print(result)
-            total_total = 0
-            commission_total = 0
-            net_total_total = 0
-            for r in result:
-                total_total += r.total                
-                net_total_total += r.net_total
-                commission_total += r.total - r.net_total
-
-            context = {'result': result,
-                       'start_time': obj.start_time,
-                       'end_time': obj.end_time,
-                       'total_total': total_total,                       
-                       'net_total_total': net_total_total,
-                       'commission_total': commission_total,
-                       }
-            return render(request, 'report/sales/report_specification.html', context)
-
-        elif(type == 'monthly_party'):
+        if(type == 'monthly_party'):
 
             result = Customer.objects.filter(deport=obj.deport).values()
 
@@ -366,7 +214,7 @@ class Report_Admin(admin.ModelAdmin):
                 r['closing_due'] = c_due
                 r['closing_advance'] = c_adv
 
-            print(result)
+            # print(result)
 
             context = {'result': result,
                        'start_time': obj.start_time,
@@ -410,7 +258,7 @@ class Report_Admin(admin.ModelAdmin):
                     r['factory_return'] + r['return_to_other_deport']
                 r['closing_stock'] = r['total_stock'] - r['total_outgoing']
                 r['gross_total'] = r['closing_stock'] * r['unit_price']
-            print(result)
+            # print(result)
 
             context = {'result': result,
                        'start_time': obj.start_time,
@@ -455,6 +303,18 @@ class Report_Admin(admin.ModelAdmin):
 
         elif(type == 'monthly_stock_gross'):
 
+            opening_stock_total = 0
+            new_total = 0
+            received_from_other_deport_total = 0
+            sales_return_total = 0
+            total_stock_total = 0
+            sell_total = 0
+            factory_return_total = 0
+            return_to_other_deport_total = 0
+            total_outgoing_total = 0
+            closing_stock_total = 0
+            gross_total_total = 0
+
             result = Deport.objects.all().distinct().values()
             for r in result:
                 # print(r)
@@ -487,14 +347,190 @@ class Report_Admin(admin.ModelAdmin):
                     r['factory_return'] + r['return_to_other_deport']
                 r['closing_stock'] = r['total_stock'] - r['total_outgoing']
                 r['gross_total'] = obj.get_deport_gross_total(deport=deport)
-            print(result)
+
+                opening_stock_total += r['opening_stock']
+                new_total += r['new']
+                received_from_other_deport_total += r['received_from_other_deport']
+                sales_return_total += r['sales_return']
+                total_stock_total += r['total_stock']
+                sell_total += r['sell']
+                factory_return_total += r['factory_return']
+                return_to_other_deport_total += r['return_to_other_deport']
+                total_outgoing_total += r['total_outgoing']
+                closing_stock_total += r['closing_stock']
+                gross_total_total += r['gross_total']
+
+            # print(result)
 
             context = {'result': result,
                        'start_time': obj.start_time,
                        'end_time': obj.end_time,
+                       'opening_stock_total': opening_stock_total,
+                       'new_total': new_total,
+                       'received_from_other_deport_total': received_from_other_deport_total,
+                       'sales_return_total': sales_return_total,
+                       'total_stock_total': total_stock_total,
+                       'sell_total': sell_total,
+                       'factory_return_total': factory_return_total,
+                       'return_to_other_deport_total': return_to_other_deport_total,
+                       'total_outgoing_total': total_outgoing_total,
+                       'closing_stock_total': closing_stock_total,
+                       'gross_total_total': gross_total_total,
                        }
 
             return render(request, 'report/sales/monthly_stock_gross.html', context)
+
+        elif(type == 'ledger_party'):
+            result = []
+            # print(obj.get_customer)
+            payment = Payment.objects.filter(
+                customer=obj.get_customer).values()
+
+            sell = Sell.objects.filter(customer=obj.get_customer).values()
+
+            for item in payment:
+                item['specification'] = 'Payment'
+                result.append(item)
+            for item in sell:
+                item['specification'] = 'Sale'
+                result.append(item)
+            result = sorted(result, key=itemgetter('date'))
+            # print(result)
+            # print(len(payment))
+            opening_due = get_due(
+                customer=obj.get_customer, date=obj.start_time)
+            closing_due = get_due(
+                customer=obj.get_customer, date=obj.end_time+datetime.timedelta(days=1))
+            opening_advance = 0
+            closing_advance = 0
+            if(opening_due < 0):
+                opening_advance = -1 * opening_due
+                opening_due = 0
+            if(closing_due < 0):
+                closing_advance = -1 * closing_due
+                closing_due = 0
+
+            context = {'result': result,
+                       'opening_due': opening_due,
+                       'closing_due': closing_due,
+                       'opening_advance': opening_advance,
+                       'closing_advance': closing_advance,
+                       'deport': obj.deport,
+                       'customer': obj.get_customer,
+                       'start_time': obj.start_time,
+                       'end_time': obj.end_time,
+                       }
+
+            return render(request, 'report/sales/ledger_party.html', context)
+
+        elif(type == 'ledger_product'):
+
+            result = DeportOperation.objects.filter(
+                date__date__gte=obj.start_time,
+                date__date__lte=obj.end_time,
+                fp_item=obj.get_fp_item,
+                deport_code=obj.deport
+            ).values()
+
+            final_result = []
+            for r in result:
+                if(r['deport_operation'] == 'new'):
+                    r['specification'] = 'New Arrival'
+                    r['in'] = r['quantity']
+                elif(r['deport_operation'] == 'received_from_other_deport'):
+                    r['specification'] = 'Received From Other Deport'
+                    r['in'] = r['quantity']
+                elif(r['deport_operation'] == 'sales_return'):
+                    r['specification'] = 'Sales Return'
+                    r['in'] = r['quantity']
+                elif(r['deport_operation'] == 'factory_return'):
+                    r['specification'] = 'Factory Return'
+                    r['out'] = r['quantity']
+
+                final_result.append(r)
+
+            # final_result = list(result)
+
+            result = SellDetailInfo.objects.filter(
+                sell__date__date__gte=obj.start_time,
+                sell__date__date__lte=obj.end_time,
+                product_code=obj.get_fp_item,
+                sell__deport=obj.deport,
+            ).values('sell__date', 'quantity')
+
+            for r in result:
+                r['date'] = r['sell__date']
+                r['specification'] = 'Sale'
+                r['out'] = r['quantity']
+                final_result.append(r)
+                # print(r)
+
+            result = final_result
+            in_total = 0
+            out_total = 0
+            for r in result:
+                if(r.get('in')):
+                    in_total += r['in']
+                elif(r.get('out')):
+                    out_total += r['out']
+            opening_stock = obj.get_deport_product_initial_stock()
+            closing_stock = opening_stock + in_total - out_total
+            value = obj.get_fp_item.unit_price * closing_stock
+
+            context = {
+                'result': result,
+                'deport': obj.deport,
+                'fp_item': obj.get_fp_item,
+                'start_time': obj.start_time,
+                'end_time': obj.end_time,
+                'in_total': in_total,
+                'out_total': out_total,
+                'opening_stock': opening_stock,
+                'closing_stock': closing_stock,
+                'value':  value,
+            }
+            return render(request, 'report/sales/ledger_product.html', context)
+
+        elif(type == 'specification'):
+
+            result = SellDetailInfo.objects.filter(sell__date__date__gte=obj.start_time,
+                                                   sell__date__date__lte=obj.end_time)
+            if(obj.deport):
+                result = result.filter(sell__deport=obj.deport)
+
+            if(obj.get_customer):
+                result = result.filter(sell__customer=obj.get_customer)
+            if(obj.fundamental_type.all()):
+                result = result.filter(
+                    product_code__fundamental_type__in=obj.fundamental_type.all())
+            if(obj.middle_category_type.all()):
+                result = result.filter(
+                    product_code__middle_category_type__in=obj.middle_category_type.all())
+            if(obj.lower_category_type.all()):
+                result = result.filter(
+                    product_code__lower_category_type__in=obj.lower_category_type.all())
+            if(obj.fp_item.all()):
+                # print(obj.fp_item.all())
+                result = result.filter(
+                    product_code__in=obj.fp_item.all())
+
+            print(result)
+            total_total = 0
+            commission_total = 0
+            net_total_total = 0
+            for r in result:
+                total_total += r.total
+                net_total_total += r.net_total
+                commission_total += r.total - r.net_total
+
+            context = {'result': result,
+                       'start_time': obj.start_time,
+                       'end_time': obj.end_time,
+                       'total_total': total_total,
+                       'net_total_total': net_total_total,
+                       'commission_total': commission_total,
+                       }
+            return render(request, 'report/sales/report_specification.html', context)
 
         elif(type == 'daily_production'):
 
