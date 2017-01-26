@@ -168,7 +168,7 @@ class Customer_Admin(admin.ModelAdmin):
         ),
 
         (
-            'Unique Code For The Customer: ', {'fields': ['code']}
+            'Unique Code(5 digit number) For The Customer(If blank then automatically be added): ', {'fields': ['code']}
         ),
 
         (

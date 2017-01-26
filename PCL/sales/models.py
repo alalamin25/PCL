@@ -174,7 +174,7 @@ class ExpenseDetail(models.Model):
 
 class Payment(models.Model):
 
-    serial_no = models.CharField(max_length=100, unique=True)
+    serial_no = models.CharField(max_length=100)
     deport = models.ForeignKey(
         Deport, verbose_name="Depot")
     # deport_code_text = models.CharField(
@@ -188,7 +188,7 @@ class Payment(models.Model):
                                       max_length=30,
                                       help_text='Select Payment Option: ')
 
-    transection_no = models.CharField(max_length=100, unique=True)
+    transection_no = models.CharField(max_length=100)
     amount = models.IntegerField(default=0)
 
     bank = models.ForeignKey(

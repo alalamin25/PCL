@@ -112,8 +112,18 @@ class Report_Admin(admin.ModelAdmin):
 
         if(type == 'monthly_party'):
 
-            result = Customer.objects.filter(deport=obj.deport).values()
+            opening_due_total = 0
+            opening_advance_total = 0
+            grand_total_total = 0
+            total_commission_total = 0
+            net_total_total = 0
+            total_due_total = 0
+            payment_total = 0
+            sales_return_total = 0
+            closing_due_total = 0
+            closing_advance_total = 0
 
+            result = Customer.objects.filter(deport=obj.deport).values()
             for r in result:
                 # r.namee = 'alamin'
                 customer = Customer.objects.get(id=r['id'])
@@ -154,16 +164,47 @@ class Report_Admin(admin.ModelAdmin):
                     c_adv = -1 * due
                 r['closing_due'] = c_due
                 r['closing_advance'] = c_adv
+
+
+                opening_due_total += r['opening_due']
+                opening_advance_total += r['opening_advance']
+                grand_total_total += r['grand_total']
+                total_commission_total += r['total_commission']
+                net_total_total += r['net_total']
+                total_due_total += r['total_due']
+                payment_total += r['payment']
+                sales_return_total += r['sales_return']
+                closing_due_total += r['closing_due']
+                closing_advance_total += r['closing_advance']
+
+
+
+
+
             # print(result)
             # print(len(result))
             # print(result)
 
             # print(result)
-            context = {'result': result,
-                       'deport': obj.deport,
-                       'start_time': obj.start_time,
-                       'end_time': obj.end_time,
-                       }
+            context = {
+                'result': result,
+                'deport': obj.deport,
+                'start_time': obj.start_time,
+                'end_time': obj.end_time,
+
+                'opening_due_total': opening_due_total,
+                'opening_advance_total': opening_advance_total,
+                'grand_total_total': grand_total_total,
+                'total_commission_total': total_commission_total,
+                'net_total_total': net_total_total,
+                'total_due_total': total_due_total,
+                'payment_total': payment_total,
+                'sales_return_total': sales_return_total,
+                'closing_due_total': closing_due_total,
+                'closing_advance_total': closing_advance_total,
+
+
+            }
             return render(request, 'report/sales/monthly_party.html', context)
 
         elif(type == 'monthly_party_gross'):
