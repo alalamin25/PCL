@@ -165,7 +165,6 @@ class Report_Admin(admin.ModelAdmin):
                 r['closing_due'] = c_due
                 r['closing_advance'] = c_adv
 
-
                 opening_due_total += r['opening_due']
                 opening_advance_total += r['opening_advance']
                 grand_total_total += r['grand_total']
@@ -176,10 +175,6 @@ class Report_Admin(admin.ModelAdmin):
                 sales_return_total += r['sales_return']
                 closing_due_total += r['closing_due']
                 closing_advance_total += r['closing_advance']
-
-
-
-
 
             # print(result)
             # print(len(result))
