@@ -1,7 +1,7 @@
 from django import forms
 
 from sales.models import ExpenseDetail, Payment, DeportOperation, Sell, SellDetailInfo
-
+from master_table.models import Customer
 
 
 class SellDetailInfoForm(forms.ModelForm):
@@ -45,6 +45,14 @@ class SellForm(forms.ModelForm):
                 raise forms.ValidationError(
                     "This customer Does not belong to this deport. Select another customer or another deport")
 
+    def __init__(self, *args, **kwargs):
+        forms.ModelForm.__init__(self, *args, **kwargs)
+        initial = kwargs.get('initial')
+        print("\n\n\n In form init method")
+        print(self.fields['deport'].initial)
+        print(initial)
+        # self.fields['customer'].queryset = Customer.objects.filter(deport=1)
+        # self.fields['customer'].choices = [('a','a')]
 
 
 

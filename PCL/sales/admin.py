@@ -70,6 +70,7 @@ class Sell_Admin(admin.ModelAdmin):
     # raw_id_fields = ( 'customer_code')
     inlines=[SellDetailInfoInline]
     # StackedInline = [SellDetailInfoInline]
+    # filter_horizontal = ('deport',)
 
     fieldsets=[
         (

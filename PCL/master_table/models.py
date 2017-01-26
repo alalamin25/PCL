@@ -129,7 +129,7 @@ class RIMiddleCat(models.Model):
     code = models.CharField(max_length=1, unique=True)
 
     def __str__(self):
-        return self.name
+        return self.fundamental_type.name + ':' + self.name
 
     class Meta:
         verbose_name = "Raw Item Middle Category"
@@ -151,7 +151,7 @@ class RILowerCat(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.fundamental_type.name + ':' + self.name
 
     class Meta:
         verbose_name = "Raw Item  Lower Category"
@@ -198,7 +198,7 @@ class FPMiddleCat(models.Model):
     code = models.CharField(max_length=1, unique=True)
 
     def __str__(self):
-        return self.name
+        return self.fundamental_type.name + ':' + self.name
 
     @property
     def get_code(self):
@@ -230,7 +230,7 @@ class FPLowerCat(models.Model):
     # comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.fundamental_type.name + ':' + self.name
 
     def get_code(self):
         return self.fundamental_type.fp_code + self.middle_category_type.code + self.code
