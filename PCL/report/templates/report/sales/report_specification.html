@@ -44,7 +44,7 @@
         <td> {{ r.product_code.code }} </td>
         <td> {{ r.sell.get_customer.name }} </td>
         <td> {{ r.product_code.name }} </td>
-        <td> {{ ee }} </td>
+        <td> {{ r.commission }} </td>
         <td> {{ r.rate|floatformat:-2 }} </td>
         <td> {{ r.quantity|floatformat:-2 }} </td>
         <td> {{ r.total|floatformat:-2 }} </td>
@@ -56,12 +56,11 @@
       {% endfor %}
 
       <tr>
-        <td colspan="6">Grand Total</td>
-        <td> {{ r.address }} </td>
-        <td> {{ r.opening_due }} </td>
-        <td> {{ r.opening_advance }} </td>
-        <td> {{ r.grand_total }} </td>
-        <td> {{ r.total_commission }} </td>
+        <td colspan="8">Grand Total</td>
+
+        <td> {{ total_total }} </td>
+        <td> {{ commission_total }} </td>
+        <td> {{ net_total_total }} </td>
 
 
       </tr>

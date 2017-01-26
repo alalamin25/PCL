@@ -94,7 +94,7 @@ class Report_Admin(admin.ModelAdmin):
             fields.append('fundamental_type')
             fields.append('middle_category_type')
             fields.append('lower_category_type')
-            fields.append('fp_item')            
+            fields.append('fp_item')
         elif(type == 'daily_production'):
             fields.remove('end_time')
         elif(type == 'shift_daily_production'):
@@ -222,6 +222,7 @@ class Report_Admin(admin.ModelAdmin):
             return render(request, 'report/sales/ledger_product.html', context)
 
         elif(type == 'specification'):
+
             result = SellDetailInfo.objects.filter(sell__date__date__gte=obj.start_time,
                                                    sell__date__date__lte=obj.end_time)
             if(obj.deport):
@@ -244,9 +245,20 @@ class Report_Admin(admin.ModelAdmin):
                     product_code__in=obj.fp_item.all())
 
             print(result)
+            total_total = 0
+            commission_total = 0
+            net_total_total = 0
+            for r in result:
+                total_total += r.total                
+                net_total_total += r.net_total
+                commission_total += r.total - r.net_total
+
             context = {'result': result,
                        'start_time': obj.start_time,
                        'end_time': obj.end_time,
+                       'total_total': total_total,                       
+                       'net_total_total': net_total_total,
+                       'commission_total': commission_total,
                        }
             return render(request, 'report/sales/report_specification.html', context)
 
@@ -300,7 +312,7 @@ class Report_Admin(admin.ModelAdmin):
 
             # print(result)
             context = {'result': result,
-                        'deport': obj.deport,
+                       'deport': obj.deport,
                        'start_time': obj.start_time,
                        'end_time': obj.end_time,
                        }
@@ -517,7 +529,6 @@ class Report_Admin(admin.ModelAdmin):
                        }
 
             return render(request, 'report/others/ri_purchase.html', context)
-
 
         elif(type == 'raw_item_stock'):
 

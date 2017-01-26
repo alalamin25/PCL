@@ -243,7 +243,7 @@ class SellDetailInfo(models.Model):
 
     total = models.FloatField(verbose_name="Total", default=0)
 
-    commission = models.FloatField(default=0)
+    commission = models.FloatField(default=0, verbose_name='Commission Rate')
     net_total = models.FloatField(
         verbose_name="Net Total")
 
