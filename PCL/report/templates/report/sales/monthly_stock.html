@@ -45,16 +45,16 @@
         <td> {{ r.code }} </td>
         <td> {{ r.name }} </td>
         <td> {{ r.fundamental_type_id__name }} </td>
-        <td> {{ r.opening_stock }} </td>
-        <td> {{ r.new }} </td>
-        <td> {{ r.received_from_other_deport }} </td>
-        <td> {{ r.sales_return }} </td>
-        <td> {{ r.total_stock }} </td>
-        <td> {{ r.sell }} </td>
-        <td> {{ r.return_to_other_deport }} </td>
-        <td> {{ r.factory_return }} </td>
-        <td> {{ r.total_outgoing }} </td>
-        <td> {{ r.closing_stock }} </td>
+        <td> {{ r.opening_stock|floatformat:-0 }} </td>
+        <td> {{ r.new|floatformat:-0 }} </td>
+        <td> {{ r.received_from_other_deport|floatformat:-0 }} </td>
+        <td> {{ r.sales_return|floatformat:-0 }} </td>
+        <td> {{ r.total_stock|floatformat:-0 }} </td>
+        <td> {{ r.sell|floatformat:-0 }} </td>
+        <td> {{ r.return_to_other_deport|floatformat:-0 }} </td>
+        <td> {{ r.factory_return|floatformat:-0 }} </td>
+        <td> {{ r.total_outgoing|floatformat:-0 }} </td>
+        <td> {{ r.closing_stock|floatformat:-0 }} </td>
         <td> {{ r.unit_price }} </td>
         <td> {{ r.gross_total }} </td>
 
@@ -63,16 +63,16 @@
 
       <tr>
         <td colspan="3">Grand Total</td>
-        <td> {{ opening_stock_total }} </td>
-        <td> {{ new_total }} </td>
-        <td> {{ received_from_other_deport_total }} </td>
-        <td> {{ sales_return_total }} </td>
-        <td> {{ total_stock_total }} </td>
-        <td> {{ sell_total }} </td>
-        <td> {{ return_to_other_deport_total }} </td>
-        <td> {{ factory_return_total }} </td>
-        <td> {{ total_outgoing_total }} </td>
-        <td> {{ closing_stock_total }} </td>
+        <td> {{ opening_stock_total|floatformat:-0 }} </td>
+        <td> {{ new_total|floatformat:-0 }} </td>
+        <td> {{ received_from_other_deport_total|floatformat:-0 }} </td>
+        <td> {{ sales_return_total|floatformat:-0 }} </td>
+        <td> {{ total_stock_total|floatformat:-0 }} </td>
+        <td> {{ sell_total|floatformat:-0 }} </td>
+        <td> {{ return_to_other_deport_total|floatformat:-0 }} </td>
+        <td> {{ factory_return_total|floatformat:-0 }} </td>
+        <td> {{ total_outgoing_total|floatformat:-0 }} </td>
+        <td> {{ closing_stock_total|floatformat:-0 }} </td>
         <td> {{ unit_price_total }} </td>
         <td> {{ gross_total_total }} </td>
 

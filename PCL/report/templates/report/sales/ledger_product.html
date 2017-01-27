@@ -40,15 +40,15 @@
       <tr>
         <td> {{ r.date|date:'d-M-Y' }} </td>
         <td> {{ r.specification }} </td>
-        <td> {{ r.in }} </td>
-        <td> {{ r.out }} </td>
+        <td> {{ r.in|floatformat:-0 }} </td>
+        <td> {{ r.out|floatformat:-0 }} </td>
       </tr>
       {% endfor %}
       <tr>
         <td>  </td>
         <td> </td>
-        <td> {{ in_total }} </td>
-        <td> {{ out_total }} </td>
+        <td> {{ in_total|floatformat:-0 }} </td>
+        <td> {{ out_total|floatformat:-0 }} </td>
       </tr>
 
 
@@ -58,7 +58,7 @@
 
 
   <br><br><br>
-<p>Closing Stock: {{ closing_stock }}</p>
+<p>Closing Stock: {{ closing_stock|floatformat:-0 }}</p>
 <p>Value: {{ value }}</p>
     <br><br><br><br><br><br>
   </div>
