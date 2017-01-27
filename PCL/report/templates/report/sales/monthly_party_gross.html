@@ -49,7 +49,7 @@
         <td> {{ r.total_due }} </td>
         <td> {{ r.payment }} </td>
         <td>  </td>
-        <td> {{ r.sales_return }} </td>
+        <td> {{ r.sales_return|floatformat:-0 }} </td>
         <td> {{ r.closing_due }} </td>
         <td> {{ r.closing_advance }} </td>
 
@@ -68,7 +68,7 @@
         <td> {{ total_due_total }} </td>
         <td> {{ payment_total }} </td>
         <td> </td>
-        <td> {{ sales_return_total }} </td>
+        <td> {{ sales_return_total|floatformat:-0 }} </td>
         <td> {{ closing_due_total }} </td>
         <td> {{ closing_advance_total }} </td>
       </tr>
