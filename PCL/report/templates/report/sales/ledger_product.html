@@ -40,7 +40,7 @@
       <tr>
         <td> {{ r.date|date:'d-M-Y' }} </td>
         <td> {{ r.specification }} </td>
-        <td> {{ r.in|floatformat:-0 }} </td>
+        <td > {{ r.in|floatformat:-0 }} </td>
         <td> {{ r.out|floatformat:-0 }} </td>
       </tr>
       {% endfor %}
@@ -54,7 +54,12 @@
 
       </tbody>
     </table>
-
+<style type="text/css" >
+td{
+  text-align: right;
+}
+  
+</style>
 
 
   <br><br><br>
