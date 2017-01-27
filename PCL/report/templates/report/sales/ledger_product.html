@@ -38,7 +38,7 @@
       <tbody>
       {% for r in result %}
       <tr>
-        <td> {{ r.date }} </td>
+        <td> {{ r.date|date:'d-M-Y' }} </td>
         <td> {{ r.specification }} </td>
         <td> {{ r.in }} </td>
         <td> {{ r.out }} </td>

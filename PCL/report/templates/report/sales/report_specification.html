@@ -40,7 +40,7 @@
       {% for r in result %}
       <tr>
         <td> {{ r.sell.memo_no }} </td>
-        <td> {{ r.sell.date }}</td>
+        <td> {{ r.sell.date|date:'d-M-Y' }}</td>
         <td> {{ r.product_code.code }} </td>
         <td> {{ r.sell.get_customer.name }} </td>
         <td> {{ r.product_code.name }} </td>

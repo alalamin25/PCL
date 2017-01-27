@@ -19,8 +19,8 @@
           </div>
 
           <div align="left" >
-            <p>Depot Code: {{ deport.code }}</p>
-            <p>Depot Address: {{ deport.address }}</p>
+            <p>Depot Code: {{ customer.deport.code }}</p>
+            <p>Depot Address: {{ customer.deport.address }}</p>
             
           </div>
 
@@ -57,7 +57,7 @@
       <tbody>
       {% for r in result %}
       <tr>
-        <td> {{ r.date }} </td>
+        <td> {{ r.date|date:'d-M-Y' }} </td>
         <td> {{ r.specification }}</td>
         <td> {{ r.transection_no }}</td>
         <td> {{ r.grand_total }}</td>
