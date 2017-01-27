@@ -76,7 +76,7 @@ class Deport(models.Model):
 
     class Meta:
         verbose_name = "Depot"
-        verbose_name_plural = "Depotes"
+        verbose_name_plural = "Depots"
 
 
 

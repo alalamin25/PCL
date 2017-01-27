@@ -13,7 +13,7 @@ PAYMENT_OPTION_CHOICES = (
 
 DEPORT_OPERATION_CHOICES = (
     ('new', 'New Arrival'),
-    ('received_from_other_deport', 'Received From Other Deport'),
+    ('received_from_other_deport', 'Received From Other Depot'),
     ('sales_return', 'Sales Return'),
     ('factory_return', 'Factory Return'),
 )
@@ -67,9 +67,10 @@ class DeportOperation(models.Model):
 
     deport_operation = models.CharField(choices=DEPORT_OPERATION_CHOICES,
                                         max_length=30,
+                                        verbose_name="Depot Operation",
                                         help_text='Select Deport Operation: ')
     deport_code = models.ForeignKey(
-        Deport, to_field='code', related_name="deport_code")
+        Deport, to_field='code', related_name="deport_code", verbose_name="Depot Code")
     date = models.DateTimeField(default=now)
     quantity = models.FloatField(default=1)
     fundamental_type = models.ForeignKey(FundamentalProductType, blank=True,
@@ -135,6 +136,9 @@ class DeportOperation(models.Model):
         return self.customer.first()
     get_customer.fget.short_description = "Customer"
 
+    class Meta:
+        verbose_name = "Depot Operation"
+        verbose_name_plural = "Depot Operation"
 
 class ExpenseDetail(models.Model):
 
@@ -170,6 +174,7 @@ class ExpenseDetail(models.Model):
     def get_expense_criteria(self):
         return self.expense_criteria.first()
     get_expense_criteria.fget.short_description = "Expense Name"
+
 
 
 class Payment(models.Model):
