@@ -40,8 +40,8 @@ function type_change()
           "cache"    : false,
           "success"  : function(json) {
 
-          	  console.log("\n\n ajax successful");
-          	  console.log(json);
+          	  // console.log("\n\n ajax successful");
+          	  // console.log(json);
           	  $('#'+target_id).val(json['data']);
 
           }           

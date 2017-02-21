@@ -48,6 +48,7 @@ class Payment_Admin(admin.ModelAdmin):
     class Media:
         js = ['/static/js/custom.js']
 
+
 # class SellDetailInfoInline(admin.StackedInline):
 
 
@@ -60,6 +61,7 @@ class SellDetailInfoInline(admin.TabularInline):
 
     model = SellDetailInfo
     extra = 0
+
 
 
 class Sell_Admin(admin.ModelAdmin):
@@ -103,7 +105,10 @@ class Sell_Admin(admin.ModelAdmin):
         return form
 
     class Media:
-        js = ['/static/sales/js/sales.js']
+        js = ('/static/sales/js/sales.js', )
+        css = {
+            'all': ('/static/sales/css/custom.css',)
+        }
 
 
 class SellDetailInfo_Admin(admin.ModelAdmin):
@@ -195,5 +200,5 @@ class DeportOperation_Admin(admin.ModelAdmin):
 admin.site.register(Payment, Payment_Admin)
 admin.site.register(Sell, Sell_Admin)
 admin.site.register(ExpenseDetail, ExpenseDetail_Admin)
-admin.site.register(SellDetailInfo, SellDetailInfo_Admin)
+# admin.site.register(SellDetailInfo, SellDetailInfo_Admin)
 admin.site.register(DeportOperation, DeportOperation_Admin)
