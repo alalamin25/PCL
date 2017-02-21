@@ -46,7 +46,7 @@ class Payment_Admin(admin.ModelAdmin):
     ]
 
     class Media:
-        js = ['/static/js/custom.js']
+        js = ['/static/js/custom.js', '/static/sales/js/deport_customer.js']
 
 
 # class SellDetailInfoInline(admin.StackedInline):
@@ -94,6 +94,10 @@ class Sell_Admin(admin.ModelAdmin):
     # change_form_template = 'commo/change_form.html'
 
     def get_form(self, request, obj=None, **kwargs):
+
+        sell = Sell.objects.all()
+        for s in sell:
+            print(s.date)
         form = super(Sell_Admin, self).get_form(request, obj, **kwargs)
         latest_sell = Sell.objects.all().order_by('-id').first()
         if(latest_sell):
@@ -105,7 +109,7 @@ class Sell_Admin(admin.ModelAdmin):
         return form
 
     class Media:
-        js = ('/static/sales/js/sales.js', )
+        js = ('/static/sales/js/sales.js', '/static/sales/js/deport_customer.js')
         css = {
             'all': ('/static/sales/css/custom.css',)
         }
@@ -194,7 +198,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
         obj.save()
 
     class Media:
-        js = ['/static/sales/js/deport_operation.js']
+        js = ['/static/sales/js/deport_operation.js', '/static/sales/js/deport_customer.js']
 
 
 admin.site.register(Payment, Payment_Admin)

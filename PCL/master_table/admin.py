@@ -109,7 +109,7 @@ class Bank_Admin(admin.ModelAdmin):
 class Deport_Admin(admin.ModelAdmin):
 
     form = DeportForm
-    list_display = ('name', 'code')
+    list_display = ('id', 'name', 'code')
     list_display_links = ('name',)
     search_fields = ('name', 'code')
 

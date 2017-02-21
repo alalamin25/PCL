@@ -25,7 +25,7 @@ class Sell(models.Model):
     date = models.DateTimeField(default=now)
     date_modified = models.DateTimeField(default=now)
     memo_no = models.CharField(max_length=100, unique=True)
-    deport = models.ForeignKey(Deport, verbose_name='Depot')
+    deport = models.ForeignKey(Deport, to_field='code', verbose_name='Depot')
     customer = models.ManyToManyField(Customer)
 
     grand_total = models.FloatField(
@@ -290,7 +290,7 @@ class Payment(models.Model):
 
     serial_no = models.CharField(max_length=100)
     deport = models.ForeignKey(
-        Deport, verbose_name="Depot")
+        Deport, to_field='code', verbose_name="Depot")
     # deport_code_text = models.CharField(
     #     max_length=100, blank=True, null=True, verbose_name="")
 

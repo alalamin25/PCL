@@ -96,7 +96,7 @@ class DeportOperationForm(forms.ModelForm):
         if(deport and customer):
             if(customer.first().deport != deport):
                 raise forms.ValidationError(
-                    "This customer Does not belong to this deport. Select another customer or another deport")
+                    "This customer Does not belong to this depot. Select another customer or another depot")
 
         fp_item_many = self.cleaned_data.get('fp_item_many')
         if(fp_item_many and fp_item_many.count() > 1):
@@ -147,7 +147,7 @@ class ExpenseDetailForm(forms.ModelForm):
         # Validation goes here :)
         deport = self.cleaned_data.get('deport')
         if(deport and deport.count() > 1):
-            raise forms.ValidationError("You can select only one deport")
+            raise forms.ValidationError("You can select only one depot")
 
         expense_criteria = self.cleaned_data.get('expense_criteria')
         if(expense_criteria and expense_criteria.count() > 1):
@@ -172,5 +172,5 @@ class PaymentForm(forms.ModelForm):
         if(deport and customer):
             if(customer.first().deport != deport):
                 raise forms.ValidationError(
-                    "This customer Does not belong to this deport. Select another customer or another deport")
+                    "This customer Does not belong to this depot. Select another customer or another depot")
         super(PaymentForm, self).clean()
