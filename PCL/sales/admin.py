@@ -52,7 +52,7 @@ class Payment_Admin(admin.ModelAdmin):
 
 
 class SellDetailInfoInline(admin.TabularInline):
-    # raw_id_fields = ('product_code', )
+    raw_id_fields = ('product_code', )
     # readonly_fields = ('product_code_text',)
     fields = ('id', 'product_code', 'product_code_text', 'fundamental_type',
               'middle_category_type', 'lower_category_type', 'finished_product_item', 'rate', 'quantity',
@@ -117,7 +117,7 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
         models.CharField: {'widget': TextInput(attrs={'size': '5'})},
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
-    # raw_id_fields = ('product_id', )
+    raw_id_fields = ('product_id', )
 
 
 class DeportOperation_Admin(admin.ModelAdmin):

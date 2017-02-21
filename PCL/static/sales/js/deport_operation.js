@@ -1,3 +1,8 @@
+// $("#id_fp_item_many_to").children().first().val();
+// $("#id_fp_item_chained").find(":selected").val()
+// <option value=​"12" title=​"AZZ00002:​ zimCompound">​AZZ00002: zimCompound​</option>​
+
+
 (function($){   
     $(function(){
         $(document).ready(function() {
