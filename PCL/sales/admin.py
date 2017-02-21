@@ -111,13 +111,13 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
     form = SellDetailInfoForm
 
     list_display = (
-        'id', 'product_code', 'rate', 'quantity', 'total')
+        'id', 'product_code', 'get_memo_no', 'rate', 'quantity', 'total')
     # list_display_links = list_display
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size': '5'})},
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
-    raw_id_fields = ('product_id', )
+    # raw_id_fields = ('product_id', )
 
 
 class DeportOperation_Admin(admin.ModelAdmin):
@@ -178,5 +178,5 @@ class DeportOperation_Admin(admin.ModelAdmin):
 admin.site.register(Payment, Payment_Admin)
 admin.site.register(Sell, Sell_Admin)
 admin.site.register(ExpenseDetail, ExpenseDetail_Admin)
-# admin.site.register(SellDetailInfo, SellDetailInfo_Admin)
+admin.site.register(SellDetailInfo, SellDetailInfo_Admin)
 admin.site.register(DeportOperation, DeportOperation_Admin)

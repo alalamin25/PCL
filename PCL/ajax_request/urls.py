@@ -10,8 +10,8 @@ urlpatterns = [
 
     # url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^deport/$', views.DeportView.as_view(), name='deport'),
-    url(r'^fpitem/$', views.FPItemView.as_view(), name='fpitem')
-    # url(r'^fp_report/middle_cat$',
+    url(r'^fpitem/$', views.FPItemView.as_view(), name='fpitem'),
+    url(r'^deport_return/$', views.DeportReturnView.as_view(), name='deport_return'),
     #     views.FpMiddleCatView.as_view(), name='fp_middle_cat'),
     # url(r'^fp_report/lower_cat$', views.FpLowerCatView.as_view(),
     #     name='fp_lower_cat'),

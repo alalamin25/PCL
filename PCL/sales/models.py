@@ -307,6 +307,12 @@ class SellDetailInfo(models.Model):
     # total = property(total)
     # date = models.DateTimeField(editable=False)
 
+    @property
+    def get_memo_no(self):
+        return self.sell.memo_no
+    get_memo_no.fget.short_description = "Memo No"
+
+
     def save(self, *args, **kw):
         if(self.finished_product_item):
             self.product_code = self.finished_product_item
