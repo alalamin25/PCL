@@ -23,6 +23,7 @@ class Sell(models.Model):
 
     transection_no = models.CharField(max_length=100, unique=True)
     date = models.DateTimeField(default=now)
+    date_modified = models.DateTimeField(default=now)
     memo_no = models.CharField(max_length=100, unique=True)
     deport = models.ForeignKey(Deport, verbose_name='Depot')
     customer = models.ManyToManyField(Customer)
@@ -64,6 +65,10 @@ class Sell(models.Model):
     def __str__(self):
         return self.transection_no
 
+    def save(self, *args, **kwargs):
+        self.date_modified = now()
+        return super(Sell, self).save(*args, **kwargs)
+
 
 class DeportOperation(models.Model):
 
@@ -75,6 +80,7 @@ class DeportOperation(models.Model):
     deport_code = models.ForeignKey(
         Deport, to_field='code', related_name="deport_code", verbose_name="Depot Code")
     date = models.DateTimeField(default=now)
+    date_modified = models.DateTimeField(default=now)
     quantity = models.FloatField(default=1)
     fundamental_type = models.ForeignKey(FundamentalProductType, blank=True,
                                          null=True)
@@ -145,10 +151,15 @@ class DeportOperation(models.Model):
         verbose_name = "Depot Operation"
         verbose_name_plural = "Depot Operation"
 
+    def save(self, *args, **kwargs):
+        self.date_modified = now()
+        return super(DeportOperation, self).save(*args, **kwargs)
+
 
 class ExpenseDetail(models.Model):
 
     date = models.DateTimeField(default=now)
+    date_modified = models.DateTimeField(default=now)
     # serial_no = models.CharField(max_length=100, unique=True)
     # deport_many = models.ManyToManyField(Deport, blank=True, related_name='ed_deport_m')
     deport = models.ManyToManyField(Deport, verbose_name='Depot')
@@ -182,6 +193,11 @@ class ExpenseDetail(models.Model):
     get_expense_criteria.fget.short_description = "Expense Name"
 
 
+    def save(self, *args, **kwargs):
+        self.date_modified = now()
+        return super(ExpenseDetail, self).save(*args, **kwargs)
+
+
 class Payment(models.Model):
 
     serial_no = models.CharField(max_length=100)
@@ -193,6 +209,7 @@ class Payment(models.Model):
     customer = models.ManyToManyField(
         Customer, verbose_name="Customer")
     date = models.DateTimeField(default=now)
+    date_modified = models.DateTimeField(default=now)
     particular = models.TextField(blank=True, null=True)
     payment_option = models.CharField(choices=PAYMENT_OPTION_CHOICES,
                                       max_length=30,
@@ -229,6 +246,10 @@ class Payment(models.Model):
     def get_customer(self):
         return self.customer.first()
     get_customer.fget.short_description = "Customer"
+
+    def save(self, *args, **kwargs):
+        self.date_modified = now()
+        return super(Payment, self).save(*args, **kwargs)
 
 
 class SellDetailInfo(models.Model):

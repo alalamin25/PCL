@@ -10,7 +10,7 @@ class ExpenseDetail_Admin(admin.ModelAdmin):
 
     form = ExpenseDetailForm
     list_display = (
-        'id', 'date', 'get_deport', 'invoice_no', 'get_expense_criteria', 'amount', 'detail')
+        'id', 'date', 'date_modified', 'get_deport', 'invoice_no', 'get_expense_criteria', 'amount', 'detail')
     list_display_links = list_display
     search_fields = ('expense_criteria',)
     list_filter = ('date', 'expense_criteria', 'deport', )
@@ -21,7 +21,7 @@ class Payment_Admin(admin.ModelAdmin):
 
     form = PaymentForm
     list_display = (
-        'id', 'date', 'serial_no', 'deport', 'get_customer', 'amount')
+        'id', 'date', 'date_modified', 'serial_no', 'deport', 'get_customer', 'amount')
     list_display_links = list_display
     search_fields = ('serial_no',)
     list_filter = ('date', 'deport')
@@ -67,7 +67,7 @@ class Sell_Admin(admin.ModelAdmin):
     form = SellForm
     filter_horizontal = ('customer',)
     list_display = (
-        'id', 'date', 'transection_no', 'memo_no', 'deport', 'get_customer_name', 'grand_total',
+        'id', 'date', 'date_modified', 'transection_no', 'memo_no', 'deport', 'get_customer_name', 'grand_total',
         'total_commission', 'net_total')
     list_display_links = list_display
     list_display_links = list_display
@@ -124,7 +124,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
 
     form = DeportOperationForm
     list_display = (
-        'id', 'date', 'deport_operation', 'deport_code', 'fp_item', 'quantity')
+        'id', 'date', 'date_modified', 'deport_operation', 'deport_code', 'fp_item', 'quantity')
     # search_fields = ('serial_no',)
     list_display_links = list_display
     list_filter = ('date', 'deport_code')
