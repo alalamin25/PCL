@@ -23,7 +23,7 @@ class Report(models.Model):
     start_time = models.DateField(blank=True, null=True)
     end_time = models.DateField(blank=True, null=True)
 
-    deport = models.ForeignKey(Deport, blank=True, null=True, verbose_name='Depot')
+    deport = models.ForeignKey(Deport, to_field='code', blank=True, null=True, verbose_name='Depot')
     customer = models.ManyToManyField(Customer, blank=True)
     fundamental_type = models.ManyToManyField(
         FundamentalProductType, blank=True)

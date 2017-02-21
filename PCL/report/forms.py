@@ -22,7 +22,7 @@ class ReportForm(forms.ModelForm):
         # request = kwargs.get('request')
         # print(request)
         if self.data and self.data.get('name') == 'ledger_party':
-            # self.fields.get('deport').required = True
+            self.fields.get('deport').required = True
             self.fields.get('customer').required = True
         elif (self.data and self.data.get('name') == 'ledger_product'):
             self.fields.get('deport').required = True
@@ -57,6 +57,11 @@ class ReportForm(forms.ModelForm):
                 raise forms.ValidationError(
                     "This customer Does not belong to this deport. Select another customer or another deport")
 
+        if(customer and not deport):
+            raise forms.ValidationError(
+                "You must select the depot of this customer")
+
+        
         elif (self.cleaned_data.get('name') == 'ledger_product'):
             fp_item = self.cleaned_data.get('fp_item')
             if(fp_item and fp_item.count() > 1):

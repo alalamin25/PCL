@@ -28,7 +28,7 @@ class Report_Admin(admin.ModelAdmin):
     # readonly_fields=('name',)
 
     class Media:
-        js = ['/static/js/report.js']
+        js = ['/static/js/report.js', '/static/sales/js/deport_customer.js']
 
     def save_model(self, request, obj, form, change):
         obj.save()
@@ -71,7 +71,7 @@ class Report_Admin(admin.ModelAdmin):
         fields.remove('deport')
         fields.remove('raw_item_report_choices')
         if(type == 'ledger_party'):
-            # fields.append('deport')
+            fields.append('deport')
             fields.append('customer')
         elif(type == 'ledger_product'):
             fields.append('deport')
