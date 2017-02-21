@@ -21,7 +21,7 @@ DEPORT_OPERATION_CHOICES = (
 
 class Sell(models.Model):
 
-    transection_no = models.CharField(max_length=100, unique=True)
+    transection_no = models.CharField(max_length=100, unique=True, verbose_name='Transaction No')
     date = models.DateTimeField(default=now)
     date_modified = models.DateTimeField(default=now)
     memo_no = models.CharField(max_length=100, unique=True)
@@ -160,7 +160,7 @@ class SellDetailInfo(models.Model):
 
 class DeportOperation(models.Model):
 
-    transection_no = models.CharField(max_length=100, unique=True)
+    transection_no = models.CharField(max_length=100, unique=True, verbose_name='Transaction No')
     deport_operation = models.CharField(choices=DEPORT_OPERATION_CHOICES,
                                         max_length=30,
                                         verbose_name="Depot Operation",
@@ -303,7 +303,7 @@ class Payment(models.Model):
                                       max_length=30,
                                       help_text='Select Payment Option: ')
 
-    transection_no = models.CharField(max_length=100)
+    transection_no = models.CharField(max_length=100, verbose_name='Transaction No')
     amount = models.IntegerField(default=0)
 
     bank = models.ForeignKey(
