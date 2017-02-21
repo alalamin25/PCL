@@ -46,9 +46,9 @@ class Payment_Admin(admin.ModelAdmin):
     class Media:
         js = ['/static/js/custom.js']
 
-
-class SellDetailInfoInline(admin.StackedInline):
-    raw_id_fields = ('product_code', )
+# class SellDetailInfoInline(admin.StackedInline):
+class SellDetailInfoInline(admin.TabularInline):
+    # raw_id_fields = ('product_code', )
     # readonly_fields = ('product_code_text',)
     fields = ('id', 'product_code', 'product_code_text', 'fundamental_type',
               'middle_category_type', 'lower_category_type', 'finished_product_item', 'rate', 'quantity',
@@ -63,7 +63,8 @@ class Sell_Admin(admin.ModelAdmin):
     form = SellForm
     filter_horizontal = ('customer',)
     list_display = (
-        'id', 'date', 'transection_no', 'deport', 'get_customer', 'grand_total', 'total_commission', 'net_total')
+        'id', 'date', 'transection_no', 'deport', 'get_customer', 'grand_total',
+        'total_commission', 'net_total')
     search_fields = ('transection_no', 'memo_no')
     list_filter = ('date', 'deport')
     # raw_id_fields = ( 'customer_code')
