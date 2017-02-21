@@ -130,7 +130,7 @@ class DeportOperation(models.Model):
         null=True)
     customer = models.ManyToManyField(
         Customer, verbose_name="Customer", blank=True)
-    transection_no = models.ForeignKey(Sell, blank=True, null=True)
+    memo_no = models.ForeignKey(Sell, to_field='memo_no', blank=True, null=True)
     return_rate = models.FloatField()
     # chalan_no = models.ForeignKey(
     #     Customer, to_field='code', verbose_name="Party")
