@@ -10,7 +10,7 @@ class ExpenseDetail_Admin(admin.ModelAdmin):
 
     form = ExpenseDetailForm
     list_display = (
-        'date', 'get_deport', 'invoice_no', 'get_expense_criteria', 'amount', 'detail')
+        'id', 'date', 'get_deport', 'invoice_no', 'get_expense_criteria', 'amount', 'detail')
     search_fields = ('expense_criteria',)
     list_filter = ('date', 'expense_criteria', 'deport', )
     filter_horizontal = ('deport', 'expense_criteria')
@@ -20,7 +20,7 @@ class Payment_Admin(admin.ModelAdmin):
 
     form = PaymentForm
     list_display = (
-        'date', 'serial_no', 'deport', 'get_customer', 'amount')
+        'id', 'date', 'serial_no', 'deport', 'get_customer', 'amount')
     search_fields = ('serial_no',)
     list_filter = ('date', 'deport')
     # raw_id_fields = ( 'customer_code',)
@@ -50,7 +50,7 @@ class Payment_Admin(admin.ModelAdmin):
 class SellDetailInfoInline(admin.StackedInline):
     raw_id_fields = ('product_code', )
     # readonly_fields = ('product_code_text',)
-    fields = ('product_code', 'product_code_text', 'fundamental_type',
+    fields = ('id', 'product_code', 'product_code_text', 'fundamental_type',
               'middle_category_type', 'lower_category_type', 'finished_product_item', 'rate', 'quantity',
               'total', 'commission', 'net_total', )
 
@@ -63,7 +63,7 @@ class Sell_Admin(admin.ModelAdmin):
     form = SellForm
     filter_horizontal = ('customer',)
     list_display = (
-        'date', 'transection_no', 'deport', 'get_customer', 'grand_total', 'total_commission', 'net_total')
+        'id', 'date', 'transection_no', 'deport', 'get_customer', 'grand_total', 'total_commission', 'net_total')
     search_fields = ('transection_no', 'memo_no')
     list_filter = ('date', 'deport')
     # raw_id_fields = ( 'customer_code')
@@ -104,7 +104,7 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
     form = SellDetailInfoForm
 
     list_display = (
-        'product_code', 'rate', 'quantity', 'total')
+        'id', 'product_code', 'rate', 'quantity', 'total')
 
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size': '5'})},
@@ -117,7 +117,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
 
     form = DeportOperationForm
     list_display = (
-        'date', 'deport_operation', 'deport_code', 'fp_item', 'quantity')
+        'id', 'date', 'deport_operation', 'deport_code', 'fp_item', 'quantity')
     # search_fields = ('serial_no',)
     list_filter = ('date', 'deport_code')
     raw_id_fields = ('transection_no',)
