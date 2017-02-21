@@ -69,10 +69,10 @@ class Sell_Admin(admin.ModelAdmin):
     form = SellForm
     filter_horizontal = ('customer',)
     list_display = (
-        'id', 'date', 'date_modified', 'transection_no', 'memo_no', 'deport', 'get_customer_name', 'grand_total',
+         'date', 'date_modified', 'transection_no', 'memo_no', 'deport', 'get_customer_name', 'grand_total',
         'total_commission', 'net_total')
     list_display_links = list_display
-    list_display_links = list_display
+
     search_fields = ('memo_no', 'deport__name', 'customer__name')
     list_filter = ('date', 'deport')
     # raw_id_fields = ( 'customer_code')

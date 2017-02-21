@@ -15,7 +15,7 @@ td {
 }*/
 
 
-table input{
+table input:not("#result_list"){
 	width: 50%;
 }
 
