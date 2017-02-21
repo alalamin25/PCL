@@ -2,6 +2,7 @@ from django import forms
 
 from sales.models import ExpenseDetail, Payment, DeportOperation, Sell, SellDetailInfo
 from master_table.models import Customer
+from report.models import Report
 
 
 class SellDetailInfoForm(forms.ModelForm):
@@ -109,6 +110,30 @@ class DeportOperationForm(forms.ModelForm):
         if(not(fp_item_many or fp_item_chained)):
             raise forms.ValidationError(
                 "You must select Finished Item from any of two source")
+
+        deport_operation = self.cleaned_data.get('deport_operation')
+        if(deport_operation == 'factory_return'):
+            deport = self.cleaned_data.get('deport_code')
+            fp_item = self.cleaned_data.get('fp_item_many')
+            if(not fp_item):
+                fp_item = self.cleaned_data.get('fp_item_chained')
+            fp_item = fp_item.first()
+            quantity = self.cleaned_data.get('quantity')
+            date = self.cleaned_data.get('date')
+            report = Report(start_time=date, end_time=date,
+                                            deport=deport)
+            report.save()
+            # print("\n\n")
+            # print(fp_item)
+            # print(type(fp_item))
+            report.fp_item.add(fp_item)
+
+            initial_stock = report.get_deport_opening_stock(fp_item=fp_item)
+
+            if(quantity > initial_stock):
+                raise forms.ValidationError(
+                    "You stock is {} and transection quantity is {}".format(initial_stock, quantity))
+
         super(DeportOperationForm, self).clean()
 
 
