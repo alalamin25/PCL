@@ -56,7 +56,7 @@ class SellDetailInfoInline(admin.TabularInline):
     # readonly_fields = ('product_code_text',)
     fields = ('id', 'product_code', 'product_code_text', 'fundamental_type',
               'middle_category_type', 'lower_category_type', 'finished_product_item', 'rate', 'quantity',
-              'total', 'commission', 'net_total', )
+              'total', 'commission', 'commission_amount', 'net_total', )
 
     model = SellDetailInfo
     extra = 0

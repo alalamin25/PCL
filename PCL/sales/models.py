@@ -70,6 +70,94 @@ class Sell(models.Model):
         return super(Sell, self).save(*args, **kwargs)
 
 
+class SellDetailInfo(models.Model):
+
+    sell = models.ForeignKey(Sell)
+    product_code = models.ForeignKey(
+        FPItem, to_field='code',
+        related_name='product_code',
+        blank=True,
+        null=True,
+    )
+
+    product_code_text = models.CharField(
+        max_length=30, blank=True, null=True, verbose_name="code")
+
+    rate = models.FloatField(default=0)
+    quantity = models.FloatField(default=1)
+
+    total = models.FloatField(verbose_name="Total", default=0)
+
+    commission = models.FloatField(default=0, verbose_name='Commission Rate')
+    commission_amount = models.FloatField(default=0, verbose_name='Commission Amount')
+    net_total = models.FloatField(
+        verbose_name="Net Total")
+
+    fundamental_type = models.ForeignKey(
+        FundamentalProductType,
+        verbose_name='Main Cat', blank=True, null=True)
+    # middle_category_type = models.ForeignKey(FPMiddleCat)
+    middle_category_type = ChainedForeignKey(
+        FPMiddleCat,
+        chained_field="fundamental_type",
+        chained_model_field="fundamental_type",
+        verbose_name="Mid Cat",
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    # lower_category_type = models.ForeignKey(FPLowerCat)
+    lower_category_type = ChainedForeignKey(
+        FPLowerCat,
+        chained_field="middle_category_type",
+        chained_model_field="middle_category_type",
+        verbose_name="Lower Cat",
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+    # production_item = models.ForeignKey(FinishedProductItem)
+    finished_product_item = ChainedForeignKey(
+        FPItem,
+        chained_field="lower_category_type",
+        chained_model_field="lower_category_type",
+        verbose_name="Product",
+        related_name='finished_product_item',
+        blank=True,
+        null=True,
+        show_all=False,
+        auto_choose=True,
+        sort=True
+    )
+
+    # @property
+    # def total(self):
+    #     return self.rate + self.quantity
+
+    # total = property(total)
+    # date = models.DateTimeField(editable=False)
+
+    @property
+    def get_memo_no(self):
+        return self.sell.memo_no
+    get_memo_no.fget.short_description = "Memo No"
+
+    def save(self, *args, **kw):
+        if(self.finished_product_item):
+            self.product_code = self.finished_product_item
+        # if(self.sell):
+        #     self.date = self.sell.date
+        super(SellDetailInfo, self).save(*args, **kw)
+
+    def __str__(self):
+        return self.sell.transection_no
+
+
+
 class DeportOperation(models.Model):
 
     transection_no = models.CharField(max_length=100, unique=True)
@@ -252,88 +340,4 @@ class Payment(models.Model):
         return super(Payment, self).save(*args, **kwargs)
 
 
-class SellDetailInfo(models.Model):
 
-    sell = models.ForeignKey(Sell)
-
-    product_code = models.ForeignKey(
-        FPItem, to_field='code',
-        related_name='product_code',
-        blank=True,
-        null=True,
-    )
-
-    product_code_text = models.CharField(
-        max_length=30, blank=True, null=True, verbose_name="code")
-
-    rate = models.FloatField(default=0)
-    quantity = models.FloatField(default=1)
-
-    total = models.FloatField(verbose_name="Total", default=0)
-
-    commission = models.FloatField(default=0, verbose_name='Commission Rate')
-    net_total = models.FloatField(
-        verbose_name="Net Total")
-
-    fundamental_type = models.ForeignKey(
-        FundamentalProductType,
-        verbose_name='Main Cat', blank=True, null=True)
-    # middle_category_type = models.ForeignKey(FPMiddleCat)
-    middle_category_type = ChainedForeignKey(
-        FPMiddleCat,
-        chained_field="fundamental_type",
-        chained_model_field="fundamental_type",
-        verbose_name="Mid Cat",
-        blank=True,
-        null=True,
-        show_all=False,
-        auto_choose=True,
-        sort=True
-    )
-    # lower_category_type = models.ForeignKey(FPLowerCat)
-    lower_category_type = ChainedForeignKey(
-        FPLowerCat,
-        chained_field="middle_category_type",
-        chained_model_field="middle_category_type",
-        verbose_name="Lower Cat",
-        blank=True,
-        null=True,
-        show_all=False,
-        auto_choose=True,
-        sort=True
-    )
-    # production_item = models.ForeignKey(FinishedProductItem)
-    finished_product_item = ChainedForeignKey(
-        FPItem,
-        chained_field="lower_category_type",
-        chained_model_field="lower_category_type",
-        verbose_name="Product",
-        related_name='finished_product_item',
-        blank=True,
-        null=True,
-        show_all=False,
-        auto_choose=True,
-        sort=True
-    )
-
-    # @property
-    # def total(self):
-    #     return self.rate + self.quantity
-
-    # total = property(total)
-    # date = models.DateTimeField(editable=False)
-
-    @property
-    def get_memo_no(self):
-        return self.sell.memo_no
-    get_memo_no.fget.short_description = "Memo No"
-
-    def save(self, *args, **kw):
-        if(self.finished_product_item):
-            self.product_code = self.finished_product_item
-        # if(self.sell):
-        #     self.date = self.sell.date
-        super(SellDetailInfo, self).save(*args, **kw)
-
-    def __str__(self):
-        return self.sell.transection_no

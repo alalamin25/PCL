@@ -66,9 +66,11 @@ function calculateTotal()
 
     var quantity_id =  basic_id + '-quantity';
     var commission_id = basic_id + '-commission';
+    var commission_amount_id = basic_id + '-commission_amount';
     var rate_id = basic_id + '-rate';
     var total_text_id = basic_id + '-total';
     var net_total_text_id = basic_id + '-net_total';
+
 
 
     var quantity = $('#'+quantity_id).val();
@@ -77,22 +79,27 @@ function calculateTotal()
 
     var total = quantity * rate;
     var net_total = total - (total * commission / 100);
+    var commission_amount = total - net_total;
      //    var target_id = $(this).attr('id') + '_text'; 
  //    var ajax_url =  "/ajax_request/fpitem/?code=" + value;
 	// // console.log(v);
 	// // $('#id_deport_code_text').val(v);
 	// 
 	console.log("Going to calculate Total");
-	console.log(rate);
-	console.log(quantity);
-  console.log(commission);
+	// console.log(rate);
+	// console.log(quantity);
+ //  console.log(commission);
+  console.log("commission_amount_id");
+  console.log(commission_amount_id)
+  console.log(commission_amount)
 
 
   total = Number(total.toFixed(2));
   net_total = Number(net_total.toFixed(2));
+  commission_amount = Number(commission_amount.toFixed(2));
 	$('#'+total_text_id).val(total);
 	$('#'+net_total_text_id).val(net_total);
-
+  $('#'+commission_amount_id).val(commission_amount);
 
   var net_grand_total = 0;
 	var net_net_total = 0;
