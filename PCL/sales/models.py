@@ -21,7 +21,7 @@ DEPORT_OPERATION_CHOICES = (
 
 class Sell(models.Model):
 
-    transection_no = models.CharField(max_length=100)
+    transection_no = models.CharField(max_length=100, unique=True)
     date = models.DateTimeField(default=now)
     memo_no = models.CharField(max_length=100)
     deport = models.ForeignKey(Deport, verbose_name='Depot')

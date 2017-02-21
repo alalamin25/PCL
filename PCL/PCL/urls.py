@@ -29,6 +29,5 @@ urlpatterns = [
     # url(r'^select2/', include('django_select2.urls')),
     url(r'^action_choices/', action_choices),
     url('^searchableselect/', include('searchableselect.urls')),
-    url(r'^ajax_select/', include(ajax_select_urls)),
-
+    url(r'^ajax_request/', include('ajax_request.urls')),
 ]

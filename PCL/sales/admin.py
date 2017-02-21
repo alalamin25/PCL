@@ -51,9 +51,8 @@ class SellDetailInfoInline(admin.StackedInline):
     raw_id_fields = ('product_code', )
     # readonly_fields = ('product_code_text',)
     fields = ('product_code', 'product_code_text', 'fundamental_type',
-    'middle_category_type', 'lower_category_type', 'finished_product_item', 'rate', 'quantity',
-    'total', 'commission', 'net_total', )
-
+              'middle_category_type', 'lower_category_type', 'finished_product_item', 'rate', 'quantity',
+              'total', 'commission', 'net_total', )
 
     model = SellDetailInfo
     extra = 0
@@ -65,14 +64,14 @@ class Sell_Admin(admin.ModelAdmin):
     filter_horizontal = ('customer',)
     list_display = (
         'date', 'transection_no', 'deport', 'get_customer', 'grand_total', 'total_commission', 'net_total')
-    search_fields=('transection_no', 'memo_no')
-    list_filter=('date', 'deport')
+    search_fields = ('transection_no', 'memo_no')
+    list_filter = ('date', 'deport')
     # raw_id_fields = ( 'customer_code')
-    inlines=[SellDetailInfoInline]
+    inlines = [SellDetailInfoInline]
     # StackedInline = [SellDetailInfoInline]
     # filter_horizontal = ('deport',)
 
-    fieldsets=[
+    fieldsets = [
         (
             'Head Info: ', {'fields': ['transection_no', 'date', 'memo_no',
                                        'deport', 'customer',
@@ -87,7 +86,12 @@ class Sell_Admin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(Sell_Admin, self).get_form(request, obj, **kwargs)
-        form.base_fields['transection_no'].initial = 'abcd'
+        latest_sell = Sell.objects.all().order_by('-id').first()
+        if(latest_sell):
+            latest_sell = latest_sell.id + 1
+        else:
+            latest_sell = 1
+        form.base_fields['transection_no'].initial = str(latest_sell)
         # self.initial['memo_no'] = self.transection_no
         return form
 
@@ -102,7 +106,7 @@ class SellDetailInfo_Admin(admin.ModelAdmin):
     list_display = (
         'product_code', 'rate', 'quantity', 'total')
 
-    formfield_overrides={
+    formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size': '5'})},
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
@@ -115,10 +119,10 @@ class DeportOperation_Admin(admin.ModelAdmin):
     list_display = (
         'date', 'deport_operation', 'deport_code', 'fp_item', 'quantity')
     # search_fields = ('serial_no',)
-    list_filter=('date', 'deport_code')
-    raw_id_fields=('transection_no',)
-    filter_horizontal=('fp_item_many', 'customer')
-    fieldsets=[
+    list_filter = ('date', 'deport_code')
+    raw_id_fields = ('transection_no',)
+    filter_horizontal = ('fp_item_many', 'customer')
+    fieldsets = [
         (
             'Basic Info: ', {
                 'fields': ['deport_operation', 'deport_code',  'date', 'quantity']}

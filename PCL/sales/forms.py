@@ -12,7 +12,7 @@ class SellDetailInfoForm(forms.ModelForm):
 
     def clean(self):
         # Validation goes here :)
- 
+
         customer = self.cleaned_data.get('customer')
         if(customer and customer.count() > 1):
             raise forms.ValidationError("You can select only one customer")
@@ -22,9 +22,7 @@ class SellDetailInfoForm(forms.ModelForm):
             if(customer.first().deport != deport):
                 raise forms.ValidationError(
                     "This customer Does not belong to this deport. Select another customer or another deport")
-
-
-
+        super(SellDetailInfoForm, self).clean()
 
 
 class SellForm(forms.ModelForm):
@@ -45,6 +43,8 @@ class SellForm(forms.ModelForm):
                 raise forms.ValidationError(
                     "This customer Does not belong to this deport. Select another customer or another deport")
 
+        super(SellForm, self).clean()
+
     def __init__(self, *args, **kwargs):
         forms.ModelForm.__init__(self, *args, **kwargs)
         initial = kwargs.get('initial')
@@ -55,14 +55,11 @@ class SellForm(forms.ModelForm):
         # self.fields['customer'].choices = [('a','a')]
 
 
-
-
 class DeportOperationForm(forms.ModelForm):
 
     class Meta:
         model = DeportOperation
         exclude = ()
-
 
     def __init__(self, *args, **kwargs):
         super(DeportOperationForm, self).__init__(*args, **kwargs)
@@ -76,7 +73,6 @@ class DeportOperationForm(forms.ModelForm):
         if self.data and self.data.get('deport_operation') == 'factory_return':
             self.fields.get('deport_from_code').required = True
 
-
             # self.fields.get('customer').required = True
         # elif (self.data and self.data.get('name') == 'ledger_product'):
         #     self.fields.get('deport').required = True
@@ -86,8 +82,6 @@ class DeportOperationForm(forms.ModelForm):
         #     self.fields.get('customer').required = True
         # elif (self.data and self.data.get('name') == 'monthly_stock'):
         #     self.fields.get('deport').required = True
-
-
 
     def clean(self):
         # Validation goes here :)
@@ -113,7 +107,7 @@ class DeportOperationForm(forms.ModelForm):
         if(not(fp_item_many or fp_item_chained)):
             raise forms.ValidationError(
                 "You must select Finished Item from any of two source")
-
+        super(DeportOperationForm, self).clean()
 
 
 class ExpenseDetailForm(forms.ModelForm):
@@ -132,6 +126,7 @@ class ExpenseDetailForm(forms.ModelForm):
         if(expense_criteria and expense_criteria.count() > 1):
             raise forms.ValidationError(
                 "You can select only one Expense Criteria")
+        super(ExpenseDetailForm, self).clean()
 
 
 class PaymentForm(forms.ModelForm):
@@ -151,3 +146,4 @@ class PaymentForm(forms.ModelForm):
             if(customer.first().deport != deport):
                 raise forms.ValidationError(
                     "This customer Does not belong to this deport. Select another customer or another deport")
+        super(PaymentForm, self).clean()
