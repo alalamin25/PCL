@@ -1,7 +1,7 @@
 (function($){   
     $(function(){
         $(document).ready(function() {
-        	$("#id_memo_no").val("alamin");
+        	// $("#id_memo_no").val("alamin");
         	$(".vForeignKeyRawIdAdminField").bind('keyup focusout change', type_change);
         	
         	$(".field-rate, .field-quantity, .field-commission").on('change keyup', calculateTotal);

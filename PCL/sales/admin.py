@@ -21,6 +21,7 @@ class Payment_Admin(admin.ModelAdmin):
     form = PaymentForm
     list_display = (
         'id', 'date', 'serial_no', 'deport', 'get_customer', 'amount')
+
     search_fields = ('serial_no',)
     list_filter = ('date', 'deport')
     # raw_id_fields = ( 'customer_code',)
@@ -47,6 +48,8 @@ class Payment_Admin(admin.ModelAdmin):
         js = ['/static/js/custom.js']
 
 # class SellDetailInfoInline(admin.StackedInline):
+
+
 class SellDetailInfoInline(admin.TabularInline):
     # raw_id_fields = ('product_code', )
     # readonly_fields = ('product_code_text',)
@@ -63,9 +66,10 @@ class Sell_Admin(admin.ModelAdmin):
     form = SellForm
     filter_horizontal = ('customer',)
     list_display = (
-        'id', 'date', 'transection_no', 'deport', 'get_customer', 'grand_total',
+        'id', 'date', 'transection_no', 'memo_no', 'deport', 'get_customer_name', 'grand_total',
         'total_commission', 'net_total')
-    search_fields = ('transection_no', 'memo_no')
+    list_display_links = list_display
+    search_fields = ('memo_no', 'deport__name', 'customer__name')
     list_filter = ('date', 'deport')
     # raw_id_fields = ( 'customer_code')
     inlines = [SellDetailInfoInline]
@@ -93,7 +97,7 @@ class Sell_Admin(admin.ModelAdmin):
         else:
             latest_sell = 1
         form.base_fields['transection_no'].initial = str(latest_sell)
-        # self.initial['memo_no'] = self.transection_no
+        form.base_fields['memo_no'].initial = str(latest_sell)
         return form
 
     class Media:

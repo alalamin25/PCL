@@ -23,7 +23,7 @@ class Sell(models.Model):
 
     transection_no = models.CharField(max_length=100, unique=True)
     date = models.DateTimeField(default=now)
-    memo_no = models.CharField(max_length=100)
+    memo_no = models.CharField(max_length=100, unique=True)
     deport = models.ForeignKey(Deport, verbose_name='Depot')
     customer = models.ManyToManyField(Customer)
 
@@ -57,6 +57,13 @@ class Sell(models.Model):
     def get_customer(self):
         return self.customer.first()
     get_customer.fget.short_description = "Customer"
+
+    @property
+    def get_customer_name(self):
+        return self.get_customer.name
+    get_customer_name.fget.short_description = "Customer Name"
+
+
 
     def __str__(self):
         return self.transection_no
