@@ -67,11 +67,13 @@ class DeportOperationForm(forms.ModelForm):
         # print(request)
         if self.data and self.data.get('deport_operation') == 'received_from_other_deport':
             self.fields.get('deport_from_code').required = True
+            self.fields.get('chalan_no').required = True
         if self.data and self.data.get('deport_operation') == 'sales_return':
             self.fields.get('customer').required = True
-            # self.fields.get('transection_no').required = True
+            self.fields.get('memo_no').required = True
+            self.fields.get('return_rate').required = True
         if self.data and self.data.get('deport_operation') == 'factory_return':
-            self.fields.get('deport_from_code').required = True
+            self.fields.get('chalan_no').required = True
 
             # self.fields.get('customer').required = True
         # elif (self.data and self.data.get('name') == 'ledger_product'):

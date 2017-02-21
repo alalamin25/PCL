@@ -133,7 +133,7 @@ class DeportOperation_Admin(admin.ModelAdmin):
     fieldsets = [
         (
             'Basic Info: ', {
-                'fields': ['deport_operation', 'deport_code',  'date', 'quantity']}
+                'fields': ['transection_no', 'deport_operation', 'deport_code',  'date', 'quantity']}
         ),
 
         (
@@ -157,9 +157,26 @@ class DeportOperation_Admin(admin.ModelAdmin):
 
         (
             'If Deport Operation is Sales Return Then Fill this up :', {
-                'fields': ['customer', 'return_rate', 'memo_no']}
+                'fields': ['customer', 'memo_no', 'return_rate']}
         ),
+
+        (
+            'If Deport Operation is Factory Return Or Depot Transfer then fill this:', {
+                'fields': ['chalan_no']}
+        ),
+
     ]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(DeportOperation_Admin, self).get_form(request, obj, **kwargs)
+        ob = DeportOperation.objects.all().order_by('-id').first()
+        if(ob):
+            latest_id = ob.id + 1
+        else:
+            latest_id = 1
+        form.base_fields['transection_no'].initial = str(latest_id)
+        # form.base_fields['memo_no'].initial = str(latest_id)
+        return form
 
     def save_model(self, request, obj, form, change):
 

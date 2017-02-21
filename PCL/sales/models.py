@@ -51,8 +51,6 @@ class Sell(models.Model):
         verbose_name = "Sale "
         verbose_name_plural = "Sales"
 
-
-
     @property
     def get_customer(self):
         return self.customer.first()
@@ -63,15 +61,13 @@ class Sell(models.Model):
         return self.get_customer.name
     get_customer_name.fget.short_description = "Customer Name"
 
-
-
     def __str__(self):
         return self.transection_no
 
 
-
 class DeportOperation(models.Model):
 
+    transection_no = models.CharField(max_length=100, unique=True)
     deport_operation = models.CharField(choices=DEPORT_OPERATION_CHOICES,
                                         max_length=30,
                                         verbose_name="Depot Operation",
@@ -131,7 +127,9 @@ class DeportOperation(models.Model):
     customer = models.ManyToManyField(
         Customer, verbose_name="Customer", blank=True)
     memo_no = models.ForeignKey(Sell, to_field='memo_no', blank=True, null=True)
-    return_rate = models.FloatField()
+    return_rate = models.FloatField(blank=True, null=True)
+
+    chalan_no = models.CharField(max_length=100, blank=True, null=True)
     # chalan_no = models.ForeignKey(
     #     Customer, to_field='code', verbose_name="Party")
 
@@ -146,6 +144,7 @@ class DeportOperation(models.Model):
     class Meta:
         verbose_name = "Depot Operation"
         verbose_name_plural = "Depot Operation"
+
 
 class ExpenseDetail(models.Model):
 
@@ -181,7 +180,6 @@ class ExpenseDetail(models.Model):
     def get_expense_criteria(self):
         return self.expense_criteria.first()
     get_expense_criteria.fget.short_description = "Expense Name"
-
 
 
 class Payment(models.Model):
@@ -231,9 +229,6 @@ class Payment(models.Model):
     def get_customer(self):
         return self.customer.first()
     get_customer.fget.short_description = "Customer"
-
-
-
 
 
 class SellDetailInfo(models.Model):
@@ -311,7 +306,6 @@ class SellDetailInfo(models.Model):
     def get_memo_no(self):
         return self.sell.memo_no
     get_memo_no.fget.short_description = "Memo No"
-
 
     def save(self, *args, **kw):
         if(self.finished_product_item):
