@@ -43,33 +43,33 @@
         <td> {{ r.id }} </td>
         <td> {{ r.name }} </td>
         <td> {{ r.address }} </td>
-        <td> {{ r.opening_due }} </td>
-        <td> {{ r.opening_advance }} </td>
-        <td> {{ r.grand_total }} </td>
-        <td> {{ r.total_commission }} </td>
-        <td> {{ r.net_total }} </td>
-        <td> {{ r.total_due }} </td>
-        <td> {{ r.payment }} </td>
+        <td> {{ r.opening_due|floatformat:-0 }} </td>
+        <td> {{ r.opening_advance|floatformat:-0 }} </td>
+        <td> {{ r.grand_total|floatformat:-0 }} </td>
+        <td> {{ r.total_commission|floatformat:-0 }} </td>
+        <td> {{ r.net_total|floatformat:-0 }} </td>
+        <td> {{ r.total_due|floatformat:-0 }} </td>
+        <td> {{ r.payment|floatformat:-0 }} </td>
         <td>  </td>
         <td> {{ r.sales_return|floatformat:-0 }} </td>
-        <td> {{ r.closing_due }} </td>
-        <td> {{ r.closing_advance }} </td>
+        <td> {{ r.closing_due|floatformat:-0 }} </td>
+        <td> {{ r.closing_advance|floatformat:-0 }} </td>
       </tr>
       {% endfor %}
 
       <tr>
         <td colspan="3">Grand Total</td>
-        <td> {{ opening_due_total }} </td>
-        <td> {{ opening_advance_total }} </td>
-        <td> {{ grand_total_total }} </td>
-        <td> {{ total_commission_total }} </td>
-        <td> {{ net_total_total }} </td>
-        <td> {{ total_due_total }} </td>
-        <td> {{ payment_total }} </td>
+        <td> {{ opening_due_total|floatformat:-0 }} </td>
+        <td> {{ opening_advance_total|floatformat:-0 }} </td>
+        <td> {{ grand_total_total|floatformat:-0 }} </td>
+        <td> {{ total_commission_total|floatformat:-0 }} </td>
+        <td> {{ net_total_total|floatformat:-0 }} </td>
+        <td> {{ total_due_total|floatformat:-0 }} </td>
+        <td> {{ payment_total|floatformat:-0 }} </td>
         <td> </td>
         <td> {{ sales_return_total|floatformat:-0 }} </td>
-        <td> {{ closing_due_total }} </td>
-        <td> {{ closing_advance_total }} </td>
+        <td> {{ closing_due_total|floatformat:-0 }} </td>
+        <td> {{ closing_advance_total|floatformat:-0 }} </td>
 
       </tr>
 
