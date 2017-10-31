@@ -39,6 +39,9 @@ class Report_Admin(admin.ModelAdmin):
         extra_context['title'] = 'Report'
         return super(Report_Admin, self).add_view(request, extra_context=extra_context)
 
+
+    # form on load
+
     def get_form(self, request, obj=None, **kwargs):
 
         type = request.GET.get('type')
@@ -56,6 +59,11 @@ class Report_Admin(admin.ModelAdmin):
         #
         # self.exclude = ['name']
         return form
+
+
+
+
+    # which fields to be shown in form
 
     def get_fields(self, request, obj=None):
         fields = super(Report_Admin, self).get_fields(request, obj)
@@ -106,6 +114,10 @@ class Report_Admin(admin.ModelAdmin):
 
         return fields
 
+
+
+    # after submission
+
     def response_add(self, request, obj, post_url_continue=None):
 
         type = request.GET.get('type')
@@ -124,6 +136,7 @@ class Report_Admin(admin.ModelAdmin):
             closing_advance_total = 0
 
             result = Customer.objects.filter(deport=obj.deport).values()
+            
             for r in result:
                 # r.namee = 'alamin'
                 customer = Customer.objects.get(id=r['id'])
